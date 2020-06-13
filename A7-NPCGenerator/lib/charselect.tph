@@ -1,0 +1,302 @@
+// Macro: Registers data of the current CHR file in the following variables:
+// $char_ref: indexed array containing CHR filespec entries (numeric "char_ref" variable contains total number of entries)
+// $char_name: associative array containing CHR filespec => character name entries.
+// $char_gender: associative array containing CHR filespec => character gender entries.
+// $char_class: associative array containing CHR filespec => character class entries.
+// $char_kit: associative array containing CHR filespec => character kit entries.
+// $char_level: associative array containing CHR filespec => character level entries.
+DEFINE_PATCH_MACRO ADD_CHR_TO_LIST
+BEGIN
+  LOCAL_SPRINT sig ~~
+  LOCAL_SPRINT name ~~
+  LOCAL_SPRINT gender_desc ~~
+  LOCAL_SPRINT class_desc ~~
+  LOCAL_SPRINT kit_desc ~~
+  LOCAL_SPRINT level_desc ~~
+
+  // Quick sanity check
+  PATCH_IF (NOT VARIABLE_IS_SET ~char_ref~) BEGIN
+    SET char_ref = 0
+  END
+
+  READ_ASCII 0 sig (4)
+  PATCH_IF (~%sig%~ STR_EQ ~CHR ~) BEGIN
+    LPF GET_CRE_INFO RET name gender_desc class_desc kit_desc level_desc END
+    TEXT_SPRINT $char_ref(~%char_ref%~) ~%SOURCE_FILE%~
+    TEXT_SPRINT $char_name(~%SOURCE_FILE%~) ~%name%~
+    TEXT_SPRINT $char_gender(~%SOURCE_FILE%~) ~%gender_desc%~
+    TEXT_SPRINT $char_class(~%SOURCE_FILE%~) ~%class_desc%~
+    TEXT_SPRINT $char_kit(~%SOURCE_FILE%~) ~%kit_desc%~
+    TEXT_SPRINT $char_level(~%SOURCE_FILE%~) ~%level_desc%~
+    SET char_ref += 1
+  END
+END
+
+
+// Macro: Performs menu-driven character selection
+// Registers selected characters in the following variable:
+// $char_selected: indexed array based on $char_ref where only selected character entries are defined and set to 1
+// (numeric "char_selected" variable contains number of selected entries)
+// adapt_xp: boolean, whether to reset character XP and apply XP-adapting script
+// Considers the following global variables:
+// char_uninstall: boolean, indicates whether selection is intended for character removal
+DEFINE_ACTION_MACRO SELECT_CHAR_INTERACTIVE
+BEGIN
+  // Character selection menu
+  LOCAL_SPRINT title @50        // Available characters:
+  LOCAL_SPRINT prompt @51       // Enter character index, A or X:
+  LOCAL_SPRINT label_gender @90 // Gender
+  LOCAL_SPRINT label_class @91  // Class
+  LOCAL_SPRINT label_kit @92    // Kit
+  LOCAL_SPRINT label_level @93  // Level
+  LOCAL_SPRINT entry_all @52    // All available characters
+  LOCAL_SPRINT entry_finish @53 // Finish selection
+  LOCAL_SPRINT yes @57          // y
+  LOCAL_SPRINT no @58           // n
+
+  LOCAL_SPRINT menu ~~
+  LOCAL_SET chosing = 1
+  LOCAL_SET repeat = 0
+  LOCAL_SET idx = 0
+  LOCAL_SPRINT filespec ~~
+  LOCAL_SPRINT name ~~
+  LOCAL_SPRINT gender ~~
+  LOCAL_SPRINT class ~~
+  LOCAL_SPRINT kit ~~
+  LOCAL_SPRINT level ~~
+  LOCAL_SPRINT entry ~~
+  LOCAL_SPRINT input ~~
+  LOCAL_SPRINT msg ~~
+  LOCAL_SPRINT confirm ~~
+
+  // Quick sanity check
+  ACTION_IF (NOT VARIABLE_IS_SET ~char_ref~) BEGIN
+    OUTER_SET char_ref = 0
+  END
+  ACTION_IF (NOT VARIABLE_IS_SET ~char_uninstall~) BEGIN
+    OUTER_SET char_uninstall = 0
+  END
+
+  ACTION_IF (NOT char_uninstall) BEGIN
+    OUTER_TEXT_SPRINT char_ext ~chr~
+  END ELSE BEGIN
+    OUTER_TEXT_SPRINT char_ext ~cre~
+  END
+
+  // clearing initial selection of characters (if any)
+  OUTER_SET char_selected = 0
+  OUTER_FOR (idx = 0; idx < char_ref; ++idx) BEGIN
+    ACTION_IF (VARIABLE_IS_SET $char_selected(~%idx%~) && $char_selected(~%idx%~) != 0) BEGIN
+      OUTER_SET $char_selected(~%idx%~) = 0
+    END
+  END
+
+  OUTER_WHILE (chosing) BEGIN
+    // generating menu string
+    OUTER_TEXT_SPRINT menu ~%title%%nl%~
+    OUTER_FOR (idx = 0; idx < char_ref; ++idx) BEGIN
+      OUTER_TEXT_SPRINT filespec $char_ref(~%idx%~)
+      LAF RES_OF_FILESPEC STR_VAR filespec RET resref = res END
+      OUTER_TEXT_SPRINT name $char_name(~%filespec%~)
+      OUTER_TEXT_SPRINT gender $char_gender(~%filespec%~)
+      OUTER_TEXT_SPRINT class $char_class(~%filespec%~)
+      OUTER_TEXT_SPRINT kit $char_kit(~%filespec%~)
+      OUTER_TEXT_SPRINT level $char_level(~%filespec%~)
+      ACTION_IF (VARIABLE_IS_SET $char_selected(~%idx%~) && $char_selected(~%idx%~) != 0) BEGIN
+        OUTER_SPRINT index @65 // selected
+        OUTER_TEXT_SPRINT index ~%idx%) [%index%]~
+      END ELSE BEGIN
+        OUTER_TEXT_SPRINT index ~%idx%)~
+      END
+      OUTER_TEXT_SPRINT entry ~%index% %name% (%resref%.%char_ext%) - %label_gender%: %gender%, %label_class%: %class%~
+      ACTION_IF (NOT ~%kit%~ STR_EQ ~~) BEGIN
+        OUTER_TEXT_SPRINT entry ~%entry%, %label_kit%: %kit%~
+      END
+      OUTER_TEXT_SPRINT entry ~%entry%, %label_level%: %level%~
+      OUTER_TEXT_SPRINT menu ~%menu%%entry%%nl%~
+    END
+    OUTER_TEXT_SPRINT menu ~%menu%A) %entry_all%%nl%~
+    OUTER_TEXT_SPRINT menu ~%menu%X) %entry_finish%%nl%~
+    OUTER_TEXT_SPRINT menu ~%menu%%prompt%~
+    PRINT ~%menu%~
+    ACTION_READLN input
+
+    // processing input
+    ACTION_IF (~%input%~ STR_EQ ~A~) BEGIN
+      // All available characters selected
+      OUTER_FOR (idx = 0; idx < char_ref; ++idx) BEGIN
+        ACTION_IF (NOT VARIABLE_IS_SET $char_selected(~%idx%~) || $char_selected(~%idx%~) = 0) BEGIN
+          OUTER_SET $char_selected(~%idx%~) = 1
+          OUTER_SET char_selected += 1
+        END
+      END
+      OUTER_SET chosing = 0
+    END ELSE ACTION_IF (~%input%~ STR_EQ ~X~) BEGIN
+      // Exit selection
+      ACTION_IF (char_selected > 0) BEGIN
+        OUTER_SPRINT msg @64  // Selected characters:
+        OUTER_FOR (idx = 0; idx < char_ref; ++idx) BEGIN
+          ACTION_IF (VARIABLE_IS_SET $char_selected(~%idx%~) && $char_selected(~%idx%~) != 0) BEGIN
+            OUTER_TEXT_SPRINT filespec $char_ref(~%idx%~)
+            OUTER_TEXT_SPRINT name $char_name(~%filespec%~)
+            LAF RES_OF_FILESPEC STR_VAR filespec RET resref = res END
+            OUTER_TEXT_SPRINT msg ~%msg%%nl%%name% (%resref%.%char_ext%)~
+          END
+        END
+        PRINT ~%msg%~
+        OUTER_SET repeat = 1
+        OUTER_WHILE (repeat) BEGIN
+          OUTER_SET repeat = 0
+          PRINT @55 // Start installation (y/n)?
+          ACTION_READLN confirm
+          ACTION_IF (~%confirm%~ STR_EQ ~%yes%~) BEGIN
+            OUTER_SET chosing = 0
+          END ELSE ACTION_IF (NOT ~%confirm%~ STR_EQ ~%no%~) BEGIN
+            PRINT @56  // Please enter y, n.
+            OUTER_SET repeat = 1
+          END
+        END
+      END ELSE BEGIN
+        OUTER_SET chosing = 0
+      END
+    END ELSE ACTION_IF (IS_AN_INT ~input~ && input >= 0 && input < char_ref) BEGIN
+      // Specific character selected
+      ACTION_IF (NOT VARIABLE_IS_SET $char_selected(~%input%~) || $char_selected(~%input%~) = 0) BEGIN
+        // add to selection
+        OUTER_SET $char_selected(~%input%~) = 1
+        OUTER_SET char_selected += 1
+        OUTER_TEXT_SPRINT filespec $char_ref(~%input%~)
+        OUTER_TEXT_SPRINT name $char_name(~%filespec%~)
+        LAF RES_OF_FILESPEC STR_VAR filespec RET resref = res END
+        OUTER_SPRINT msg @61  // Character selected:
+        PRINT ~%msg% %name% (%resref%.%char_ext%)~
+      END ELSE ACTION_IF ($char_selected(~%input%~) != 0) BEGIN
+        // remove from selection
+        OUTER_SET $char_selected(~%input%~) = 0
+        OUTER_SET char_selected -= 1
+        OUTER_TEXT_SPRINT filespec $char_ref(~%input%~)
+        OUTER_TEXT_SPRINT name $char_name(~%filespec%~)
+        LAF RES_OF_FILESPEC STR_VAR filespec RET resref = res END
+        OUTER_SPRINT msg @62  // Character unselected:
+        PRINT ~%msg% %name% (%resref%.%char_ext%)~
+      END
+    END ELSE BEGIN
+      // Invalid input
+      PRINT @54 // Please enter a valid character index, A or X.
+    END
+  END
+
+  // Auto-adapt XP?
+  OUTER_SET adapt_xp = 0
+  ACTION_IF (NOT char_uninstall && char_selected > 0) BEGIN
+    OUTER_SET repeat = 1
+    OUTER_WHILE (repeat) BEGIN
+      OUTER_SET repeat = 0
+      PRINT @59 // Should NPCs automatically adapt experience when joining the party (y/n)?
+      ACTION_READLN confirm
+      ACTION_IF (~%confirm%~ STR_EQ ~%yes%~) BEGIN
+        OUTER_SET adapt_xp = 1
+      END ELSE ACTION_IF (NOT ~%confirm%~ STR_EQ ~%no%~) BEGIN
+        PRINT @56  // Please enter y, n.
+        OUTER_SET repeat = 1
+      END
+    END
+  END
+END
+
+
+// Macro: Performs configuration-based character selection
+// Registers selected characters in the following variable:
+// $char_selected: indexed array based on $char_ref where only selected character entries are defined and set to 1
+// (numeric "char_selected" variable contains number of selected entries)
+// adapt_xp: boolean, whether to reset character XP and apply XP-adapting script
+DEFINE_ACTION_MACRO SELECT_CHAR_AUTOMATED
+BEGIN
+  LOCAL_SET registered = 0
+  LOCAL_SET idx = 0
+  LOCAL_SPRINT resref ~~
+
+  OUTER_SET char_ref = 0
+  ACTION_IF (AUTO_INSTALL_ALL_NPCS) BEGIN
+    // selecting all available NPCs
+    ACTION_IF (AUTO_INSTALL_GAME) BEGIN
+      // collecting CHR information
+      OUTER_SET char_ref = 0
+      // from game resources
+      COPY_EXISTING_REGEXP ~^.+\.chr$~ ~override~
+        LPF IS_CHAR_REGISTERED
+          STR_VAR chr_resref = EVAL ~%SOURCE_RES%~
+          RET registered
+        END
+        PATCH_IF (NOT registered && NOT FILE_EXISTS_IN_GAME ~%SOURCE_RES%.CRE~) BEGIN
+          LPM ADD_CHR_TO_LIST
+        END
+      BUT_ONLY IF_EXISTS
+    END
+    ACTION_IF (AUTO_INSTALL_USER) BEGIN
+      // from "characters" folder
+      ACTION_BASH_FOR ~%chr_folder%~ ~^.+\.chr$~ BEGIN
+        LAF IS_CHAR_REGISTERED
+          STR_VAR chr_resref = EVAL ~%BASH_FOR_RES%~
+          RET registered
+        END
+        ACTION_IF (NOT registered && NOT FILE_EXISTS_IN_GAME ~%BASH_FOR_RES%.CRE~) BEGIN
+          COPY ~%BASH_FOR_FILESPEC%~ ~%BASH_FOR_FILESPEC%~
+            LPM ADD_CHR_TO_LIST
+          BUT_ONLY IF_EXISTS
+        END
+      END
+    END
+  END ELSE BEGIN
+    // selecting specified NPCs only
+    OUTER_SET idx = 0
+    OUTER_WHILE (idx >= 0) BEGIN
+      ACTION_IF (VARIABLE_IS_SET EVAL ~AUTO_INSTALL_NPC_%idx%~) BEGIN
+        OUTER_TEXT_SPRINT resref EVAL ~%AUTO_INSTALL_NPC_%idx%%~
+        ACTION_TO_UPPER ~resref~
+        ACTION_IF (~%resref%~ STRING_MATCHES_REGEXP ~.+\.CHR~ = 0) BEGIN
+          OUTER_PATCH_SAVE resref ~%resref%~ BEGIN
+            REPLACE_TEXTUALLY ~\(.+\)\.CHR~ ~\1~
+          END
+        END
+        ACTION_IF (NOT ~%resref%~ STR_EQ ~~ && STRING_LENGTH ~%resref%~ <= 8) BEGIN
+          ACTION_IF (AUTO_INSTALL_GAME && FILE_EXISTS_IN_GAME ~%resref%.CHR~) BEGIN
+            COPY_EXISTING ~%resref%.CHR~ ~override~
+              LPF IS_CHAR_REGISTERED
+                STR_VAR chr_resref = EVAL ~%resref%~
+                RET registered
+              END
+              PATCH_IF (NOT registered) BEGIN
+                LPM ADD_CHR_TO_LIST
+              END
+            BUT_ONLY IF_EXISTS
+          END ELSE ACTION_IF (AUTO_INSTALL_USER && FILE_EXISTS ~%chr_folder%/%resref%.CHR~) BEGIN
+            COPY ~%chr_folder%/%resref%.CHR~ ~%chr_folder%/%resref%.CHR~
+              LPF IS_CHAR_REGISTERED
+                STR_VAR chr_resref = EVAL ~%resref%~
+                RET registered
+              END
+              PATCH_IF (NOT registered) BEGIN
+                LPM ADD_CHR_TO_LIST
+              END
+            BUT_ONLY IF_EXISTS
+          END
+        END
+        OUTER_SET idx += 1
+      END ELSE BEGIN
+        OUTER_SET idx = "-1"
+      END
+    END
+  END
+
+  OUTER_SET char_selected = 0
+  OUTER_FOR (idx = 0; idx < char_ref; ++idx) BEGIN
+    OUTER_SET $char_selected(~%idx%~) = 1
+    OUTER_SET char_selected += 1
+  END
+
+  OUTER_SET adapt_xp = 0
+  ACTION_IF (VARIABLE_IS_SET ~AUTO_INSTALL_ADAPT_XP~ && AUTO_INSTALL_ADAPT_XP) BEGIN
+    OUTER_SET adapt_xp = 1
+  END
+END

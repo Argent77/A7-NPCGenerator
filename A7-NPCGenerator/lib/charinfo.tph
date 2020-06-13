@@ -1,0 +1,185 @@
+// Returns creature information as description strings
+DEFINE_PATCH_FUNCTION GET_CRE_INFO
+RET
+  name
+  gender_desc
+  class_desc
+  kit_desc
+  level_desc
+BEGIN
+  TEXT_SPRINT name ~~
+  TEXT_SPRINT gender_desc ~~
+  TEXT_SPRINT class_desc ~~
+  TEXT_SPRINT kit_desc ~~
+  TEXT_SPRINT level_desc ~~
+
+  READ_ASCII 0 sig (4)
+  PATCH_IF (~%sig%~ STR_EQ ~CHR ~) BEGIN
+    SET is_chr = 1
+    SET ofs_base = 0x64
+  END ELSE PATCH_IF (~%sig%~ STR_EQ ~CRE ~) BEGIN
+    SET is_chr = 0
+    SET ofs_base = 0x00
+  END ELSE BEGIN
+    SET is_chr = "-1"
+  END
+
+  PATCH_IF (is_chr >= 0) BEGIN
+    // getting name
+    PATCH_IF (is_chr) BEGIN
+      READ_ASCII 0x8 name (32) NULL
+    END ELSE BEGIN
+      READ_STRREF (ofs_base + 0x8) name ELSE ~~
+    END
+    // getting gender
+    READ_BYTE (ofs_base + 0x275) gender
+    LPF __GET_GENDER_INFO INT_VAR gender RET gender_desc END
+    // getting class
+    READ_BYTE (ofs_base + 0x10) flags
+    READ_BYTE (ofs_base + 0x273) class
+    LPF __GET_CLASS_INFO INT_VAR flags class RET class_desc END
+    // getting kit
+    SET kit = (SHORT_AT (ofs_base + 0x244)) << 16 | (SHORT_AT (ofs_base + 0x246))
+    LPF __GET_KIT_INFO INT_VAR kit RET kit_desc END
+    // getting levels
+    READ_BYTE (ofs_base + 0x234) level1
+    READ_BYTE (ofs_base + 0x235) level2
+    READ_BYTE (ofs_base + 0x236) level3
+    LPF __GET_LEVEL_INFO INT_VAR class level1 level2 level3 RET level_desc END
+  END
+END
+
+
+DEFINE_PATCH_FUNCTION __GET_GENDER_INFO
+INT_VAR gender = "-1"
+RET gender_desc
+BEGIN
+  PATCH_MATCH ~%gender%~ WITH
+    1 BEGIN SPRINT gender_desc @101 END // Male
+    2 BEGIN SPRINT gender_desc @102 END // Female
+    DEFAULT SPRINT gender_desc @100 // (unknown)
+  END
+END
+
+
+DEFINE_PATCH_FUNCTION __GET_CLASS_INFO
+INT_VAR
+  flags = 0
+  class = "-1"
+RET class_desc
+BEGIN
+  SET is_multi = 0
+  PATCH_MATCH ~%class%~ WITH
+    1 BEGIN SPRINT class_desc @110 END  // Mage
+    2 BEGIN SPRINT class_desc @111 END  // Fighter
+    3 BEGIN SPRINT class_desc @112 END  // Cleric
+    4 BEGIN SPRINT class_desc @113 END  // Thief
+    5 BEGIN SPRINT class_desc @114 END  // Bard
+    6 BEGIN SPRINT class_desc @115 END  // Paladin
+    7 BEGIN SPRINT class_desc @116 SET is_multi = 1 END  // Fighter/Mage
+    8 BEGIN SPRINT class_desc @117 SET is_multi = 1 END  // Fighter/Cleric
+    9 BEGIN SPRINT class_desc @118 SET is_multi = 1 END  // Fighter/Thief
+    10 BEGIN SPRINT class_desc @119 SET is_multi = 1 END // Fighter/Mage/Thief
+    11 BEGIN SPRINT class_desc @120 END // Druid
+    12 BEGIN SPRINT class_desc @121 END // Ranger
+    13 BEGIN SPRINT class_desc @122 SET is_multi = 1 END // Mage/Thief
+    14 BEGIN SPRINT class_desc @123 SET is_multi = 1 END // Cleric/Mage
+    15 BEGIN SPRINT class_desc @124 SET is_multi = 1 END // Cleric/Thief
+    16 BEGIN SPRINT class_desc @125 SET is_multi = 1 END // Fighter/Druid
+    17 BEGIN SPRINT class_desc @126 SET is_multi = 1 END // Fighter/Mage/Cleric
+    18 BEGIN SPRINT class_desc @127 SET is_multi = 1 END // Cleric/Ranger
+    19 BEGIN SPRINT class_desc @128 END // Sorcerer
+    20 BEGIN SPRINT class_desc @129 END // Monk
+    21 BEGIN SPRINT class_desc @130 END // Shaman
+    DEFAULT SPRINT class_desc @102
+  END
+
+  PATCH_IF (is_multi) BEGIN
+    PATCH_IF (flags & 0b11111000) BEGIN
+      SPRINT type @141  // dual
+    END ELSE BEGIN
+      SPRINT type @140  // multi
+    END
+    TEXT_SPRINT class_desc ~%class_desc% (%type%)~
+  END
+END
+
+
+DEFINE_PATCH_FUNCTION __GET_KIT_INFO
+INT_VAR kit = "-1"
+RET kit_desc
+BEGIN
+  TEXT_SPRINT kit_desc ~~
+
+  INNER_ACTION BEGIN
+    COPY_EXISTING ~kitlist.2da~ ~override~
+      READ_2DA_ENTRIES_NOW kitlist 1
+    BUT_ONLY
+  END
+
+  SET kit_strref = 0
+  PATCH_IF (kit < 0x4000 || kit >= 0x10000000) BEGIN
+    // BG1-style kit
+    PATCH_MATCH ~%kit%~ WITH
+      0x40 BEGIN TEXT_SPRINT kit_name ~ABJURER~ END
+      0x80 BEGIN TEXT_SPRINT kit_name ~CONJURER~ END
+      0x100 BEGIN TEXT_SPRINT kit_name ~DIVINER~ END
+      0x200 BEGIN TEXT_SPRINT kit_name ~ENCHANTER~ END
+      0x400 BEGIN TEXT_SPRINT kit_name ~ILLUSIONIST~ END
+      0x800 BEGIN TEXT_SPRINT kit_name ~INVOKER~ END
+      0x1000 BEGIN TEXT_SPRINT kit_name ~NECROMANCER~ END
+      0x2000 BEGIN TEXT_SPRINT kit_name ~TRANSMUTER~ END
+      0x40000000 BEGIN TEXT_SPRINT kit_name ~BARBARIAN~ END
+      ~-2147483648~ BEGIN TEXT_SPRINT kit_name ~WILDMAGE~ END
+      DEFAULT TEXT_SPRINT kit_name ~~
+    END
+    FOR (row = 4; row < kitlist; ++row) BEGIN
+      READ_2DA_ENTRY_FORMER kitlist row 1 value
+      PATCH_IF (~%value%~ STR_EQ ~%kit_name%~) BEGIN
+        READ_2DA_ENTRY_FORMER kitlist row 3 strref
+        PATCH_IF (IS_AN_INT ~strref~) BEGIN
+          SET kit_strref = strref
+          SET row = kitlist
+        END
+      END
+    END
+  END ELSE BEGIN
+    // BG2-style kit
+    SET kit_id = kit & 0x3fff
+    FOR (row = 4; row < kitlist; ++row) BEGIN
+      READ_2DA_ENTRY_FORMER kitlist row 0 value
+      PATCH_IF (IS_AN_INT ~value~ && value = kit_id) BEGIN
+        READ_2DA_ENTRY_FORMER kitlist row 3 strref
+        PATCH_IF (IS_AN_INT ~strref~) BEGIN
+          SET kit_strref = strref
+          SET row = kitlist
+        END
+      END
+    END
+  END
+
+  PATCH_IF (kit_strref > 0) BEGIN
+    GET_STRREF kit_strref kit_desc
+  END
+END
+
+
+DEFINE_PATCH_FUNCTION __GET_LEVEL_INFO
+INT_VAR
+  class  = "-1"
+  level1 = 0
+  level2 = 0
+  level3 = 0
+RET level_desc
+BEGIN
+  TEXT_SPRINT level_desc ~~
+  PATCH_IF (level1 > 0) BEGIN
+    TEXT_SPRINT level_desc ~%level1%~
+    PATCH_IF (level2 > 0) BEGIN
+      TEXT_SPRINT level_desc ~%level_desc%/%level2%~
+      PATCH_IF (level3 > 0) BEGIN
+        TEXT_SPRINT level_desc ~%level_desc%/%level3%~
+      END
+    END
+  END
+END

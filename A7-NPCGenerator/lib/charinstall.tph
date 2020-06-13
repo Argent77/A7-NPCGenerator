@@ -1,0 +1,275 @@
+INCLUDE ~%MOD_FOLDER%/lib/scripts.tph~
+
+// Macro: Initializes potential meeting locations
+// Registers detected games in the following variable:
+// $supported_games: indexed array containing all detected games
+// (numeric "supported_games" variable contains number of detected games)
+DEFINE_ACTION_MACRO INIT_LOCATIONS
+BEGIN
+  OUTER_SET supported_games = 0
+  ACTION_IF (GAME_INCLUDES ~bg1~) BEGIN
+    OUTER_TEXT_SPRINT $supported_games(~%supported_games%~) ~BG1~
+    OUTER_SET supported_games += 1
+  END
+  ACTION_IF (GAME_INCLUDES ~sod~) BEGIN
+    OUTER_TEXT_SPRINT $supported_games(~%supported_games%~) ~SOD~
+    OUTER_SET supported_games += 1
+  END
+  ACTION_IF (GAME_INCLUDES ~soa~) BEGIN
+    OUTER_TEXT_SPRINT $supported_games(~%supported_games%~) ~SOA~
+    OUTER_SET supported_games += 1
+  END
+  ACTION_IF (GAME_INCLUDES ~tob~) BEGIN
+    OUTER_TEXT_SPRINT $supported_games(~%supported_games%~) ~TOB~
+    OUTER_SET supported_games += 1
+  END
+  ACTION_IF (GAME_INCLUDES ~iwd~) BEGIN
+    OUTER_TEXT_SPRINT $supported_games(~%supported_games%~) ~IWD~
+    OUTER_SET supported_games += 1
+  END
+
+  ACTION_IF (supported_games = 0) BEGIN
+    FAIL @504 // No supported game detected.
+  END
+END
+
+
+// Macro: Installs all characters selected in the character selection menu.
+// Requires the following variables to be initialized: $char_ref, $char_selected, $char_name
+DEFINE_ACTION_MACRO INSTALL_CHARACTERS
+BEGIN
+  LOCAL_SET idx = 0
+  LOCAL_SET are_x = 0
+  LOCAL_SET are_y = 0
+  LOCAL_SET are_dir = 0
+  LOCAL_SET success = 0
+  LOCAL_SPRINT filespec ~~
+  LOCAL_SPRINT chr_resref ~~
+  LOCAL_SPRINT directory ~~
+  LOCAL_SPRINT name ~~
+  LOCAL_SPRINT msg ~~
+
+  // Quick sanity check
+  ACTION_IF (NOT VARIABLE_IS_SET ~char_selected~) BEGIN
+    OUTER_SET char_selected = 0
+  END
+  ACTION_IF (NOT VARIABLE_IS_SET ~supported_games~) BEGIN
+    OUTER_SET supported_games = 0
+  END
+
+  ACTION_IF (char_selected > 0) BEGIN
+    ACTION_IF (NOT FILE_EXISTS_IN_GAME ~A7CHRNPC.DLG~) BEGIN
+      COMPILE ~%MOD_FOLDER%/dialogs/a7chrnpc.d~
+    END
+
+    // Spell effect "Clear Fog of War" used in companion mode
+    ACTION_IF (NOT FILE_EXISTS_IN_GAME ~A7CHRXV.SPL~) BEGIN
+      // Non-EE games have to resort to secondary type removal
+      ACTION_IF (NOT IS_EE) BEGIN
+        LAF ADD_CUSTOM_SECTYPE STR_VAR name = ~A7CHR_CLEAR_FOW~ RET type END
+      END
+      COPY ~%MOD_FOLDER%/spells/a7chrxv.spl~ ~override~
+        PATCH_IF (NOT IS_EE && type > 0) BEGIN
+          WRITE_BYTE 0x27 type    // secondary type
+        END
+        LPF ADD_SPELL_EFFECT
+          INT_VAR
+            opcode = 268  // Clear Fog of War
+            target = 2    // Preset target
+            timing = IS_EE ? 9 : 1  // Work-around for non-EE games to make effect removable
+        END
+    END
+    ACTION_IF (NOT FILE_EXISTS_IN_GAME ~A7CHRXV2.SPL~) BEGIN
+      ACTION_IF (NOT IS_EE) BEGIN
+        LAF GET_CUSTOM_SECTYPE STR_VAR name = ~A7CHR_CLEAR_FOW~ RET type END
+      END
+      COPY ~%MOD_FOLDER%/spells/a7chrxv2.spl~ ~override~
+        PATCH_IF (NOT IS_EE && type > 0) BEGIN
+          LPF ADD_SPELL_EFFECT
+            INT_VAR
+              opcode = 221  // Remove secondary type
+              target = 2    // Preset target
+              timing = 1    // Instant/Permanent until death
+              parameter2 = type
+          END
+        END
+        PATCH_IF (IS_EE) BEGIN
+          LPF ADD_SPELL_EFFECT
+            INT_VAR
+              opcode = 321  // Remove effects by resource
+              target = 2    // Preset target
+              timing = 1    // Instant/Permanent until death
+            STR_VAR
+              resource = ~A7CHRXV~
+          END
+        END
+    END
+
+    // Don't auto-assign "MULTIG.DLG" to custom NPCs
+    OUTER_SET add_bp = 0
+    COPY_EXISTING ~dplayer3.bcs~ ~override~
+      DECOMPILE_AND_PATCH BEGIN
+        SET add_bp = (INDEX_BUFFER(~Global("A7CHR-CUSTOM","LOCALS"~) < 0)
+        PATCH_IF (add_bp) BEGIN
+          TEXT_SPRINT trigger ~Global("A7CHR-CUSTOM","LOCALS",0)%LNL%~
+          SET trigger_len = STRING_LENGTH ~%trigger%~
+          SET p1 = 0
+          SET p2 = 0
+          WHILE (p1 >= 0 && p2 >= p1) BEGIN
+            SET p1 = INDEX_BUFFER(~"MULTIG"~ p2)
+            PATCH_IF (p1 >= 0) BEGIN
+              SET p1 = RINDEX_BUFFER(~^THEN$~ p1)
+              PATCH_IF (p1 >= 0) BEGIN
+                INSERT_BYTES p1 trigger_len
+                WRITE_ASCIIE p1 ~%trigger%~ (trigger_len)
+                SET p2 = INDEX_BUFFER(~^END$~ p1)
+              END
+            END
+          END
+        END
+      END
+    BUT_ONLY IF_EXISTS
+    ACTION_IF (add_bp) BEGIN
+      EXTEND_BOTTOM ~dplayer3.bcs~ ~.../inlined/a7-npcgenerator/breaking_point.baf~
+    END
+
+    ACTION_IF (NOT FILE_EXISTS_IN_GAME ~A7CHRNPC.BCS~) BEGIN
+      COMPILE ~%MOD_FOLDER%/scripts/a7chrnpc.baf~
+      // use better method for setting character XP if available
+      ACTION_IF (VALID_SCRIPT_ACTIONS ~ChangeStat(Myself,XP,0,SET)~) BEGIN
+        COPY_EXISTING ~A7CHRNPC.BCS~ ~override~
+          DECOMPILE_AND_PATCH BEGIN
+            REPLACE_TEXTUALLY ~AddXPObject(Myself,\([0-9]+\))~ ~ChangeStat(Myself,XP,\1,SET)~
+          END
+        BUT_ONLY
+      END
+    END
+
+    // Installing NPCs
+    OUTER_FOR (char_idx = 0; char_idx < char_ref; ++char_idx) BEGIN
+      ACTION_IF (VARIABLE_IS_SET $char_selected(~%char_idx%~)) BEGIN
+        // getting character info
+        OUTER_TEXT_SPRINT filespec $char_ref(~%char_idx%~)
+        LAF RES_OF_FILESPEC STR_VAR filespec RET chr_resref = res END
+        LAF DIRECTORY_OF_FILESPEC STR_VAR filespec RET directory END
+        OUTER_TEXT_SPRINT name $char_name(~%filespec%~)
+        OUTER_SPRINT msg @60  // Installing character
+        PRINT ~%msg% %name% (%chr_resref%.chr)~
+
+        // installing CHR as CRE
+        ACTION_IF (~%directory%~ STR_EQ ~~ && FILE_EXISTS_IN_GAME ~%filespec%~) BEGIN
+          COPY_EXISTING ~%filespec%~ ~override/%chr_resref%.cre~
+            LPF INSTALL_CHR_AS_CRE INT_VAR adapt_xp STR_VAR script_name = EVAL ~A7CHR-%chr_resref%~ END
+        END ELSE BEGIN
+          COPY ~%chr_folder%/%chr_resref%.chr~ ~override/%chr_resref%.cre~
+            LPF INSTALL_CHR_AS_CRE INT_VAR adapt_xp STR_VAR script_name = EVAL ~A7CHR-%chr_resref%~ END
+        END
+
+        // setting up character creation
+        OUTER_SET move_stage = 1
+        OUTER_FOR (game_idx = 0; game_idx < supported_games; ++game_idx) BEGIN
+          OUTER_TEXT_SPRINT game $supported_games(~%game_idx%~)
+          OUTER_SET loc_idx = 0
+          OUTER_WHILE (loc_idx >= 0) BEGIN
+            // retrieving set of areas to set up as potential meeting point
+            LAF GET_GAME_AREAS
+              INT_VAR loc_idx
+              STR_VAR game
+              RET areas
+              RET_ARRAY areas
+            END
+
+            ACTION_IF (areas > 0) BEGIN
+              // adding NPCs to area(s)
+              OUTER_SET are_idx = (areas > 1) ? RANDOM(0 (areas - 1)) : 0
+              OUTER_TEXT_SPRINT are_resref $areas(~%are_idx%~)
+              LAF GET_AREA_SCRIPT
+                STR_VAR are_resref
+                RET are_script
+              END
+
+              LAF GET_FREE_NPC_POSITION
+              STR_VAR game are_resref
+              RET
+                are_x = x
+                are_y = y
+                are_dir = dir
+              END
+
+              OUTER_TEXT_SPRINT extra_trigger ~~
+              ACTION_IF (~%game%~ STR_EQ ~IWD~) BEGIN
+                ACTION_IF (~%are_resref%~ STR_EQ ~AR1006~) BEGIN
+                  // IWD special: Delay NPC creation until stepping out of opening tavern and in again
+                  LAF GET_AREA_SCRIPT
+                    STR_VAR are_resref = ~AR1000~
+                    RET ar1000_script = are_script
+                  END
+                  ACTION_IF (NOT FILE_CONTAINS_EVALUATED(~%ar1000_script%.BCS~ ~"GLOBALA7CHR-INIT-ENABLED"~)) BEGIN
+                    // Add only once to area script
+                    EXTEND_TOP ~%ar1000_script%.BCS~ ~.../inlined/a7-npcgenerator/init_enable.baf~
+                  END
+                  OUTER_TEXT_SPRINT extra_trigger ~!Global("A7CHR-INIT-ENABLED","GLOBAL",0) AreaCheckObject("%are_resref%",Player1)~
+                END ELSE ACTION_IF (~%are_resref%~ STR_EQ ~AR9101~ || ~%are_resref%~ STR_EQ ~AR9102~) BEGIN
+                  // IWD special: Only available if game started in HOW campaign
+                  OUTER_TEXT_SPRINT extra_trigger ~GlobalGT("Chapter","GLOBAL",6)~
+                END
+              END
+
+              ACTION_IF (NOT FILE_CONTAINS_EVALUATED(~%are_script%.BCS~ ~"GLOBALA7CHR-MOVESTAGE"~)) BEGIN
+                // Add only once to area script
+                EXTEND_TOP ~%are_script%.BCS~ ~.../inlined/a7-npcgenerator/move_init.baf~ EVAL
+              END
+              EXTEND_TOP ~%are_script%.BCS~ ~.../inlined/a7-npcgenerator/create_script.baf~ EVAL
+              EXTEND_TOP ~%are_script%.BCS~ ~.../inlined/a7-npcgenerator/move_script.baf~ EVAL
+              EXTEND_BOTTOM ~A7CHRNPC.BCS~ ~.../inlined/a7-npcgenerator/npc_return_script.baf~ EVAL
+
+              LAF REGISTER_CHAR
+                INT_VAR are_x are_y are_dir
+                STR_VAR game chr_resref are_resref script_name = EVAL ~A7CHR-%chr_resref%~
+                RET success
+              END
+
+              OUTER_SET loc_idx += 1
+              OUTER_SET move_stage += 1
+            END ELSE BEGIN
+              OUTER_SET loc_idx = "-1"
+            END
+          END
+        END
+      END
+    END
+  END
+END
+
+
+// Prepares current CHR/CRE file to be used as custom NPC
+DEFINE_PATCH_FUNCTION INSTALL_CHR_AS_CRE
+INT_VAR
+  adapt_xp = 0  // whether to activate XP adaptation
+STR_VAR
+  script_name = ~~
+BEGIN
+  PATCH_IF (~%script_name%~ STR_EQ ~~ && VARIABLE_IS_SET ~SOURCE_RES~) BEGIN
+    TEXT_SPRINT script_name ~A7CHR-%SOURCE_RES%~
+  END
+  READ_ASCII 0 sig (4)
+  PATCH_IF (~%sig%~ STR_EQ ~CHR ~) BEGIN
+    READ_ASCII 0x8 chr_name (32) NULL
+    SET name_strref = RESOLVE_STR_REF(~%chr_name%~)
+    DELETE_BYTES 0 0x64
+    WRITE_LONG 0x8 name_strref
+    WRITE_LONG 0xc name_strref
+    WRITE_BYTE 0x270 128 // Allegiance = NEUTRAL
+    WRITE_ASCII DIALOG ~A7CHRNPC~ (8)
+    WRITE_ASCII SCRIPT_OVERRIDE ~A7CHRNPC~ (8)
+    WRITE_ASCII SCRIPT_DEFAULT ~~ (8)
+    WRITE_ASCIIE DEATHVAR ~%script_name%~ (32)
+    LPF ADD_LOCAL_VARIABLE INT_VAR value = 1 STR_VAR name = ~A7CHR-CUSTOM~ END
+    PATCH_IF (adapt_xp) BEGIN
+      WRITE_LONG 0x18 0
+      LPF ADD_LOCAL_VARIABLE INT_VAR value = 1 STR_VAR name = ~A7CHR-ADAPT-XP~ END
+      // Precaution: opcode may mess with XP adaptation
+      LPF DELETE_CRE_EFFECT INT_VAR opcode_to_delete = 104 END  // XP bonus
+    END
+  END
+END

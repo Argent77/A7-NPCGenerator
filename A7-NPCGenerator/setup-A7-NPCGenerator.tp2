@@ -1,0 +1,303 @@
+BACKUP ~A7-NPCGenerator/backup~
+SUPPORT ~https://github.com/Argent77/A7-NPCGenerator~
+VERSION ~0.9beta~
+
+ALWAYS
+  // Platform-specific line breaks
+  ACTION_IF (~%WEIDU_OS%~ STR_EQ ~win32~) BEGIN
+    OUTER_TEXT_SPRINT nl ~%WNL%~
+  END ELSE BEGIN
+    OUTER_TEXT_SPRINT nl ~%LNL%~
+  END
+
+  // Detect EE game
+  OUTER_SET IS_EE = GAME_IS ~bgee bg2ee eet iwdee pstee~
+
+  // Needed for scripts
+  APPEND ~STATE.IDS~ ~0x80101FEF CD_STATE_NOTVALID~ UNLESS ~\bCD_STATE_NOTVALID\b~
+
+  // Loading BG1 area code mappings
+  INCLUDE ~%MOD_FOLDER%/lib/areacodes.tpa~
+
+  // convert strings to UTF-8 for BGEE/BG2EE
+  ACTION_DEFINE_ARRAY noconvert BEGIN setup END
+  ACTION_DEFINE_ARRAY reload BEGIN mod END
+  LAF HANDLE_CHARSETS
+  INT_VAR
+    infer_charsets = 1
+  STR_VAR
+    tra_path = EVAL ~%MOD_FOLDER%/languages~
+    noconvert_array = ~noconvert~
+    reload_array = ~reload~
+  END
+END
+
+README ~%MOD_FOLDER%/readme/readme-%LANGUAGE%.txt~
+       ~%MOD_FOLDER%/readme/readme.txt~
+
+LANGUAGE ~English~
+         ~english~
+         ~%MOD_FOLDER%/languages/english/setup.tra~
+         ~%MOD_FOLDER%/languages/english/mod.tra~
+LANGUAGE ~Deutsch~
+         ~german~
+         ~%MOD_FOLDER%/languages/english/setup.tra~
+         ~%MOD_FOLDER%/languages/english/mod.tra~
+         ~%MOD_FOLDER%/languages/german/setup.tra~
+         ~%MOD_FOLDER%/languages/german/mod.tra~
+
+BEGIN @2  // User characters only
+SUBCOMPONENT @1 // Add custom NPCs to the game
+REQUIRE_PREDICATE (GAME_IS ~tob tutu tutu_totsc bgt bgee bg2ee eet iwdee~) @500 // Game is not supported.
+REQUIRE_PREDICATE (VALID_SCRIPT_ACTIONS ~MakeGlobal()~) @500 // Game is not supported.
+DESIGNATED 1
+NO_LOG_RECORD
+
+INCLUDE ~%MOD_FOLDER%/lib/functions.tph~
+INCLUDE ~%MOD_FOLDER%/lib/charselect.tph~
+INCLUDE ~%MOD_FOLDER%/lib/charinstall.tph~
+INCLUDE ~%MOD_FOLDER%/lib/charinfo.tph~
+
+// Select (one or more) characters to install
+LAF GET_CHARACTER_DIR RET chr_folder = dir END
+
+OUTER_SET char_ref = 0
+// collecting CHR information from "characters" folder
+ACTION_BASH_FOR ~%chr_folder%~ ~^.+\.chr$~ BEGIN
+  LAF IS_CHAR_REGISTERED
+    STR_VAR chr_resref = EVAL ~%BASH_FOR_RES%~
+    RET registered
+  END
+  ACTION_IF (NOT registered && NOT FILE_EXISTS_IN_GAME ~%BASH_FOR_RES%.CRE~) BEGIN
+    COPY ~%BASH_FOR_FILESPEC%~ ~%BASH_FOR_FILESPEC%~
+      LPM ADD_CHR_TO_LIST
+    BUT_ONLY IF_EXISTS
+  END
+END
+
+ACTION_IF (char_ref = 0) BEGIN  
+  ABORT @502  // No characters available.
+END
+
+// Character selection menu
+LAM SELECT_CHAR_INTERACTIVE
+
+ACTION_IF (char_selected = 0) BEGIN
+  ABORT @503  // No characters selected.
+END
+
+// Initialize meeting places
+LAM INIT_LOCATIONS
+
+// Processing character selection
+LAM INSTALL_CHARACTERS
+
+
+BEGIN @3  // Game characters only
+SUBCOMPONENT @1 // Add custom NPCs to the game
+REQUIRE_PREDICATE (GAME_IS ~tob tutu tutu_totsc bgt bgee bg2ee eet iwdee~) @500 // Game is not supported.
+REQUIRE_PREDICATE (VALID_SCRIPT_ACTIONS ~MakeGlobal()~) @500 // Game is not supported.
+DESIGNATED 2
+NO_LOG_RECORD
+
+INCLUDE ~%MOD_FOLDER%/lib/functions.tph~
+INCLUDE ~%MOD_FOLDER%/lib/charselect.tph~
+INCLUDE ~%MOD_FOLDER%/lib/charinstall.tph~
+INCLUDE ~%MOD_FOLDER%/lib/charinfo.tph~
+
+// Select (one or more) characters to install
+OUTER_SET char_ref = 0
+// collecting CHR information from game resources
+COPY_EXISTING_REGEXP ~^.+\.chr$~ ~override~
+  LPF IS_CHAR_REGISTERED
+    STR_VAR chr_resref = EVAL ~%SOURCE_RES%~
+    RET registered
+  END
+  PATCH_IF (NOT registered && NOT FILE_EXISTS_IN_GAME ~%SOURCE_RES%.CRE~) BEGIN
+    LPM ADD_CHR_TO_LIST
+  END
+BUT_ONLY IF_EXISTS
+
+ACTION_IF (char_ref = 0) BEGIN  
+  ABORT @502  // No characters available.
+END
+
+// Character selection menu
+LAM SELECT_CHAR_INTERACTIVE
+
+ACTION_IF (char_selected = 0) BEGIN
+  ABORT @503  // No characters selected.
+END
+
+// Initialize meeting places
+LAM INIT_LOCATIONS
+
+// Processing character selection
+LAM INSTALL_CHARACTERS
+
+
+BEGIN @4  // Game characters and user characters
+SUBCOMPONENT @1 // Add custom NPCs to the game
+REQUIRE_PREDICATE (GAME_IS ~tob tutu tutu_totsc bgt bgee bg2ee eet iwdee~) @500 // Game is not supported.
+REQUIRE_PREDICATE (VALID_SCRIPT_ACTIONS ~MakeGlobal()~) @500 // Game is not supported.
+DESIGNATED 3
+NO_LOG_RECORD
+
+INCLUDE ~%MOD_FOLDER%/lib/functions.tph~
+INCLUDE ~%MOD_FOLDER%/lib/charselect.tph~
+INCLUDE ~%MOD_FOLDER%/lib/charinstall.tph~
+INCLUDE ~%MOD_FOLDER%/lib/charinfo.tph~
+
+// Select (one or more) characters to install
+LAF GET_CHARACTER_DIR RET chr_folder = dir END
+
+// collecting CHR information
+OUTER_SET char_ref = 0
+// from game resources
+COPY_EXISTING_REGEXP ~^.+\.chr$~ ~override~
+  LPF IS_CHAR_REGISTERED
+    STR_VAR chr_resref = EVAL ~%SOURCE_RES%~
+    RET registered
+  END
+  PATCH_IF (NOT registered && NOT FILE_EXISTS_IN_GAME ~%SOURCE_RES%.CRE~) BEGIN
+    LPM ADD_CHR_TO_LIST
+  END
+BUT_ONLY IF_EXISTS
+
+// from "characters" folder
+ACTION_BASH_FOR ~%chr_folder%~ ~^.+\.chr$~ BEGIN
+  LAF IS_CHAR_REGISTERED
+    STR_VAR chr_resref = EVAL ~%BASH_FOR_RES%~
+    RET registered
+  END
+  ACTION_IF (NOT registered && NOT FILE_EXISTS_IN_GAME ~%BASH_FOR_RES%.CRE~) BEGIN
+    COPY ~%BASH_FOR_FILESPEC%~ ~%BASH_FOR_FILESPEC%~
+      LPM ADD_CHR_TO_LIST
+    BUT_ONLY IF_EXISTS
+  END
+END
+
+ACTION_IF (char_ref = 0) BEGIN  
+  ABORT @502  // No characters available.
+END
+
+// Character selection menu
+LAM SELECT_CHAR_INTERACTIVE
+
+ACTION_IF (char_selected = 0) BEGIN
+  ABORT @503  // No characters selected.
+END
+
+// Initialize meeting places
+LAM INIT_LOCATIONS
+
+// Processing character selection
+LAM INSTALL_CHARACTERS
+
+
+BEGIN @5 // Automated installation (from settings.tpa)
+SUBCOMPONENT @1 // Add custom NPCs to the game
+REQUIRE_PREDICATE (GAME_IS ~tob tutu tutu_totsc bgt bgee bg2ee eet iwdee~) @500 // Game is not supported.
+REQUIRE_PREDICATE (VALID_SCRIPT_ACTIONS ~MakeGlobal()~) @500 // Game is not supported.
+REQUIRE_PREDICATE (FILE_EXISTS ~%MOD_FOLDER%/settings.tpa~) @505 // No settings file found.
+DESIGNATED 4
+NO_LOG_RECORD
+
+INCLUDE ~%MOD_FOLDER%/lib/functions.tph~
+INCLUDE ~%MOD_FOLDER%/lib/charselect.tph~
+INCLUDE ~%MOD_FOLDER%/lib/charinstall.tph~
+INCLUDE ~%MOD_FOLDER%/lib/charinfo.tph~
+INCLUDE ~%MOD_FOLDER%/settings.tpa~
+
+// Sanity checks
+ACTION_IF (NOT VARIABLE_IS_SET ~AUTO_INSTALL_GAME~) BEGIN
+  OUTER_SET AUTO_INSTALL_GAME = 1
+END
+ACTION_IF (NOT VARIABLE_IS_SET ~AUTO_INSTALL_USER~) BEGIN
+  OUTER_SET AUTO_INSTALL_USER = 1
+END
+ACTION_IF (NOT VARIABLE_IS_SET ~AUTO_INSTALL_ALL_NPCS~) BEGIN
+  OUTER_SET AUTO_INSTALL_ALL_NPCS = 0
+END
+
+// Collecting characters to install
+LAF GET_CHARACTER_DIR RET chr_folder = dir END
+
+// Performing character selection
+LAM SELECT_CHAR_AUTOMATED
+
+ACTION_IF (char_selected = 0) BEGIN
+  ABORT @503  // No characters selected.
+END
+
+// Initialize meeting places
+LAM INIT_LOCATIONS
+
+// Processing character selection
+LAM INSTALL_CHARACTERS
+
+
+BEGIN @11 // Select individually
+SUBCOMPONENT @10 // Remove custom NPCs from the game (CAUTION: See readme)
+REQUIRE_PREDICATE (FILE_EXISTS_IN_GAME ~a7-npc.2da~) @501 // No installed NPCs found.
+REQUIRE_PREDICATE (FILE_CONTAINS_EVALUATED(~a7-npc.2da~ ~^[^ %TAB%]+[ %TAB%]+[^ %TAB%]+[ %TAB%]+[^ %TAB%]+[ %TAB%]+[^ %TAB%]+[ %TAB%]+[-+0-9*]+[ %TAB%]+[-+0-9*]+[ %TAB%]+[-+0-9*][ %TAB%%WNL%]*$~)) @501 // No installed NPCs found.
+DESIGNATED 10
+NO_LOG_RECORD
+
+INCLUDE ~%MOD_FOLDER%/lib/functions.tph~
+INCLUDE ~%MOD_FOLDER%/lib/charselect.tph~
+INCLUDE ~%MOD_FOLDER%/lib/charuninstall.tph~
+INCLUDE ~%MOD_FOLDER%/lib/charinfo.tph~
+
+// collecting list of installed characters
+OUTER_SET char_ref = 0
+LAM GET_INSTALLED_CHARS
+
+ACTION_IF (char_ref = 0) BEGIN
+  ABORT @501  // No installed NPCs found.
+END
+
+// Character selection menu
+OUTER_SET char_uninstall = 1
+LAM SELECT_CHAR_INTERACTIVE
+
+ACTION_IF (char_selected = 0) BEGIN
+  ABORT @503  // No characters selected.
+END
+
+// Processing character removal
+LAM UNINSTALL_CHARACTERS
+
+
+BEGIN @12 // Remove all
+SUBCOMPONENT @10 // Remove custom NPCs from the game (CAUTION: See readme)
+REQUIRE_PREDICATE (FILE_EXISTS_IN_GAME ~a7-npc.2da~) @501 // No installed NPCs found.
+REQUIRE_PREDICATE (FILE_CONTAINS_EVALUATED(~a7-npc.2da~ ~^[^ %TAB%]+[ %TAB%]+[^ %TAB%]+[ %TAB%]+[^ %TAB%]+[ %TAB%]+[^ %TAB%]+[ %TAB%]+[-+0-9*]+[ %TAB%]+[-+0-9*]+[ %TAB%]+[-+0-9*][ %TAB%%WNL%]*$~)) @501 // No installed NPCs found.
+DESIGNATED 11
+NO_LOG_RECORD
+
+INCLUDE ~%MOD_FOLDER%/lib/functions.tph~
+INCLUDE ~%MOD_FOLDER%/lib/charselect.tph~
+INCLUDE ~%MOD_FOLDER%/lib/charuninstall.tph~
+INCLUDE ~%MOD_FOLDER%/lib/charinfo.tph~
+
+// collecting list of installed characters
+OUTER_SET char_ref = 0
+LAM GET_INSTALLED_CHARS
+
+ACTION_IF (char_ref = 0) BEGIN
+  ABORT @501  // No installed NPCs found.
+END
+
+OUTER_SET char_selected = 0
+OUTER_FOR (idx = 0; idx < char_ref; ++idx) BEGIN
+  OUTER_SET $char_selected(~%idx%~) = 1
+  OUTER_SET char_selected += 1
+END
+
+ACTION_IF (char_selected = 0) BEGIN
+  ABORT @503  // No characters selected.
+END
+
+// Processing character removal
+LAM UNINSTALL_CHARACTERS

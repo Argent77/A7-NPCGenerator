@@ -1,0 +1,625 @@
+// Making NPC global
+IF
+  Global("A7CHR-INIT","LOCALS",0)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-INIT","LOCALS",1)
+    MakeGlobal()
+    SetInterrupt(TRUE)
+END
+
+IF
+  BreakingPoint()
+  !StateCheck(Player1,CD_STATE_NOTVALID)
+THEN
+  RESPONSE #100
+    Wait(1)
+    Dialog(Player1)
+END
+
+
+// Fixing dialog
+IF
+  Global("A7CHR-DIALOG-INIT","LOCALS",2)
+  !InParty(Myself)
+  Global("A7CHR-FOLLOWER","LOCALS",0)
+THEN
+  RESPONSE #100
+    SetGlobal("A7CHR-DIALOG-INIT","LOCALS",0)
+    SetGlobal("A7CHR-KICKEDOUT","LOCALS",1)
+    SetDialog("A7CHRNPC")
+    Dialog([PC])
+END
+
+IF
+  !Global("A7CHR-DIALOG-INIT","LOCALS",0)
+  !InParty(Myself)
+  Global("A7CHR-FOLLOWER","LOCALS",0)
+THEN
+  RESPONSE #100
+    SetGlobal("A7CHR-DIALOG-INIT","LOCALS",0)
+    SetDialog("A7CHRNPC")
+    Continue()
+END
+
+IF
+  Global("A7CHR-DIALOG-INIT","LOCALS",0)
+  OR(2)
+    InParty(Myself)
+    !Global("A7CHR-FOLLOWER","LOCALS",0)
+THEN
+  RESPONSE #100
+    SetGlobal("A7CHR-DIALOG-INIT","LOCALS",2)
+    SetDialog("A7CHRNPC")
+    Continue()
+END
+
+
+// Adapting NPC experience
+IF
+  Global("A7CHR-XP-INIT","LOCALS",0)
+  !Global("A7CHR-ADAPT-XP","LOCALS",0)
+  InParty(Myself)
+  XPLT(Player1,2000)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-XP-INIT","LOCALS",1)
+    SetInterrupt(TRUE)
+END
+
+IF
+  Global("A7CHR-XP-INIT","LOCALS",0)
+  !Global("A7CHR-ADAPT-XP","LOCALS",0)
+  InParty(Myself)
+  XPGT(Player1,1999)
+  XPLT(Player1,4000)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-XP-INIT","LOCALS",1)
+    AddXPObject(Myself,2000)
+    SetInterrupt(TRUE)
+END
+
+IF
+  Global("A7CHR-XP-INIT","LOCALS",0)
+  !Global("A7CHR-ADAPT-XP","LOCALS",0)
+  InParty(Myself)
+  XPGT(Player1,3999)
+  XPLT(Player1,8000)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-XP-INIT","LOCALS",1)
+    AddXPObject(Myself,4000)
+    SetInterrupt(TRUE)
+END
+
+IF
+  Global("A7CHR-XP-INIT","LOCALS",0)
+  !Global("A7CHR-ADAPT-XP","LOCALS",0)
+  InParty(Myself)
+  XPGT(Player1,7999)
+  XPLT(Player1,16000)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-XP-INIT","LOCALS",1)
+    AddXPObject(Myself,8000)
+    SetInterrupt(TRUE)
+END
+
+IF
+  Global("A7CHR-XP-INIT","LOCALS",0)
+  !Global("A7CHR-ADAPT-XP","LOCALS",0)
+  InParty(Myself)
+  XPGT(Player1,15999)
+  XPLT(Player1,32000)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-XP-INIT","LOCALS",1)
+    AddXPObject(Myself,16000)
+    SetInterrupt(TRUE)
+END
+
+IF
+  Global("A7CHR-XP-INIT","LOCALS",0)
+  !Global("A7CHR-ADAPT-XP","LOCALS",0)
+  InParty(Myself)
+  XPGT(Player1,31999)
+  XPLT(Player1,64000)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-XP-INIT","LOCALS",1)
+    AddXPObject(Myself,32000)
+    SetInterrupt(TRUE)
+END
+
+IF
+  Global("A7CHR-XP-INIT","LOCALS",0)
+  !Global("A7CHR-ADAPT-XP","LOCALS",0)
+  InParty(Myself)
+  XPGT(Player1,63999)
+  XPLT(Player1,125000)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-XP-INIT","LOCALS",1)
+    AddXPObject(Myself,64000)
+    SetInterrupt(TRUE)
+END
+
+IF
+  Global("A7CHR-XP-INIT","LOCALS",0)
+  !Global("A7CHR-ADAPT-XP","LOCALS",0)
+  InParty(Myself)
+  XPGT(Player1,124999)
+  XPLT(Player1,250000)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-XP-INIT","LOCALS",1)
+    AddXPObject(Myself,125000)
+    SetInterrupt(TRUE)
+END
+
+IF
+  Global("A7CHR-XP-INIT","LOCALS",0)
+  !Global("A7CHR-ADAPT-XP","LOCALS",0)
+  InParty(Myself)
+  XPGT(Player1,249999)
+  XPLT(Player1,500000)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-XP-INIT","LOCALS",1)
+    AddXPObject(Myself,250000)
+    SetInterrupt(TRUE)
+END
+
+IF
+  Global("A7CHR-XP-INIT","LOCALS",0)
+  !Global("A7CHR-ADAPT-XP","LOCALS",0)
+  InParty(Myself)
+  XPGT(Player1,499999)
+  XPLT(Player1,750000)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-XP-INIT","LOCALS",1)
+    AddXPObject(Myself,500000)
+    SetInterrupt(TRUE)
+END
+
+IF
+  Global("A7CHR-XP-INIT","LOCALS",0)
+  !Global("A7CHR-ADAPT-XP","LOCALS",0)
+  InParty(Myself)
+  XPGT(Player1,749999)
+  XPLT(Player1,1000000)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-XP-INIT","LOCALS",1)
+    AddXPObject(Myself,750000)
+    SetInterrupt(TRUE)
+END
+
+IF
+  Global("A7CHR-XP-INIT","LOCALS",0)
+  !Global("A7CHR-ADAPT-XP","LOCALS",0)
+  InParty(Myself)
+  XPGT(Player1,999999)
+  XPLT(Player1,1250000)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-XP-INIT","LOCALS",1)
+    AddXPObject(Myself,1000000)
+    SetInterrupt(TRUE)
+END
+
+IF
+  Global("A7CHR-XP-INIT","LOCALS",0)
+  !Global("A7CHR-ADAPT-XP","LOCALS",0)
+  InParty(Myself)
+  XPGT(Player1,1249999)
+  XPLT(Player1,1500000)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-XP-INIT","LOCALS",1)
+    AddXPObject(Myself,1250000)
+    SetInterrupt(TRUE)
+END
+
+IF
+  Global("A7CHR-XP-INIT","LOCALS",0)
+  !Global("A7CHR-ADAPT-XP","LOCALS",0)
+  InParty(Myself)
+  XPGT(Player1,1499999)
+  XPLT(Player1,1750000)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-XP-INIT","LOCALS",1)
+    AddXPObject(Myself,1500000)
+    SetInterrupt(TRUE)
+END
+
+IF
+  Global("A7CHR-XP-INIT","LOCALS",0)
+  !Global("A7CHR-ADAPT-XP","LOCALS",0)
+  InParty(Myself)
+  XPGT(Player1,1749999)
+  XPLT(Player1,2000000)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-XP-INIT","LOCALS",1)
+    AddXPObject(Myself,1750000)
+    SetInterrupt(TRUE)
+END
+
+IF
+  Global("A7CHR-XP-INIT","LOCALS",0)
+  !Global("A7CHR-ADAPT-XP","LOCALS",0)
+  InParty(Myself)
+  XPGT(Player1,1999999)
+  XPLT(Player1,2250000)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-XP-INIT","LOCALS",1)
+    AddXPObject(Myself,2000000)
+    SetInterrupt(TRUE)
+END
+
+IF
+  Global("A7CHR-XP-INIT","LOCALS",0)
+  !Global("A7CHR-ADAPT-XP","LOCALS",0)
+  InParty(Myself)
+  XPGT(Player1,2249999)
+  XPLT(Player1,2500000)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-XP-INIT","LOCALS",1)
+    AddXPObject(Myself,2250000)
+    SetInterrupt(TRUE)
+END
+
+IF
+  Global("A7CHR-XP-INIT","LOCALS",0)
+  !Global("A7CHR-ADAPT-XP","LOCALS",0)
+  InParty(Myself)
+  XPGT(Player1,2499999)
+  XPLT(Player1,2750000)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-XP-INIT","LOCALS",1)
+    AddXPObject(Myself,2500000)
+    SetInterrupt(TRUE)
+END
+
+IF
+  Global("A7CHR-XP-INIT","LOCALS",0)
+  !Global("A7CHR-ADAPT-XP","LOCALS",0)
+  InParty(Myself)
+  XPGT(Player1,2749999)
+  XPLT(Player1,3000000)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-XP-INIT","LOCALS",1)
+    AddXPObject(Myself,2750000)
+    SetInterrupt(TRUE)
+END
+
+IF
+  Global("A7CHR-XP-INIT","LOCALS",0)
+  !Global("A7CHR-ADAPT-XP","LOCALS",0)
+  InParty(Myself)
+  XPGT(Player1,2999999)
+  XPLT(Player1,3250000)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-XP-INIT","LOCALS",1)
+    AddXPObject(Myself,3000000)
+    SetInterrupt(TRUE)
+END
+
+IF
+  Global("A7CHR-XP-INIT","LOCALS",0)
+  !Global("A7CHR-ADAPT-XP","LOCALS",0)
+  InParty(Myself)
+  XPGT(Player1,3249999)
+  XPLT(Player1,3500000)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-XP-INIT","LOCALS",1)
+    AddXPObject(Myself,3250000)
+    SetInterrupt(TRUE)
+END
+
+IF
+  Global("A7CHR-XP-INIT","LOCALS",0)
+  !Global("A7CHR-ADAPT-XP","LOCALS",0)
+  InParty(Myself)
+  XPGT(Player1,3499999)
+  XPLT(Player1,3750000)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-XP-INIT","LOCALS",1)
+    AddXPObject(Myself,3500000)
+    SetInterrupt(TRUE)
+END
+
+IF
+  Global("A7CHR-XP-INIT","LOCALS",0)
+  !Global("A7CHR-ADAPT-XP","LOCALS",0)
+  InParty(Myself)
+  XPGT(Player1,3749999)
+  XPLT(Player1,4000000)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-XP-INIT","LOCALS",1)
+    AddXPObject(Myself,3750000)
+    SetInterrupt(TRUE)
+END
+
+IF
+  Global("A7CHR-XP-INIT","LOCALS",0)
+  !Global("A7CHR-ADAPT-XP","LOCALS",0)
+  InParty(Myself)
+  XPGT(Player1,3999999)
+  XPLT(Player1,4250000)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-XP-INIT","LOCALS",1)
+    AddXPObject(Myself,4000000)
+    SetInterrupt(TRUE)
+END
+
+IF
+  Global("A7CHR-XP-INIT","LOCALS",0)
+  !Global("A7CHR-ADAPT-XP","LOCALS",0)
+  InParty(Myself)
+  XPGT(Player1,4249999)
+  XPLT(Player1,4500000)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-XP-INIT","LOCALS",1)
+    AddXPObject(Myself,4250000)
+    SetInterrupt(TRUE)
+END
+
+IF
+  Global("A7CHR-XP-INIT","LOCALS",0)
+  !Global("A7CHR-ADAPT-XP","LOCALS",0)
+  InParty(Myself)
+  XPGT(Player1,4499999)
+  XPLT(Player1,4750000)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-XP-INIT","LOCALS",1)
+    AddXPObject(Myself,4500000)
+    SetInterrupt(TRUE)
+END
+
+IF
+  Global("A7CHR-XP-INIT","LOCALS",0)
+  !Global("A7CHR-ADAPT-XP","LOCALS",0)
+  InParty(Myself)
+  XPGT(Player1,4749999)
+  XPLT(Player1,5000000)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-XP-INIT","LOCALS",1)
+    AddXPObject(Myself,4750000)
+    SetInterrupt(TRUE)
+END
+
+IF
+  Global("A7CHR-XP-INIT","LOCALS",0)
+  !Global("A7CHR-ADAPT-XP","LOCALS",0)
+  InParty(Myself)
+  XPGT(Player1,4999999)
+  XPLT(Player1,5250000)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-XP-INIT","LOCALS",1)
+    AddXPObject(Myself,5000000)
+    SetInterrupt(TRUE)
+END
+
+IF
+  Global("A7CHR-XP-INIT","LOCALS",0)
+  !Global("A7CHR-ADAPT-XP","LOCALS",0)
+  InParty(Myself)
+  XPGT(Player1,5249999)
+  XPLT(Player1,5500000)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-XP-INIT","LOCALS",1)
+    AddXPObject(Myself,5250000)
+    SetInterrupt(TRUE)
+END
+
+IF
+  Global("A7CHR-XP-INIT","LOCALS",0)
+  !Global("A7CHR-ADAPT-XP","LOCALS",0)
+  InParty(Myself)
+  XPGT(Player1,5499999)
+  XPLT(Player1,5750000)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-XP-INIT","LOCALS",1)
+    AddXPObject(Myself,5500000)
+    SetInterrupt(TRUE)
+END
+
+IF
+  Global("A7CHR-XP-INIT","LOCALS",0)
+  !Global("A7CHR-ADAPT-XP","LOCALS",0)
+  InParty(Myself)
+  XPGT(Player1,5749999)
+  XPLT(Player1,6000000)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-XP-INIT","LOCALS",1)
+    AddXPObject(Myself,5750000)
+    SetInterrupt(TRUE)
+END
+
+IF
+  Global("A7CHR-XP-INIT","LOCALS",0)
+  !Global("A7CHR-ADAPT-XP","LOCALS",0)
+  InParty(Myself)
+  XPGT(Player1,5999999)
+  XPLT(Player1,6250000)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-XP-INIT","LOCALS",1)
+    AddXPObject(Myself,6000000)
+    SetInterrupt(TRUE)
+END
+
+IF
+  Global("A7CHR-XP-INIT","LOCALS",0)
+  !Global("A7CHR-ADAPT-XP","LOCALS",0)
+  InParty(Myself)
+  XPGT(Player1,6249999)
+  XPLT(Player1,6500000)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-XP-INIT","LOCALS",1)
+    AddXPObject(Myself,6250000)
+    SetInterrupt(TRUE)
+END
+
+IF
+  Global("A7CHR-XP-INIT","LOCALS",0)
+  !Global("A7CHR-ADAPT-XP","LOCALS",0)
+  InParty(Myself)
+  XPGT(Player1,6499999)
+  XPLT(Player1,6750000)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-XP-INIT","LOCALS",1)
+    AddXPObject(Myself,6500000)
+    SetInterrupt(TRUE)
+END
+
+IF
+  Global("A7CHR-XP-INIT","LOCALS",0)
+  !Global("A7CHR-ADAPT-XP","LOCALS",0)
+  InParty(Myself)
+  XPGT(Player1,6749999)
+  XPLT(Player1,7000000)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-XP-INIT","LOCALS",1)
+    AddXPObject(Myself,6750000)
+    SetInterrupt(TRUE)
+END
+
+IF
+  Global("A7CHR-XP-INIT","LOCALS",0)
+  !Global("A7CHR-ADAPT-XP","LOCALS",0)
+  InParty(Myself)
+  XPGT(Player1,6999999)
+  XPLT(Player1,7250000)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-XP-INIT","LOCALS",1)
+    AddXPObject(Myself,7000000)
+    SetInterrupt(TRUE)
+END
+
+IF
+  Global("A7CHR-XP-INIT","LOCALS",0)
+  !Global("A7CHR-ADAPT-XP","LOCALS",0)
+  InParty(Myself)
+  XPGT(Player1,7249999)
+  XPLT(Player1,7500000)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-XP-INIT","LOCALS",1)
+    AddXPObject(Myself,7250000)
+    SetInterrupt(TRUE)
+END
+
+IF
+  Global("A7CHR-XP-INIT","LOCALS",0)
+  !Global("A7CHR-ADAPT-XP","LOCALS",0)
+  InParty(Myself)
+  XPGT(Player1,7499999)
+  XPLT(Player1,7750000)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-XP-INIT","LOCALS",1)
+    AddXPObject(Myself,7500000)
+    SetInterrupt(TRUE)
+END
+
+IF
+  Global("A7CHR-XP-INIT","LOCALS",0)
+  !Global("A7CHR-ADAPT-XP","LOCALS",0)
+  InParty(Myself)
+  XPGT(Player1,7749999)
+  XPLT(Player1,8000000)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-XP-INIT","LOCALS",1)
+    AddXPObject(Myself,7750000)
+    SetInterrupt(TRUE)
+END
+
+IF
+  Global("A7CHR-XP-INIT","LOCALS",0)
+  !Global("A7CHR-ADAPT-XP","LOCALS",0)
+  InParty(Myself)
+  XPGT(Player1,7999999)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-XP-INIT","LOCALS",1)
+    AddXPObject(Myself,8000000)
+    SetInterrupt(TRUE)
+END
+
+IF
+  !Global("A7CHR-XP-INIT","LOCALS",2)
+  InParty(Myself)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-XP-INIT","LOCALS",2)
+    SetInterrupt(TRUE)
+END

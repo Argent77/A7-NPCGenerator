@@ -1,0 +1,12 @@
+// Initializing BG1 area code mappings
+// Variable "AREA_ARxxxx" holds the "ARxxxx" resref specific to the current game
+// Alternate notation: $AREA(~ARxxxx~)
+ACTION_IF (GAME_IS ~bg1 totsc bgee~) BEGIN
+  INCLUDE ~%MOD_FOLDER%/lib/areacodes-bg.tpa~
+END ACTION_IF (GAME_IS ~eet~) BEGIN
+  INCLUDE ~%MOD_FOLDER%/lib/areacodes-eet.tpa~
+END ELSE ACTION_IF (GAME_IS ~bgt~) BEGIN
+  INCLUDE ~%MOD_FOLDER%/lib/areacodes-bgt.tpa~
+END ELSE ACTION_IF (GAME_IS ~tutu tutu_totsc~) BEGIN
+  INCLUDE ~%MOD_FOLDER%/lib/areacodes-tutu.tpa~
+END

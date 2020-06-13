@@ -1,0 +1,27 @@
+// dialog lines
+@1000 = ~Hello, <SIRMAAM>! I'm waiting for a chance to go out adventuring. Do you need another companion?~
+@1001 = ~Greetings again! Have you changed your mind? Do you need another companion?~
+@1002 = ~Yes, please join the party.~
+@1003 = ~No.~
+@1004 = ~Hello, <SIRMAAM>! I'm waiting for a chance to prove myself in battle. Do you need another companion?~
+@1005 = ~Hello, <SIRMAAM>! I'm waiting for a chance to discover lost knowledge of the arcane arts. Do you need another companion?~
+@1006 = ~Hello, <SIRMAAM>! I'm waiting for a chance to preach the tenets and deeds of my deity all over the realms. Do you need another companion?~
+@1007 = ~Hello, <SIRMAAM>! I'm waiting for a chance to find all the hidden treasures of the world. Do you need another companion?~
+@1008 = ~Hello, <SIRMAAM>! I'm waiting for a chance to entertain everyone in the world with my songs and poems. Do you need another companion?~
+@1009 = ~Hello, <SIRMAAM>! I'm waiting for a chance to smite evil in the name of my god. Do you need another companion?~
+@1010 = ~Hello, <SIRMAAM>! I'm waiting for a chance to wreak havoc in the world for the glory of my patron. Do you need another companion?~
+@1011 = ~Hello, <SIRMAAM>! I'm waiting for a chance to help mother nature in all of Faerûn. Do you need another companion?~
+@1012 = ~Hello, <SIRMAAM>! I'm waiting for a chance to hunt down monsters that threaten nature and people. Do you need another companion?~
+@1013 = ~Hello, <SIRMAAM>! I'm waiting for a chance to learn more about the world, and thus about myself. Do you need another companion?~
+@1014 = ~Sure, you can tag along for a while.~
+@1015 = ~Do you want me to keep following you?~
+@1016 = ~Do you still want me in the party?~
+@1017 = ~Yes, please do.~
+@1018 = ~Please join the party.~
+@1019 = ~No, please stop following us.~
+@1020 = ~No, please stop following us, and give us all your gear.~
+@1021 = ~Yes.~
+@1022 = ~No, I'd rather have you tag along.~
+@1023 = ~No, please wait for us here.~
+@1024 = ~No, please return to the meeting place.~
+@1025 = ~No, please return to the meeting place, and give us all your gear.~

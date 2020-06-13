@@ -1,0 +1,27 @@
+// dialog lines
+@1000 = ~Hallo, <SIRMAAM>! Ich warte auf eine Gelegenheit, mich ins Abenteuer zu stürzen. Benötigt Ihr einen weiteren Gefährten?~
+@1001 = ~Seid wieder gegrüßt! Habt Ihr es Euch anders überlegt? Könnt Ihr einen weiteren Gefährten gebrauchen?~
+@1002 = ~Ja, wir können jemanden wie Euch gebrauchen.~
+@1003 = ~Nein.~
+@1004 = ~Hallo, <SIRMAAM>! Ich warte auf eine Gelegenheit, mich im Kampf zu beweisen. Benötigt Ihr einen weiteren Gefährten?~
+@1005 = ~Hallo, <SIRMAAM>! Ich warte auf eine Gelegenheit, verlorenes Wissen über die arkanen Künste zu entdecken. Benötigt Ihr einen weiteren Gefährten?~
+@1006 = ~Hallo, <SIRMAAM>! Ich warte auf eine Gelegenheit, die Lehren und Taten meiner Gottheit im ganzen Reich zu verkünden. Benötigt Ihr einen weiteren Gefährten?~
+@1007 = ~Hallo, <SIRMAAM>! Ich warte auf eine Gelegenheit, alle verborgenen Schätze der Welt zu finden. Benötigt Ihr einen weiteren Gefährten?~
+@1008 = ~Hallo, <SIRMAAM>! Ich warte auf eine Gelegenheit, die Welt mit meinen Liedern und Reimen zu unterhalten. Benötigt Ihr einen weiteren Gefährten?~
+@1009 = ~Hallo, <SIRMAAM>! Ich warte auf eine Gelegenheit, das Böse im Namen meines Gottes zu bekämpfen. Benötigt Ihr einen weiteren Gefährten?~
+@1010 = ~Hallo, <SIRMAAM>! Ich warte auf eine Gelegenheit, zum Ruhme meiner Schutzgottheit, Chaos und Verwüstung in der Welt anzurichten. Benötigt Ihr einen weiteren Gefährten?~
+@1011 = ~Hallo, <SIRMAAM>! Ich warte auf eine Gelegenheit, Mutter Natur in ganz Faerûn zu helfen. Benötigt Ihr einen weiteren Gefährten?~
+@1012 = ~Hallo, <SIRMAAM>! Ich warte auf eine Gelegenheit, Monster zur jagen, welche Natur und Menschen bedrohen. Benötigt Ihr einen weiteren Gefährten?~
+@1013 = ~Hallo, <SIRMAAM>! Ich warte auf eine Gelegenheit, mehr von der Welt kennenzulernen. Denn dadurch erfahre ich auch etwas über mich selbst. Benötigt Ihr einen weiteren Gefährten?~
+@1014 = ~Klar doch. Ihr könnt uns für eine Weile folgen.~
+@1015 = ~Wollt Ihr, dass ich Euch weiterhin folge?~
+@1016 = ~Wollt Ihr mich weiterhin in der Gruppe haben?~
+@1017 = ~Ja, bitte.~
+@1018 = ~Ihr könnt gerne der Gruppe beitreten.~
+@1019 = ~Nein, bitte nicht.~
+@1020 = ~Nein, bitte nicht. Und übergebt uns Eure Ausrüstung.~
+@1021 = ~Ja, sicher.~
+@1022 = ~Nein. Folgt uns besser mit Abstand.~
+@1023 = ~Nein. Wartet hier auf uns.~
+@1024 = ~Nein. Kehrt bitte zum ursprünglichen Treffpunkt zurück.~
+@1025 = ~Nein. Kehrt bitte zum ursprünglichen Treffpunkt zurück. Und übergebt uns Eure Ausrüstung.~

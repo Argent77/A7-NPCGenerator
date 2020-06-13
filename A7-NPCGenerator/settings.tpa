@@ -1,0 +1,28 @@
+// ********************************************************
+// *** This file is used for automated NPC installation ***
+// ********************************************************
+
+// Set to 1 to search for character files in game resources (such as Abdel or Adelia).
+OUTER_SET AUTO_INSTALL_GAME = 0
+
+// Set to 1 to search for pregenerated or exported character files in the "characters" folder.
+OUTER_SET AUTO_INSTALL_USER = 1
+
+// Set to 1 to adapt experience of NPCs to a similar level as the protagonist when they first join the party.
+OUTER_SET AUTO_INSTALL_ADAPT_XP = 1
+
+// There are two options for installing characters:
+
+// 1. Install all available characters at once
+// Set this variable to 1 to enable this option.
+// This option takes precedence over the second option (setting up individual characters) if enabled.
+OUTER_SET AUTO_INSTALL_ALL_NPCS = 1
+
+// 2. Install characters individually
+// Specify the filename (without extension) for each character that should be considered for installation.
+// Filename length must not exceed 8 characters.
+// Specify a unique numeric index starting at 0 for each character definition.
+// Non-existing or already installed characters will be gracefully skipped by the mod.
+// OUTER_TEXT_SPRINT AUTO_INSTALL_NPC_0 "03MAGE"
+// OUTER_TEXT_SPRINT AUTO_INSTALL_NPC_1 "06RANGER"
+// OUTER_TEXT_SPRINT AUTO_INSTALL_NPC_2 "08BARD"

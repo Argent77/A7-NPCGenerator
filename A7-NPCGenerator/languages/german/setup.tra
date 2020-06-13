@@ -1,0 +1,73 @@
+@1 = ~Benutzerdefinierte NSCs zum Spiel hinzufuegen~
+@2 = ~Nur selbsterstellte Charaktere~
+@3 = ~Nur Charaktere des Spiels~
+@4 = ~Selbsterstellte und Spielcharaktere~
+@5 = ~Automatische Installation (aus settings.tpa)~
+@10 = ~Benutzerdefinierte NSCs deinstallieren~
+@11 = ~Manuell auswaehlen~
+@12 = ~All deinstallieren~
+
+// Strings for interactive character selection
+@50 = ~Verfuegbare Charaktere:~
+@51 = ~Charakteroption auswaehlen:~
+@52 = ~Alle verfuegbaren Charaktere~
+@53 = ~Auswahl beenden~
+@54 = ~Bitte eine gueltige Zahl, A oder X eingeben.~
+@55 = ~Fortfahren (%yes%/%no%)?~
+@56 = ~Bitte %yes% oder %no% eingeben.~
+@57 = ~j~   // assigned to %yes%
+@58 = ~n~   // assigned to %no%
+@59 = ~Soll Erfahrung der NSCs automatisch bei Gruppenaufnahme angepasst werden (%yes%/%no%)?~
+@60 = ~Installiere Charakter:~
+@61 = ~Charakter ausgewaehlt:~
+@62 = ~Charakter deselektiert:~
+@63 = ~Deinstalliere Charakter:~
+@64 = ~Ausgewaehlte Charaktere:~
+@65 = ~ausgewaehlt~
+
+// Info labels
+@90 = ~Geschlecht~
+@91 = ~Klasse~
+@92 = ~Kit~
+@93 = ~Stufe~
+
+// Character gender
+@100 = ~(unbekannt)~
+@101 = ~Maennlich~
+@102 = ~Weiblich~
+
+// Character class
+@110 = ~Magier~
+@111 = ~Kaempfer~
+@112 = ~Kleriker~
+@113 = ~Dieb~
+@114 = ~Barde~
+@115 = ~Paladin~
+@116 = ~Kaempfer/Magier~
+@117 = ~Kaempfer/Kleriker~
+@118 = ~Kaempfer/Dieb~
+@119 = ~Kaempfer/Magier/Dieb~
+@120 = ~Druide~
+@121 = ~Waldlaeufer~
+@122 = ~Magier/Dieb~
+@123 = ~Kleriker/Magier~
+@124 = ~Kleriker/Dieb~
+@125 = ~Kaempfer/Druide~
+@126 = ~Kaempfer/Magier/Kleriker~
+@127 = ~Kleriker/Waldlaeufer~
+@128 = ~Hexenmeister~
+@129 = ~Moench~
+@130 = ~Schamane~
+
+// Character class type
+@140 = ~Kombination~
+@141 = ~Mehrklassig~
+
+
+// Messages
+@500 = ~Spiel wird nicht unterstuetzt.~
+@501 = ~Keine installierten NSCs gefunden.~
+@502 = ~Keine Charaktere verfuegbar.~
+@503 = ~Keine Charaktere ausgewaehlt.~
+@504 = ~Kein unterstuetztes Spiel erkannt.~
+@505 = ~Keine Konfigurationsdatei gefunden.~

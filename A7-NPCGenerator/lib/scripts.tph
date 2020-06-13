@@ -1,0 +1,107 @@
+// Script block added to area scripts for character creation
+<<<<<<<< .../inlined/a7-npcgenerator/create_script.baf
+IF
+  Global("A7CHR-%chr_resref%-CREATED","GLOBAL",0)
+  OR(2)
+    GlobalLT("A7CHR-MOVESTAGE","GLOBAL",%move_stage%)
+    Global("A7CHR-MOVESTAGE","GLOBAL",%move_stage%)
+  %extra_trigger%
+THEN
+  RESPONSE #100
+    SetGlobal("A7CHR-%chr_resref%-CREATED","GLOBAL",1)
+    SetGlobal("A7CHR-%chr_resref%-MOVED","MYAREA",1)
+    CreateCreature("%chr_resref%",[%are_x%.%are_y%],%are_dir%)
+    Continue()
+END
+>>>>>>>>
+
+
+// Script block added to area scripts for moving NPCs to another map
+<<<<<<<< .../inlined/a7-npcgenerator/move_script.baf
+IF
+  Global("A7CHR-%chr_resref%-MOVED","MYAREA",0)
+  !Global("A7CHR-%chr_resref%-CREATED","GLOBAL",0)
+  OR(2)
+    GlobalLT("A7CHR-MOVESTAGE","GLOBAL",%move_stage%)
+    Global("A7CHR-MOVESTAGE","GLOBAL",%move_stage%)
+  !InParty("A7CHR-%chr_resref%")
+  !StateCheck("A7CHR-%chr_resref%",CD_STATE_NOTVALID)
+  !AreaCheckObject("%are_resref%","A7CHR-%chr_resref%")
+  %extra_trigger%
+THEN
+  RESPONSE #100
+    SetGlobal("A7CHR-%chr_resref%-MOVED","MYAREA",1)
+    MoveGlobal("%are_resref%","A7CHR-%chr_resref%",[%are_x%.%are_y%])
+    ActionOverride("A7CHR-%chr_resref%",Face(%are_dir%))
+    Continue()
+END
+>>>>>>>>
+
+
+// Script block added to area scripts to set a new "home" location for returning NPCs
+<<<<<<<< .../inlined/a7-npcgenerator/move_init.baf
+IF
+  Global("A7CHR-MOVED","MYAREA",0)
+  GlobalLT("A7CHR-MOVESTAGE","GLOBAL",%move_stage%)
+  %extra_trigger%
+THEN
+  RESPONSE #100
+    SetGlobal("A7CHR-MOVED","MYAREA",1)
+    SetGlobal("A7CHR-MOVESTAGE","GLOBAL",%move_stage%)
+    Continue()
+END
+
+IF
+  Global("A7CHR-MOVED","MYAREA",0)
+  !GlobalLT("A7CHR-MOVESTAGE","GLOBAL",%move_stage%)
+  %extra_trigger%
+THEN
+  RESPONSE #100
+    SetGlobal("A7CHR-MOVED","MYAREA",1)
+    Continue()
+END
+>>>>>>>>
+
+
+// Script for delaying NPC creation in special cases
+<<<<<<<< .../inlined/a7-npcgenerator/init_enable.baf
+IF
+  Global("A7CHR-INIT-ENABLED","GLOBAL",0)
+THEN
+  RESPONSE #100
+    SetGlobal("A7CHR-INIT-ENABLED","GLOBAL",1)
+    Continue()
+END
+>>>>>>>>
+
+
+// Script for reacting to breaking point trigger
+<<<<<<<< .../inlined/a7-npcgenerator/breaking_point.baf
+IF
+  BreakingPoint()
+  !Global("A7CHR-CUSTOM","LOCALS",0)
+  !StateCheck(Player1,CD_STATE_NOTVALID)
+THEN
+  RESPONSE #100
+    Wait(1)
+    Dialog(Player1)
+END
+>>>>>>>>
+
+
+// Script for NPC returning to meeting location
+<<<<<<<< .../inlined/a7-npcgenerator/npc_return_script.baf
+IF
+  Global("A7CHR-RETURN","LOCALS",1)
+  Name("A7CHR-%chr_resref%",Myself)
+  Global("A7CHR-MOVESTAGE","GLOBAL",%move_stage%)
+  !InParty(Myself)
+  Global("A7CHR-FOLLOWER","LOCALS",0)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-RETURN","LOCALS",0)
+    EscapeAreaMove("%are_resref%",%are_x%,%are_y%,%are_dir%)
+    SetInterrupt(TRUE)
+END
+>>>>>>>>

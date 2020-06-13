@@ -1,0 +1,73 @@
+@1 = ~Add custom NPCs to the game~
+@2 = ~User characters only~
+@3 = ~Game characters only~
+@4 = ~User characters and game characters~
+@5 = ~Automated installation (from settings.tpa)~
+@10 = ~Remove custom NPCs from the game~
+@11 = ~Select individually~
+@12 = ~Remove all~
+
+// Strings for interactive character selection
+@50 = ~Available characters:~
+@51 = ~Select character option:~
+@52 = ~All available characters~
+@53 = ~Finish selection~
+@54 = ~Please enter a valid character index, A or X.~
+@55 = ~Continue (%yes%/%no%)?~
+@56 = ~Please enter %yes% or %no%.~
+@57 = ~y~   // assigned to %yes%
+@58 = ~n~   // assigned to %no%
+@59 = ~Should NPCs automatically adapt experience when joining the party (%yes%/%no%)?~
+@60 = ~Installing character:~
+@61 = ~Character selected:~
+@62 = ~Character unselected:~
+@63 = ~Uninstalling character:~
+@64 = ~Selected characters:~
+@65 = ~selected~
+
+// Info labels
+@90 = ~Gender~
+@91 = ~Class~
+@92 = ~Kit~
+@93 = ~Level~
+
+// Character gender
+@100 = ~(unknown)~
+@101 = ~Male~
+@102 = ~Female~
+
+// Character class
+@110 = ~Mage~
+@111 = ~Fighter~
+@112 = ~Cleric~
+@113 = ~Thief~
+@114 = ~Bard~
+@115 = ~Paladin~
+@116 = ~Fighter/Mage~
+@117 = ~Fighter/Cleric~
+@118 = ~Fighter/Thief~
+@119 = ~Fighter/Mage/Thief~
+@120 = ~Druid~
+@121 = ~Ranger~
+@122 = ~Mage/Thief~
+@123 = ~Cleric/Mage~
+@124 = ~Cleric/Thief~
+@125 = ~Fighter/Druid~
+@126 = ~Fighter/Mage/Cleric~
+@127 = ~Cleric/Ranger~
+@128 = ~Sorcerer~
+@129 = ~Monk~
+@130 = ~Shaman~
+
+// Character class type
+@140 = ~multi~
+@141 = ~dual~
+
+
+// Messages
+@500 = ~Game is not supported.~
+@501 = ~No installed NPCs found.~
+@502 = ~No characters available.~
+@503 = ~No characters selected.~
+@504 = ~No supported games detected.~
+@505 = ~No settings file found.~

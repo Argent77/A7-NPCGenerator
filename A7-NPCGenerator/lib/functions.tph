@@ -1,0 +1,398 @@
+<<<<<<<< .../inlined/a7-npcgenerator/blank
+>>>>>>>>
+
+<<<<<<<< .../inlined/a7-npcgenerator/a7-npc.2da
+2DA V1.0
+*
+    RESREF    SCRIPT_NAME   ARE       ARE_X     ARE_Y     ARE_DIR
+>>>>>>>>
+
+RANDOM_SEED ~~
+
+// Returns the game-specific BG1 area resref
+DEFINE_ACTION_FUNCTION RESOLVE_ARE_RESREF
+STR_VAR
+  game    = ~~
+  are_src = ~~
+RET
+  are_dst
+BEGIN
+  ACTION_TO_UPPER ~are_src~
+  LOG ~DEBUG: game=%game%, area=%are_src%~
+  ACTION_IF (~%game%~ STR_EQ ~BG1~ && VARIABLE_IS_SET EVAL ~AREA_%are_src%~) BEGIN
+    OUTER_TEXT_SPRINT are_dst EVAL ~%AREA_%are_src%%~
+  END ELSE BEGIN
+    OUTER_TEXT_SPRINT are_dst ~%are_src%~
+  END
+END
+
+DEFINE_PATCH_FUNCTION RESOLVE_ARE_RESREF
+STR_VAR
+  game    = ~~
+  are_src = ~~
+RET
+  are_dst
+BEGIN
+  INNER_ACTION BEGIN
+    LAF RESOLVE_ARE_RESREF STR_VAR game are_src RET are_dst END
+  END
+END
+
+
+// Returns the path to the "characters" folder containing custom CHR files
+DEFINE_ACTION_FUNCTION GET_CHARACTER_DIR
+RET
+  dir
+BEGIN
+  OUTER_TEXT_SPRINT dir ~~
+  ACTION_IF (GAME_IS ~bgee bg2ee eet iwdee pstee~) BEGIN
+    OUTER_TEXT_SPRINT dir ~%USER_DIRECTORY%/characters~
+  END ELSE BEGIN
+    OUTER_TEXT_SPRINT dir ~characters~
+  END
+END
+
+
+// Marks the specified character as installed
+DEFINE_ACTION_FUNCTION REGISTER_CHAR
+INT_VAR
+  are_x   = 0
+  are_y   = 0
+  are_dir = 0
+STR_VAR
+  game = ~~
+  chr_resref = ~~
+  are_resref = ~~
+  script_name = ~~
+RET
+  success
+BEGIN
+  OUTER_SET success = 0
+  ACTION_IF (NOT (~%chr_resref%~ STR_EQ ~~ || ~%are_resref%~ STR_EQ ~~)) BEGIN
+    ACTION_IF (NOT FILE_EXISTS_IN_GAME ~a7-npc.2da~) BEGIN
+      COPY ~.../inlined/a7-npcgenerator/a7-npc.2da~ ~override~
+    END
+
+    // Determine game-specific ARE resref
+    LAF RESOLVE_ARE_RESREF STR_VAR game are_src = EVAL ~%are_resref%~ RET are_resref = are_dst END
+
+    OUTER_SET exists = 0
+    COPY_EXISTING ~a7-npc.2da~ ~override~
+      READ_2DA_ENTRIES_NOW npcs 1
+      FOR (row = 3; row < npcs; ++row) BEGIN
+        READ_2DA_ENTRY_FORMER npcs row 1 chr
+        READ_2DA_ENTRY_FORMER npcs row 3 are
+        PATCH_IF (~%chr%~ STR_EQ ~%chr_resref%~ && ~%are%~ STR_EQ ~%are_resref%~) BEGIN
+          SET exists = 1
+          SET row = npcs
+        END
+      END
+    BUT_ONLY
+
+    ACTION_IF (exists = 0) BEGIN
+      OUTER_SET index = npcs - 3
+      ACTION_IF (~%script_name%~ STR_EQ ~~) BEGIN
+        OUTER_TEXT_SPRINT script_name ~%resref%~
+      END
+      APPEND ~a7-npc.2da~ ~%index% %chr_resref% %script_name% %are_resref% %are_x% %are_y% %are_dir%~
+      OUTER_SET success = 1
+      COPY_EXISTING ~a7-npc.2da~ ~override~
+        PRETTY_PRINT_2DA
+      BUT_ONLY
+    END
+  END
+END
+
+// Marks the specified character as uninstalled
+DEFINE_ACTION_FUNCTION UNREGISTER_CHAR
+STR_VAR
+  chr_resref = ~~
+RET
+  success
+BEGIN
+  OUTER_SET success = 0
+  ACTION_IF (FILE_EXISTS_IN_GAME ~a7-npc.2da~) BEGIN
+    COPY_EXISTING ~a7-npc.2da~ ~override~
+      READ_2DA_ENTRIES_NOW npcs 1
+      FOR (row = npcs - 1; row >= 3; --row) BEGIN
+        READ_2DA_ENTRY_FORMER npcs row 1 value
+        PATCH_IF (~%value%~ STR_EQ ~%chr_resref%~) BEGIN
+          REMOVE_2DA_ROW row 1
+          SET success = 1
+          SET npcs -= 1
+        END
+      END
+    BUT_ONLY
+
+    ACTION_IF (npcs <= 3 && FILE_EXISTS ~override/a7-npc.2da~) BEGIN
+      DELETE ~override/a7-npc.2da~
+    END
+  END
+END
+
+
+// Returns whether the specified characters is already installed
+DEFINE_ACTION_FUNCTION IS_CHAR_REGISTERED
+STR_VAR
+  chr_resref = ~~
+RET
+  registered
+BEGIN
+  OUTER_SET registered = 0
+  ACTION_IF (FILE_EXISTS_IN_GAME ~a7-npc.2da~ && NOT ~%chr_resref%~ STR_EQ ~~) BEGIN
+    COPY_EXISTING ~a7-npc.2da~ ~override~
+      READ_2DA_ENTRIES_NOW npcs 1
+      FOR (row = 3; row < npcs; ++row) BEGIN
+        READ_2DA_ENTRY_FORMER npcs row 1 chr
+        PATCH_IF (~%chr%~ STR_EQ ~%chr_resref%~) BEGIN
+          SET registered = 1
+          SET row = npcs
+        END
+      END
+    BUT_ONLY
+  END
+END
+
+DEFINE_PATCH_FUNCTION IS_CHAR_REGISTERED
+STR_VAR
+  chr_resref = ~~
+RET
+  registered
+BEGIN
+  INNER_ACTION BEGIN
+    LAF IS_CHAR_REGISTERED STR_VAR chr_resref RET registered END
+  END
+END
+
+
+// Returns the area script associated with the specified area
+DEFINE_ACTION_FUNCTION GET_AREA_SCRIPT
+INT_VAR
+  enforce = 1 // whether to enforce creation of an area script if none exist
+STR_VAR
+  are_resref = ~~
+RET
+  are_script
+BEGIN
+  OUTER_TEXT_SPRINT are_script ~~
+  ACTION_IF (NOT ~%are_resref%~ STR_EQ ~~) BEGIN
+    COPY_EXISTING ~%are_resref%.ARE~ ~override~
+      READ_ASCII 0 sig (8)
+      PATCH_IF (~%sig%~ STR_EQ ~AREAV1.0~) BEGIN
+        READ_ASCII AREA_SCRIPT are_script (8) NULL
+        PATCH_IF (NOT FILE_EXISTS_IN_GAME ~%are_script%.BCS~) BEGIN
+          PATCH_IF (enforce) BEGIN
+            TEXT_SPRINT are_script ~%are_resref%~
+            WRITE_ASCIIE AREA_SCRIPT ~%are_script%~ (8)
+            INNER_ACTION BEGIN
+              COPY ~.../inlined/a7-npcgenerator/blank~ ~override/%are_resref%.BCS~
+                INSERT_BYTES 0 (6 - SOURCE_SIZE)
+                WRITE_ASCIIE 0 ~SC%LNL%SC%LNL%~
+            END
+          END ELSE BEGIN
+            TEXT_SPRINT are_script ~~
+          END
+        END
+      END
+    BUT_ONLY IF_EXISTS
+  END
+END
+
+
+// Returns position and direction used for creating a character in the specified area.
+DEFINE_ACTION_FUNCTION GET_FREE_NPC_POSITION
+STR_VAR
+  game       = ~~
+  are_resref = ~~
+RET
+  x y dir
+  success // Returns 1 if a free slot is found. Returns 0 if an occupied slot is reused.
+BEGIN
+  OUTER_SET x = 0
+  OUTER_SET y = 0
+  OUTER_SET dir = 0
+  OUTER_SET success = 0
+  ACTION_IF (NOT ~%are_resref%~ STR_EQ ~~) BEGIN
+    // Determine game-specific ARE resref
+    LAF RESOLVE_ARE_RESREF STR_VAR game are_src = EVAL ~%are_resref%~ RET are_resref = are_dst END
+
+    OUTER_SET npcs = 0
+    COPY_EXISTING ~a7-npc.2da~ ~override~
+      READ_2DA_ENTRIES_NOW npcs 1
+    BUT_ONLY IF_EXISTS
+
+    OUTER_SET def_x = 0
+    OUTER_SET def_y = 0
+    OUTER_SET def_dir = 0
+    OUTER_SET src_x = 0
+    OUTER_SET src_y = 0
+    OUTER_SET src_dir = 0
+    COPY ~%MOD_FOLDER%/2da/a7-positions.2da~ ~%MOD_FOLDER%/2da/a7-positions.2da~
+      READ_2DA_ENTRIES_NOW position 1
+      FOR (row1 = 3; row1 < position; ++row1) BEGIN
+        READ_2DA_ENTRY_FORMER position row1 3 src_ref
+        LPF RESOLVE_ARE_RESREF STR_VAR game are_src = EVAL ~%src_ref%~ RET src_ref = are_dst END
+        PATCH_IF (~%src_ref%~ STR_EQ ~%are_resref%~) BEGIN
+          READ_2DA_ENTRY_FORMER position row1 4 src_x
+          READ_2DA_ENTRY_FORMER position row1 5 src_y
+          READ_2DA_ENTRY_FORMER position row1 6 src_dir
+          PATCH_IF (def_x = 0 && RANDOM(0 99) < 20) BEGIN
+            // add some randomness to the fallback position
+            SET def_x = src_x
+            SET def_y = src_y
+            SET def_dir = src_dir
+          END
+
+          PATCH_IF (npcs <= 3) BEGIN
+            // no NPC installed yet? Use first available slot
+            SET x = src_x
+            SET y = src_y
+            SET dir = src_dir
+            SET success = 1
+            SET row1 = position
+          END ELSE BEGIN
+            // check for matching entry
+            SET match = 0
+            FOR (row2 = 3; row2 < npcs; ++row2) BEGIN
+              READ_2DA_ENTRY_FORMER npcs row2 3 dst_ref
+              PATCH_IF (~%dst_ref%~ STR_EQ ~%src_ref%~) BEGIN
+                READ_2DA_ENTRY_FORMER npcs row2 4 dst_x
+                READ_2DA_ENTRY_FORMER npcs row2 5 dst_y
+                PATCH_IF (IS_AN_INT ~dst_x~ && IS_AN_INT ~dst_y~ && dst_x = src_x && dst_y = src_y) BEGIN
+                  SET match = 1
+                  SET row2 = npcs
+                END
+              END
+            END
+            PATCH_IF (NOT match) BEGIN
+              SET x = src_x
+              SET y = src_y
+              SET dir = src_dir
+              SET success = 1
+              SET row1 = position
+            END
+          END
+        END
+      END
+    BUT_ONLY
+
+    // fall back to last suitable source position
+    ACTION_IF (NOT success) BEGIN
+      OUTER_SET x = (def_x != 0) ? def_x : src_x
+      OUTER_SET y = (def_x != 0) ? def_y : src_y
+      OUTER_SET dir = (def_x != 0) ? def_dir : src_dir
+    END
+  END
+END
+
+
+// Returns an array containing all areas where NPCs can be created
+DEFINE_ACTION_FUNCTION GET_GAME_AREAS
+INT_VAR
+  loc_idx = "-1"  // Limit match to areas matching the specified location index (-1 = ignore)
+STR_VAR
+  game = ~~       // Supported games: BG1, SOD, SOA, TOB
+RET
+  areas           // number of valid entries in "areas" array
+RET_ARRAY
+  areas           // indexed array containing area resrefs associated with the specified game
+BEGIN
+  OUTER_SET areas = 0
+  ACTION_IF (NOT ~%game%~ STR_EQ ~~) BEGIN
+    COPY ~%MOD_FOLDER%/2da/a7-positions.2da~ ~%MOD_FOLDER%/2da/a7-positions.2da~
+      READ_2DA_ENTRIES_NOW position 1
+      FOR (row = 3; row < position; ++row) BEGIN
+        READ_2DA_ENTRY_FORMER position row 1 src_game
+        PATCH_IF (~%src_game%~ STR_EQ ~%game%~) BEGIN
+          READ_2DA_ENTRY_FORMER position row 2 src_loc_idx
+          READ_2DA_ENTRY_FORMER position row 3 src_area
+          LPF RESOLVE_ARE_RESREF STR_VAR game are_src = EVAL ~%src_area%~ RET src_area = are_dst END
+          SET exists = 0
+          FOR (i = 0; i < areas && exists = 0; ++i) BEGIN
+            SET exists = $areas(~%i%~) STR_EQ ~%src_area%~
+          END
+          PATCH_IF (exists = 0) BEGIN
+            PATCH_IF (loc_idx < 0 || loc_idx = src_loc_idx) BEGIN
+              TEXT_SPRINT $areas(~%areas%~) ~%src_area%~
+              SET areas += 1
+            END
+          END
+        END
+      END
+    BUT_ONLY
+    ACTION_IF (areas = 0) BEGIN
+      // work around a WeiDU bug which triggers error if array is empty
+      OUTER_TEXT_SPRINT $areas(~%areas%~) ~~
+    END
+  END
+END
+
+
+// Adds the specified local variable to the current creature
+DEFINE_PATCH_FUNCTION ADD_LOCAL_VARIABLE
+INT_VAR
+  value = 0
+STR_VAR
+  name = ~~
+BEGIN
+  SET len = STRING_LENGTH ~%name%~
+  PATCH_IF (len > 0) BEGIN
+    PATCH_IF (len > 32) BEGIN
+      INNER_PATCH_SAVE name ~%name%~ BEGIN
+        DELETE_BYTES 32 (len - 32)
+      END
+    END
+    LPF ADD_CRE_EFFECT
+      INT_VAR
+        opcode = 187  // Set local variable
+        parameter1 = value
+        timing = 9  // Instant/permanent
+      STR_VAR
+        effvar = EVAL ~%name%~
+    END
+  END
+END
+
+// Returns secondary type ID if available, -1 otherwise.
+DEFINE_ACTION_FUNCTION GET_CUSTOM_SECTYPE
+STR_VAR
+  name = ~~
+RET
+  type
+BEGIN
+  OUTER_SET type = "-1"
+  ACTION_IF (NOT ~%name%~ STR_EQ ~~) BEGIN
+    COPY_EXISTING ~msectype.2da~ ~override~
+      READ_2DA_ENTRIES_NOW msectype 1
+      FOR (row = 3; row < msectype; ++row) BEGIN
+        READ_2DA_ENTRY_FORMER msectype row 0 value
+        PATCH_IF (~%value%~ STR_EQ ~%name%~) BEGIN
+          SET type = row - 3
+          SET row = msectype
+        END
+      END
+    BUT_ONLY
+  END
+END
+
+// Adds a new secondary type and returns its ID. Returns -1 if entry could not be added.
+DEFINE_ACTION_FUNCTION ADD_CUSTOM_SECTYPE
+INT_VAR
+  strref = "-1"
+STR_VAR
+  name = ~~
+RET
+  type
+BEGIN
+  OUTER_SET type = "-1"
+  ACTION_IF (NOT ~%name%~ STR_EQ ~~) BEGIN
+    LAF GET_CUSTOM_SECTYPE STR_VAR name RET type END
+    ACTION_IF (type < 0) BEGIN
+      COPY_EXISTING ~msectype.2da~ ~override~
+        READ_2DA_ENTRIES_NOW msectype 1
+      BUT_ONLY
+      APPEND ~msectype.2da~ ~%name% %strref%~
+      OUTER_SET type = msectype - 3
+    END
+  END
+END
