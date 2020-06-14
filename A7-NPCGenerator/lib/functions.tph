@@ -53,6 +53,30 @@ BEGIN
 END
 
 
+// Ensures that the returned resref contains only characters allowed in filename or scriptname.
+DEFINE_ACTION_FUNCTION GET_SAFE_RESREF
+STR_VAR resref = ~~
+RET resref
+BEGIN
+  ACTION_IF (NOT ~%resref%~ STR_EQ ~~) BEGIN
+    OUTER_SET len = STRING_LENGTH ~%resref%~
+    OUTER_PATCH_SAVE resref ~%resref%~ BEGIN
+      PATCH_IF (len > 8) BEGIN
+        DELETE_BYTES 8 (len - 8)
+      END
+      REPLACE_TEXTUALLY ~[ %TAB%"']~ ~_~
+    END
+  END
+END
+
+DEFINE_PATCH_FUNCTION GET_SAFE_RESREF
+STR_VAR resref = ~~
+RET resref
+BEGIN
+  INNER_ACTION BEGIN LAF GET_SAFE_RESREF STR_VAR resref RET resref END END
+END
+
+
 // Marks the specified character as installed
 DEFINE_ACTION_FUNCTION REGISTER_CHAR
 INT_VAR
@@ -61,14 +85,14 @@ INT_VAR
   are_dir = 0
 STR_VAR
   game = ~~
-  chr_resref = ~~
+  cre_resref = ~~
   are_resref = ~~
   script_name = ~~
 RET
   success
 BEGIN
   OUTER_SET success = 0
-  ACTION_IF (NOT (~%chr_resref%~ STR_EQ ~~ || ~%are_resref%~ STR_EQ ~~)) BEGIN
+  ACTION_IF (NOT (~%cre_resref%~ STR_EQ ~~ || ~%are_resref%~ STR_EQ ~~)) BEGIN
     ACTION_IF (NOT FILE_EXISTS_IN_GAME ~a7-npc.2da~) BEGIN
       COPY ~.../inlined/a7-npcgenerator/a7-npc.2da~ ~override~
     END
@@ -82,7 +106,7 @@ BEGIN
       FOR (row = 3; row < npcs; ++row) BEGIN
         READ_2DA_ENTRY_FORMER npcs row 1 chr
         READ_2DA_ENTRY_FORMER npcs row 3 are
-        PATCH_IF (~%chr%~ STR_EQ ~%chr_resref%~ && ~%are%~ STR_EQ ~%are_resref%~) BEGIN
+        PATCH_IF (~%chr%~ STR_EQ ~%cre_resref%~ && ~%are%~ STR_EQ ~%are_resref%~) BEGIN
           SET exists = 1
           SET row = npcs
         END
@@ -94,7 +118,7 @@ BEGIN
       ACTION_IF (~%script_name%~ STR_EQ ~~) BEGIN
         OUTER_TEXT_SPRINT script_name ~%resref%~
       END
-      APPEND ~a7-npc.2da~ ~%index% %chr_resref% %script_name% %are_resref% %are_x% %are_y% %are_dir%~
+      APPEND ~a7-npc.2da~ ~%index% %cre_resref% %script_name% %are_resref% %are_x% %are_y% %are_dir%~
       OUTER_SET success = 1
       COPY_EXISTING ~a7-npc.2da~ ~override~
         PRETTY_PRINT_2DA
@@ -106,7 +130,7 @@ END
 // Marks the specified character as uninstalled
 DEFINE_ACTION_FUNCTION UNREGISTER_CHAR
 STR_VAR
-  chr_resref = ~~
+  cre_resref = ~~
 RET
   success
 BEGIN
@@ -116,17 +140,12 @@ BEGIN
       READ_2DA_ENTRIES_NOW npcs 1
       FOR (row = npcs - 1; row >= 3; --row) BEGIN
         READ_2DA_ENTRY_FORMER npcs row 1 value
-        PATCH_IF (~%value%~ STR_EQ ~%chr_resref%~) BEGIN
+        PATCH_IF (~%value%~ STR_EQ ~%cre_resref%~) BEGIN
           REMOVE_2DA_ROW row 1
           SET success = 1
-          SET npcs -= 1
         END
       END
     BUT_ONLY
-
-    ACTION_IF (npcs <= 3 && FILE_EXISTS ~override/a7-npc.2da~) BEGIN
-      DELETE ~override/a7-npc.2da~
-    END
   END
 END
 
@@ -134,17 +153,18 @@ END
 // Returns whether the specified characters is already installed
 DEFINE_ACTION_FUNCTION IS_CHAR_REGISTERED
 STR_VAR
-  chr_resref = ~~
+  cre_resref = ~~
 RET
   registered
 BEGIN
   OUTER_SET registered = 0
-  ACTION_IF (FILE_EXISTS_IN_GAME ~a7-npc.2da~ && NOT ~%chr_resref%~ STR_EQ ~~) BEGIN
+  ACTION_IF (FILE_EXISTS_IN_GAME ~a7-npc.2da~ && NOT ~%cre_resref%~ STR_EQ ~~) BEGIN
+    LAF GET_SAFE_RESREF STR_VAR resref = EVAL ~%cre_resref%~ RET cre_resref = resref END
     COPY_EXISTING ~a7-npc.2da~ ~override~
       READ_2DA_ENTRIES_NOW npcs 1
       FOR (row = 3; row < npcs; ++row) BEGIN
         READ_2DA_ENTRY_FORMER npcs row 1 chr
-        PATCH_IF (~%chr%~ STR_EQ ~%chr_resref%~) BEGIN
+        PATCH_IF (~%chr%~ STR_EQ ~%cre_resref%~) BEGIN
           SET registered = 1
           SET row = npcs
         END
@@ -155,12 +175,12 @@ END
 
 DEFINE_PATCH_FUNCTION IS_CHAR_REGISTERED
 STR_VAR
-  chr_resref = ~~
+  cre_resref = ~~
 RET
   registered
 BEGIN
   INNER_ACTION BEGIN
-    LAF IS_CHAR_REGISTERED STR_VAR chr_resref RET registered END
+    LAF IS_CHAR_REGISTERED STR_VAR cre_resref RET registered END
   END
 END
 

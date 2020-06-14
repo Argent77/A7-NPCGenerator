@@ -146,28 +146,6 @@ BEGIN
 END
 
 
-// Removes entries for selected CRE from a7-npc.2da.
-DEFINE_ACTION_FUNCTION REMOVE_CRE_ENTRIES
-STR_VAR
-  cre_resref = ~~
-RET
-  success
-BEGIN
-  OUTER_SET success = 0
-  ACTION_IF (NOT ~%cre_resref%~ STR_EQ ~~ && FILE_EXISTS_IN_GAME ~%cre_resref%.CRE~) BEGIN
-    COPY_EXISTING ~a7-npc.2da~ ~override~
-      READ_2DA_ENTRIES_NOW npcs 1
-      FOR (row = npcs - 1; row >= 3; --row) BEGIN
-        READ_2DA_ENTRY_FORMER npcs row 1 cre
-        PATCH_IF (~%cre%~ STR_EQ ~%cre_resref%~) BEGIN
-          REMOVE_2DA_ROW row 1
-        END
-      END
-    BUT_ONLY IF_EXISTS
-  END
-END
-
-
 // Macro: Uninstalls all characters selected in the character selection menu.
 // Requires the following variables to be initialized: $char_ref, $char_selected, $char_name
 DEFINE_ACTION_MACRO UNINSTALL_CHARACTERS
@@ -192,7 +170,7 @@ BEGIN
         LAF REMOVE_CRE_SCRIPT STR_VAR cre_resref END
 
         // removing character entries from a7-npc.2da
-        LAF REMOVE_CRE_ENTRIES STR_VAR cre_resref END
+        LAF UNREGISTER_CHAR STR_VAR cre_resref END
 
         // removing CRE resource
         ACTION_IF (FILE_EXISTS ~override/%cre_resref%.cre~) BEGIN

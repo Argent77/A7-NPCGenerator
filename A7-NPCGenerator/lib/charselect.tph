@@ -1,3 +1,36 @@
+// Macro: Collects CHR information from external files (in "characters" folder).
+DEFINE_ACTION_MACRO COLLECT_CHR_EXTERNAL
+BEGIN
+  ACTION_BASH_FOR ~%chr_folder%~ ~^.+\.chr$~ BEGIN
+    LAF IS_CHAR_REGISTERED
+      STR_VAR cre_resref = EVAL ~%BASH_FOR_RES%~
+      RET registered
+    END
+    LAF GET_SAFE_RESREF STR_VAR resref = EVAL ~%BASH_FOR_RES%~ RET cre_resref = resref END
+    ACTION_IF (NOT registered && NOT FILE_EXISTS_IN_GAME ~%cre_resref%.CRE~) BEGIN
+      COPY ~%BASH_FOR_FILESPEC%~ ~%BASH_FOR_FILESPEC%~
+        LPM ADD_CHR_TO_LIST
+      BUT_ONLY IF_EXISTS
+    END
+  END
+END
+
+// Macro: Collects CHR information from internal game resources.
+DEFINE_ACTION_MACRO COLLECT_CHR_INTERNAL
+BEGIN
+  COPY_EXISTING_REGEXP ~^.+\.chr$~ ~override~
+    LPF IS_CHAR_REGISTERED
+      STR_VAR cre_resref = EVAL ~%SOURCE_RES%~
+      RET registered
+    END
+    LPF GET_SAFE_RESREF STR_VAR resref = EVAL ~%SOURCE_RES%~ RET cre_resref = resref END
+    PATCH_IF (NOT registered && NOT FILE_EXISTS_IN_GAME ~%cre_resref%.CRE~) BEGIN
+      LPM ADD_CHR_TO_LIST
+    END
+  BUT_ONLY IF_EXISTS
+END
+
+
 // Macro: Registers data of the current CHR file in the following variables:
 // $char_ref: indexed array containing CHR filespec entries (numeric "char_ref" variable contains total number of entries)
 // $char_name: associative array containing CHR filespec => character name entries.
@@ -220,32 +253,12 @@ BEGIN
   ACTION_IF (AUTO_INSTALL_ALL_NPCS) BEGIN
     // selecting all available NPCs
     ACTION_IF (AUTO_INSTALL_GAME) BEGIN
-      // collecting CHR information
-      OUTER_SET char_ref = 0
       // from game resources
-      COPY_EXISTING_REGEXP ~^.+\.chr$~ ~override~
-        LPF IS_CHAR_REGISTERED
-          STR_VAR chr_resref = EVAL ~%SOURCE_RES%~
-          RET registered
-        END
-        PATCH_IF (NOT registered && NOT FILE_EXISTS_IN_GAME ~%SOURCE_RES%.CRE~) BEGIN
-          LPM ADD_CHR_TO_LIST
-        END
-      BUT_ONLY IF_EXISTS
+      LAM COLLECT_CHR_INTERNAL
     END
     ACTION_IF (AUTO_INSTALL_USER) BEGIN
       // from "characters" folder
-      ACTION_BASH_FOR ~%chr_folder%~ ~^.+\.chr$~ BEGIN
-        LAF IS_CHAR_REGISTERED
-          STR_VAR chr_resref = EVAL ~%BASH_FOR_RES%~
-          RET registered
-        END
-        ACTION_IF (NOT registered && NOT FILE_EXISTS_IN_GAME ~%BASH_FOR_RES%.CRE~) BEGIN
-          COPY ~%BASH_FOR_FILESPEC%~ ~%BASH_FOR_FILESPEC%~
-            LPM ADD_CHR_TO_LIST
-          BUT_ONLY IF_EXISTS
-        END
-      END
+      LAM COLLECT_CHR_EXTERNAL
     END
   END ELSE BEGIN
     // selecting specified NPCs only
@@ -263,7 +276,7 @@ BEGIN
           ACTION_IF (AUTO_INSTALL_GAME && FILE_EXISTS_IN_GAME ~%resref%.CHR~) BEGIN
             COPY_EXISTING ~%resref%.CHR~ ~override~
               LPF IS_CHAR_REGISTERED
-                STR_VAR chr_resref = EVAL ~%resref%~
+                STR_VAR cre_resref = EVAL ~%resref%~
                 RET registered
               END
               PATCH_IF (NOT registered) BEGIN
@@ -273,7 +286,7 @@ BEGIN
           END ELSE ACTION_IF (AUTO_INSTALL_USER && FILE_EXISTS ~%chr_folder%/%resref%.CHR~) BEGIN
             COPY ~%chr_folder%/%resref%.CHR~ ~%chr_folder%/%resref%.CHR~
               LPF IS_CHAR_REGISTERED
-                STR_VAR chr_resref = EVAL ~%resref%~
+                STR_VAR cre_resref = EVAL ~%resref%~
                 RET registered
               END
               PATCH_IF (NOT registered) BEGIN

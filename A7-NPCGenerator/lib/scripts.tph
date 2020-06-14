@@ -1,16 +1,16 @@
 // Script block added to area scripts for character creation
 <<<<<<<< .../inlined/a7-npcgenerator/create_script.baf
 IF
-  Global("A7CHR-%chr_resref%-CREATED","GLOBAL",0)
+  Global("A7CHR-%cre_resref%-CREATED","GLOBAL",0)
   OR(2)
     GlobalLT("A7CHR-MOVESTAGE","GLOBAL",%move_stage%)
     Global("A7CHR-MOVESTAGE","GLOBAL",%move_stage%)
   %extra_trigger%
 THEN
   RESPONSE #100
-    SetGlobal("A7CHR-%chr_resref%-CREATED","GLOBAL",1)
-    SetGlobal("A7CHR-%chr_resref%-MOVED","MYAREA",1)
-    CreateCreature("%chr_resref%",[%are_x%.%are_y%],%are_dir%)
+    SetGlobal("A7CHR-%cre_resref%-CREATED","GLOBAL",1)
+    SetGlobal("A7CHR-%cre_resref%-MOVED","MYAREA",1)
+    CreateCreature("%cre_resref%",[%are_x%.%are_y%],%are_dir%)
     Continue()
 END
 >>>>>>>>
@@ -19,20 +19,20 @@ END
 // Script block added to area scripts for moving NPCs to another map
 <<<<<<<< .../inlined/a7-npcgenerator/move_script.baf
 IF
-  Global("A7CHR-%chr_resref%-MOVED","MYAREA",0)
-  !Global("A7CHR-%chr_resref%-CREATED","GLOBAL",0)
+  Global("A7CHR-%cre_resref%-MOVED","MYAREA",0)
+  !Global("A7CHR-%cre_resref%-CREATED","GLOBAL",0)
   OR(2)
     GlobalLT("A7CHR-MOVESTAGE","GLOBAL",%move_stage%)
     Global("A7CHR-MOVESTAGE","GLOBAL",%move_stage%)
-  !InParty("A7CHR-%chr_resref%")
-  !StateCheck("A7CHR-%chr_resref%",CD_STATE_NOTVALID)
-  !AreaCheckObject("%are_resref%","A7CHR-%chr_resref%")
+  !InParty("A7CHR-%cre_resref%")
+  !StateCheck("A7CHR-%cre_resref%",CD_STATE_NOTVALID)
+  !AreaCheckObject("%are_resref%","A7CHR-%cre_resref%")
   %extra_trigger%
 THEN
   RESPONSE #100
-    SetGlobal("A7CHR-%chr_resref%-MOVED","MYAREA",1)
-    MoveGlobal("%are_resref%","A7CHR-%chr_resref%",[%are_x%.%are_y%])
-    ActionOverride("A7CHR-%chr_resref%",Face(%are_dir%))
+    SetGlobal("A7CHR-%cre_resref%-MOVED","MYAREA",1)
+    MoveGlobal("%are_resref%","A7CHR-%cre_resref%",[%are_x%.%are_y%])
+    ActionOverride("A7CHR-%cre_resref%",Face(%are_dir%))
     Continue()
 END
 >>>>>>>>
@@ -93,7 +93,7 @@ END
 <<<<<<<< .../inlined/a7-npcgenerator/npc_return_script.baf
 IF
   Global("A7CHR-RETURN","LOCALS",1)
-  Name("A7CHR-%chr_resref%",Myself)
+  Name("A7CHR-%cre_resref%",Myself)
   Global("A7CHR-MOVESTAGE","GLOBAL",%move_stage%)
   !InParty(Myself)
   Global("A7CHR-FOLLOWER","LOCALS",0)

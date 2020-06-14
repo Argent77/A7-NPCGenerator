@@ -152,17 +152,18 @@ BEGIN
         OUTER_TEXT_SPRINT filespec $char_ref(~%char_idx%~)
         LAF RES_OF_FILESPEC STR_VAR filespec RET chr_resref = res END
         LAF DIRECTORY_OF_FILESPEC STR_VAR filespec RET directory END
+        LAF GET_SAFE_RESREF STR_VAR resref = EVAL ~%chr_resref%~ RET cre_resref = resref END
         OUTER_TEXT_SPRINT name $char_name(~%filespec%~)
         OUTER_SPRINT msg @60  // Installing character
         PRINT ~%msg% %name% (%chr_resref%.chr)~
 
         // installing CHR as CRE
         ACTION_IF (~%directory%~ STR_EQ ~~ && FILE_EXISTS_IN_GAME ~%filespec%~) BEGIN
-          COPY_EXISTING ~%filespec%~ ~override/%chr_resref%.cre~
-            LPF INSTALL_CHR_AS_CRE INT_VAR adapt_xp STR_VAR script_name = EVAL ~A7CHR-%chr_resref%~ END
+          COPY_EXISTING ~%filespec%~ ~override/%cre_resref%.cre~
+            LPF INSTALL_CHR_AS_CRE INT_VAR adapt_xp STR_VAR script_name = EVAL ~A7CHR-%cre_resref%~ END
         END ELSE BEGIN
-          COPY ~%chr_folder%/%chr_resref%.chr~ ~override/%chr_resref%.cre~
-            LPF INSTALL_CHR_AS_CRE INT_VAR adapt_xp STR_VAR script_name = EVAL ~A7CHR-%chr_resref%~ END
+          COPY ~%chr_folder%/%chr_resref%.chr~ ~override/%cre_resref%.cre~
+            LPF INSTALL_CHR_AS_CRE INT_VAR adapt_xp STR_VAR script_name = EVAL ~A7CHR-%cre_resref%~ END
         END
 
         // setting up character creation
@@ -225,7 +226,7 @@ BEGIN
 
               LAF REGISTER_CHAR
                 INT_VAR are_x are_y are_dir
-                STR_VAR game chr_resref are_resref script_name = EVAL ~A7CHR-%chr_resref%~
+                STR_VAR game cre_resref are_resref script_name = EVAL ~A7CHR-%cre_resref%~
                 RET success
               END
 
