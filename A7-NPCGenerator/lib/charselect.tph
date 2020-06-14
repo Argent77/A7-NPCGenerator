@@ -1,16 +1,23 @@
 // Macro: Collects CHR information from external files (in "characters" folder).
 DEFINE_ACTION_MACRO COLLECT_CHR_EXTERNAL
 BEGIN
-  ACTION_BASH_FOR ~%chr_folder%~ ~^.+\.chr$~ BEGIN
-    LAF IS_CHAR_REGISTERED
-      STR_VAR cre_resref = EVAL ~%BASH_FOR_RES%~
-      RET registered
-    END
-    LAF GET_SAFE_RESREF STR_VAR resref = EVAL ~%BASH_FOR_RES%~ RET cre_resref = resref END
-    ACTION_IF (NOT registered && NOT FILE_EXISTS_IN_GAME ~%cre_resref%.CRE~) BEGIN
-      COPY ~%BASH_FOR_FILESPEC%~ ~%BASH_FOR_FILESPEC%~
-        LPM ADD_CHR_TO_LIST
-      BUT_ONLY IF_EXISTS
+  ACTION_IF (NOT VARIABLE_IS_SET ~chr_folder~) BEGIN
+    OUTER_SET chr_folder = 0
+  END
+
+  OUTER_FOR (i = 0; i < chr_folder; ++i) BEGIN
+    OUTER_TEXT_SPRINT folder $chr_folder(~%i%~)
+    ACTION_BASH_FOR ~%folder%~ ~^.+\.chr$~ BEGIN
+      LAF IS_CHAR_REGISTERED
+        STR_VAR cre_resref = EVAL ~%BASH_FOR_RES%~
+        RET registered
+      END
+      LAF GET_SAFE_RESREF STR_VAR resref = EVAL ~%BASH_FOR_RES%~ RET cre_resref = resref END
+      ACTION_IF (NOT registered && NOT FILE_EXISTS_IN_GAME ~%cre_resref%.CRE~) BEGIN
+        COPY ~%BASH_FOR_FILESPEC%~ ~%BASH_FOR_FILESPEC%~
+          LPM ADD_CHR_TO_LIST
+        BUT_ONLY IF_EXISTS
+      END
     END
   END
 END
@@ -249,6 +256,10 @@ BEGIN
   LOCAL_SET idx = 0
   LOCAL_SPRINT resref ~~
 
+  ACTION_IF (NOT VARIABLE_IS_SET ~chr_folder~) BEGIN
+    OUTER_SET chr_folder = 0
+  END
+
   OUTER_SET char_ref = 0
   ACTION_IF (AUTO_INSTALL_ALL_NPCS) BEGIN
     // selecting all available NPCs
@@ -279,20 +290,27 @@ BEGIN
                 STR_VAR cre_resref = EVAL ~%resref%~
                 RET registered
               END
-              PATCH_IF (NOT registered) BEGIN
+              LPF GET_SAFE_RESREF STR_VAR resref RET cre_resref = resref END
+              PATCH_IF (NOT registered && NOT FILE_EXISTS_IN_GAME ~%cre_resref%.CRE~) BEGIN
                 LPM ADD_CHR_TO_LIST
               END
             BUT_ONLY IF_EXISTS
-          END ELSE ACTION_IF (AUTO_INSTALL_USER && FILE_EXISTS ~%chr_folder%/%resref%.CHR~) BEGIN
-            COPY ~%chr_folder%/%resref%.CHR~ ~%chr_folder%/%resref%.CHR~
-              LPF IS_CHAR_REGISTERED
-                STR_VAR cre_resref = EVAL ~%resref%~
-                RET registered
+          END ELSE ACTION_IF (AUTO_INSTALL_USER) BEGIN
+            OUTER_FOR (i = 0; i < chr_folder; ++i) BEGIN
+              OUTER_TEXT_SPRINT folder $chr_folder(~%i%~)
+              ACTION_IF (FILE_EXISTS ~%folder%/%resref%.CHR~) BEGIN
+                COPY ~%folder%/%resref%.CHR~ ~%folder%/%resref%.CHR~
+                  LPF IS_CHAR_REGISTERED
+                    STR_VAR cre_resref = EVAL ~%resref%~
+                    RET registered
+                  END
+                  LPF GET_SAFE_RESREF STR_VAR resref RET cre_resref = resref END
+                  PATCH_IF (NOT registered && NOT FILE_EXISTS_IN_GAME ~%cre_resref%.CRE~) BEGIN
+                    LPM ADD_CHR_TO_LIST
+                  END
+                BUT_ONLY IF_EXISTS
               END
-              PATCH_IF (NOT registered) BEGIN
-                LPM ADD_CHR_TO_LIST
-              END
-            BUT_ONLY IF_EXISTS
+            END
           END
         END
         OUTER_SET idx += 1

@@ -39,17 +39,26 @@ BEGIN
 END
 
 
-// Returns the path to the "characters" folder containing custom CHR files
+// Returns the path(s) to the "characters" folder containing custom CHR files as array.
 DEFINE_ACTION_FUNCTION GET_CHARACTER_DIR
 RET
-  dir
+  dir   // number of array elements
+RET_ARRAY
+  dir   // array of folder paths
 BEGIN
-  OUTER_TEXT_SPRINT dir ~~
-  ACTION_IF (GAME_IS ~bgee bg2ee eet iwdee pstee~) BEGIN
-    OUTER_TEXT_SPRINT dir ~%USER_DIRECTORY%/characters~
-  END ELSE BEGIN
-    OUTER_TEXT_SPRINT dir ~characters~
+  OUTER_SET dir = 0
+  ACTION_IF (DIRECTORY_EXISTS ~characters~) BEGIN
+    OUTER_TEXT_SPRINT $dir(~%dir%~) ~characters~
+    OUTER_SET dir += 1
   END
+  ACTION_IF (GAME_IS ~bgee bg2ee eet iwdee pstee~) BEGIN
+    OUTER_TEXT_SPRINT $dir(~%dir%~) ~%USER_DIRECTORY%/characters~
+    OUTER_SET dir += 1
+  END
+  ACTION_IF (dir = 0) BEGIN
+    // work-around for WeiDU bug when returning empty array
+    OUTER_TEXT_SPRINT $dir(~0~) ~.~
+  END 
 END
 
 

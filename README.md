@@ -11,12 +11,13 @@ The mod supports the following games and game variants:
 - Original BG2
 - Tutu/EasyTutu
 - BGT (Baldur's Gate Trilogy)
-- BG:EE (with or without "Siege of Dragonspear" expansion)
+- BG:EE
+- SoD (Siege of Dragonspear)
 - BG2:EE
 - EET (Enhanced Edition Trilogy)
 - IWD:EE
 
-It is currently available in English and German.
+The mod is currently available in English and German.
 
 ## Components
 

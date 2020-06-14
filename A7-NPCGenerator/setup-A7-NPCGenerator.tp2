@@ -59,7 +59,7 @@ INCLUDE ~%MOD_FOLDER%/lib/charinstall.tph~
 INCLUDE ~%MOD_FOLDER%/lib/charinfo.tph~
 
 // Select (one or more) characters to install
-LAF GET_CHARACTER_DIR RET chr_folder = dir END
+LAF GET_CHARACTER_DIR RET chr_folder = dir RET_ARRAY chr_folder = dir END
 
 OUTER_SET char_ref = 0
 // collecting CHR information from "characters" folder
@@ -131,7 +131,7 @@ INCLUDE ~%MOD_FOLDER%/lib/charinstall.tph~
 INCLUDE ~%MOD_FOLDER%/lib/charinfo.tph~
 
 // Select (one or more) characters to install
-LAF GET_CHARACTER_DIR RET chr_folder = dir END
+LAF GET_CHARACTER_DIR RET chr_folder = dir RET_ARRAY chr_folder = dir END
 
 // collecting CHR information
 OUTER_SET char_ref = 0
@@ -184,7 +184,7 @@ ACTION_IF (NOT VARIABLE_IS_SET ~AUTO_INSTALL_ALL_NPCS~) BEGIN
 END
 
 // Collecting characters to install
-LAF GET_CHARACTER_DIR RET chr_folder = dir END
+LAF GET_CHARACTER_DIR RET chr_folder = dir RET_ARRAY chr_folder = dir END
 
 // Performing character selection
 LAM SELECT_CHAR_AUTOMATED
