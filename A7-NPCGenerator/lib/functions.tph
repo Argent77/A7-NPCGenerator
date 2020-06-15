@@ -18,7 +18,6 @@ RET
   are_dst
 BEGIN
   ACTION_TO_UPPER ~are_src~
-  LOG ~DEBUG: game=%game%, area=%are_src%~
   ACTION_IF (~%game%~ STR_EQ ~BG1~ && VARIABLE_IS_SET EVAL ~AREA_%are_src%~) BEGIN
     OUTER_TEXT_SPRINT are_dst EVAL ~%AREA_%are_src%%~
   END ELSE BEGIN
