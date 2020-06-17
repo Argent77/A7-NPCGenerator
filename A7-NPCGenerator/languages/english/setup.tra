@@ -26,10 +26,10 @@
 @65 = ~selected~
 
 // Info labels
-@90 = ~Gender~
-@91 = ~Class~
-@92 = ~Kit~
-@93 = ~Level~
+@90 = ~Gender:~
+@91 = ~Class:~
+@92 = ~Kit:~
+@93 = ~Level:~
 
 // Character gender
 @100 = ~(unknown)~

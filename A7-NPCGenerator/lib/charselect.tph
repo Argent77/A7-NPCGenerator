@@ -148,11 +148,11 @@ BEGIN
       END ELSE BEGIN
         OUTER_TEXT_SPRINT index ~%idx%)~
       END
-      OUTER_TEXT_SPRINT entry ~%index% %name% (%resref%.%char_ext%) - %label_gender%: %gender%, %label_class%: %class%~
+      OUTER_TEXT_SPRINT entry ~%index% %name% (%resref%.%char_ext%) - %label_gender% %gender%, %label_class% %class%~
       ACTION_IF (NOT ~%kit%~ STR_EQ ~~) BEGIN
-        OUTER_TEXT_SPRINT entry ~%entry%, %label_kit%: %kit%~
+        OUTER_TEXT_SPRINT entry ~%entry%, %label_kit% %kit%~
       END
-      OUTER_TEXT_SPRINT entry ~%entry%, %label_level%: %level%~
+      OUTER_TEXT_SPRINT entry ~%entry%, %label_level% %level%~
       OUTER_TEXT_SPRINT menu ~%menu%%entry%%nl%~
     END
     OUTER_TEXT_SPRINT menu ~%menu%A) %entry_all%%nl%~

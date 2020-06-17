@@ -91,7 +91,9 @@ BEGIN
     19 BEGIN SPRINT class_desc @128 END // Sorcerer
     20 BEGIN SPRINT class_desc @129 END // Monk
     21 BEGIN SPRINT class_desc @130 END // Shaman
-    DEFAULT SPRINT class_desc @102
+    DEFAULT
+      SPRINT class_desc @100  // (unknown)
+      SPRINT class_desc ~%class% %class_desc%~
   END
 
   PATCH_IF (is_multi) BEGIN
