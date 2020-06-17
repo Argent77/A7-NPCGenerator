@@ -267,6 +267,7 @@ BEGIN
     DELETE_BYTES 0 0x64
     WRITE_LONG 0x8 name_strref
     WRITE_LONG 0xc name_strref
+    WRITE_LONG BIO "-1" // no biography
     WRITE_BYTE 0x270 128 // Allegiance = NEUTRAL
     WRITE_ASCII DIALOG ~A7CHRNPC~ (8)
     WRITE_ASCII SCRIPT_OVERRIDE ~A7CHRNPC~ (8)
