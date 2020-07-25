@@ -6,6 +6,8 @@
 @10 = ~Benutzerdefinierte NSCs deinstallieren~
 @11 = ~Manuell auswaehlen~
 @12 = ~All deinstallieren~
+@20 = ~Aktiviere Gesinnungspruefung installierter NSCs~
+@21 = ~Deaktiviere Gesinnungspruefung installierter NSCs~
 
 // Strings for interactive character selection
 @50 = ~Verfuegbare Charaktere:~
@@ -71,3 +73,5 @@
 @503 = ~Keine Charaktere ausgewaehlt.~
 @504 = ~Kein unterstuetztes Spiel erkannt.~
 @505 = ~Keine Konfigurationsdatei gefunden.~
+@506 = ~Gesinnungspruefung wurde bereits aktiviert.~
+@507 = ~Gesinnungspruefung wurde bereits deaktiviert.~

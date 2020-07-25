@@ -6,6 +6,8 @@
 @10 = ~Remove custom NPCs from the game~
 @11 = ~Select individually~
 @12 = ~Remove all~
+@20 = ~Enable alignment checks for custom NPCs~
+@21 = ~Disable alignment checks for custom NPCs~
 
 // Strings for interactive character selection
 @50 = ~Available characters:~
@@ -71,3 +73,5 @@
 @503 = ~No characters selected.~
 @504 = ~No supported games detected.~
 @505 = ~No settings file found.~
+@506 = ~Alignment checks already enabled.~
+@507 = ~Alignment checks already disabled.~

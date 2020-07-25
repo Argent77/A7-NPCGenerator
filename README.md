@@ -32,6 +32,12 @@ Manual installation provides a menu-driven character selection. Automated instal
 **NOTE:**
 This component won't be registered in the WeiDU.log and can therefore be called anytime and as many times you want to install characters as NPCs. To uninstall NPCs use the second component of the mod ("Remove custom NPCs from the game").
 
+### Enable/Disable alignment checks for custom NPCs (not available for IWD:EE)
+
+By default installed NPCs won't always join or follow the party right away. If their goals don't align with yours they might ask for a fee or outright refuse to join.
+
+With this component it is possible to toggle this check on or off. When disabled then every installed NPC will automatically join or follow your party when asked.
+
 ### Remove custom NPCs from the game
 
 This component allows you to remove installed characters from the game. You can choose whether to uninstall selected characters individually or all installed characters at once.

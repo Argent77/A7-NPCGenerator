@@ -105,3 +105,17 @@ THEN
     SetInterrupt(TRUE)
 END
 >>>>>>>>
+
+
+// Script for disabling alignment check when recruiting NPCs for the first time.
+<<<<<<<< .../inlined/a7-npcgenerator/npc_disable_alignment_check.baf
+IF
+  Global("A7CHR-SKIPCHECK_CHECKED","GLOBAL",0)
+  Global("A7CHR-SKIPCHECK","GLOBAL",0)
+THEN
+RESPONSE #100
+  SetGlobal("A7CHR-SKIPCHECK_CHECKED","GLOBAL",1)
+  SetGlobal("A7CHR-SKIPCHECK","GLOBAL",1)
+  Continue()
+END
+>>>>>>>>

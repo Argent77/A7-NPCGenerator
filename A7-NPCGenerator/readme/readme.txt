@@ -23,7 +23,8 @@ The mod supports the following games and game variants:
 - Original BG2
 - Tutu/EasyTutu
 - BGT (Baldur's Gate Trilogy)
-- BG:EE (with or without "Siege of Dragonspear" expansion)
+- BG:EE
+- SoD (Siege of Dragonspear)
 - BG2:EE
 - EET (Enhanced Edition Trilogy)
 - IWD:EE
@@ -116,7 +117,47 @@ BG2 engine if cheat keys are enabled. The NPC has to be kicked out and invited a
 effect re-applied. Enhanced Editions are not affected.
 
 
-*** 2. Remove custom NPCs from the game ***
+*** 2. Enable/Disable alignment checks for custom NPCs (not available for IWD:EE) ***
+
+By default installed NPCs won't always join or follow the party right away. If their goals don't
+align with yours they might ask for a fee or outright refuse to join.
+
+This check is only performed when asked to join or follow the first time. Subsequent requests are
+always accepted.
+
+With this component it is possible to toggle this check on or off. When disabled then every
+installed NPC will automatically join or follow your party when asked. NPCs in IWD:EE will always
+join or follow your party when asked.
+
+The requirements for NPCs are as follows:
+Good-aligned NPCs:
+- Join for free if reputation is between 9 and 12 and the protagonist's charisma is 14 or higher.
+- Join for free if reputation is 13 or higher.
+Neutral NPCs:
+- Join for free if reputation is between 5 and 16 and the protagonist's charisma is 14 or higher.
+- Join for 250 gold if reputation is between 5 and 16 and the protagonist's charisma is 13 or lower.
+- Join for 250 gold if reputation is 16 or higher and the protagonist's charisma is 14 or higher.
+- Join for 500 gold if reputation is 4 or lower and the protagonist's charisma is 14 or higher.
+Evil NPCs:
+- Join for free if reputation is 8 or lower and the protagonist's charisma is 14 or higher.
+- Join for 250 gold if reputation is 8 or lower and the protagonist's charisma is 13 or lower.
+- Join for 250 gold if reputation is between 9 and 12 and the protagonist's charisma is 14 or higher.
+- Join for 500 gold if reputation is between 9 and 12 and the protagonist's charisma is 13 or lower.
+- Join for 1000 gold if reputation is between 13 and 16 and the protagonist's charisma is 14 or higher.
+
+NOTE:
+This setting will be stored in saved games. Toggling this check later won't have an effect unless
+you load an earlier save. Alternatively you can toggle this check manually in the game if the debug
+console is enabled.
+
+To disable alignment checks enter this code (replace "CLUAConsole" by "C" for the Enhanced Editions):
+CLUAConsole:SetGlobal("A7CHR-SKIPCHECK","GLOBAL",1)
+
+To enable alignment checks enter this code (replace "CLUAConsole" by "C" for the Enhanced Editions):
+CLUAConsole:SetGlobal("A7CHR-SKIPCHECK","GLOBAL",0)
+
+
+*** 3. Remove custom NPCs from the game ***
 
 This component allows you to remove installed characters from the game. You can choose whether to
 uninstall selected characters individually or all installed characters at once.
