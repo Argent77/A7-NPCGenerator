@@ -285,40 +285,34 @@ BEGIN
 END
 
 
-// Adds global script block to disable initial alignment check when recruiting custom NPCs.
+// Adds local script block to disable initial alignment check when recruiting custom NPCs.
 DEFINE_ACTION_FUNCTION ADD_DISABLED_ALIGNMENT_CHECK
 BEGIN
-  LAF GET_GLOBAL_SCRIPTS RET scripts RET_ARRAY scripts END
-  OUTER_FOR (i = 0; i < scripts; ++i) BEGIN
-    OUTER_TEXT_SPRINT resref $scripts(~%i%~)
-    ACTION_IF (FILE_EXISTS_IN_GAME ~%resref%.BCS~ &&
-               NOT FILE_CONTAINS_EVALUATED(~%resref%.BCS~ ~GLOBALA7CHR-SKIPCHECK_CHECKED~)) BEGIN
-      EXTEND_TOP ~%resref%.BCS~ ~.../inlined/a7-npcgenerator/npc_disable_alignment_check.baf~
+  ACTION_IF (FILE_EXISTS_IN_GAME ~a7chrnpc.bcs~) BEGIN
+    ACTION_IF (FILE_EXISTS_IN_GAME ~a7chrnpc.bcs~ &&
+               NOT FILE_CONTAINS_EVALUATED(~a7chrnpc.bcs~ ~LOCALSA7CHR-SKIPCHECK_CHECKED~)) BEGIN
+      EXTEND_TOP ~a7chrnpc.bcs~ ~.../inlined/a7-npcgenerator/npc_disable_alignment_check.baf~
     END
   END
 END
 
-// Removes global script block to disable initial alignment check when recruiting custom NPCs.
+// Removes local script block to disable initial alignment check when recruiting custom NPCs.
 DEFINE_ACTION_FUNCTION REMOVE_DISABLED_ALIGNMENT_CHECK
 BEGIN
-  LAF GET_GLOBAL_SCRIPTS RET scripts RET_ARRAY scripts END
-  OUTER_FOR (i = 0; i < scripts; ++i) BEGIN
-    OUTER_TEXT_SPRINT resref $scripts(~%i%~)
-    COPY_EXISTING ~%resref%.BCS~ ~override~
-      PATCH_IF (INDEX_BUFFER(~GLOBALA7CHR-SKIPCHECK_CHECKED~) >= 0) BEGIN
-        DECOMPILE_AND_PATCH BEGIN
-          SET p1 = INDEX_BUFFER(~Global("A7CHR-SKIPCHECK_CHECKED","GLOBAL",0)~)
+  COPY_EXISTING ~a7chrnpc.bcs~ ~override~
+    PATCH_IF (INDEX_BUFFER(~LOCALSA7CHR-SKIPCHECK_CHECKED~) >= 0) BEGIN
+      DECOMPILE_AND_PATCH BEGIN
+        SET p1 = INDEX_BUFFER(~Global("A7CHR-SKIPCHECK_CHECKED","LOCALS",0)~)
+        PATCH_IF (p1 >= 0) BEGIN
+          SET p1 = RINDEX_BUFFER(~^IF$~ p1)
           PATCH_IF (p1 >= 0) BEGIN
-            SET p1 = RINDEX_BUFFER(~^IF$~ p1)
-            PATCH_IF (p1 >= 0) BEGIN
-              SET p2 = INDEX_BUFFER(~^END$~ p1)
-              PATCH_IF (p2 > p1) BEGIN
-                DELETE_BYTES p1 (p2 - p1 + 3)
-              END
+            SET p2 = INDEX_BUFFER(~^END$~ p1)
+            PATCH_IF (p2 > p1) BEGIN
+              DELETE_BYTES p1 (p2 - p1 + 3)
             END
           END
         END
       END
-    BUT_ONLY IF_EXISTS
-  END
+    END
+  BUT_ONLY IF_EXISTS
 END

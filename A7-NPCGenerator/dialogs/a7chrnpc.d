@@ -5,12 +5,12 @@ BEGIN ~A7CHRNPC~
 IF ~NumTimesTalkedTo(0) Class(Myself,MONK) !InParty(Myself) Global("A7CHR-FOLLOWER","LOCALS",0)~ Intro.1.Monk
   SAY @1013 /* Hello, <SIRMAAM>! I'm waiting for a chance to learn more about the world, and thus about myself. Do you need another companion? */
 
-  + ~OR(2) !Global("A7CHR-SKIPCHECK","GLOBAL",0) !Global("A7CHR-CHECKED","LOCALS",0)~ + @1002 /* Yes, please join the party. */
+  + ~OR(2) !Global("A7CHR-SKIPCHECK","LOCALS",0) !Global("A7CHR-CHECKED","LOCALS",0)~ + @1002 /* Yes, please join the party. */
     DO ~SetGlobal("A7CHR-DIALOG-INIT","LOCALS",0)
         SetGlobal("A7CHR-CHECKED","LOCALS",1)
         ChangeAIScript("DPLAYER3",DEFAULT)
         JoinParty()~ EXIT
-  + ~OR(2) !Global("A7CHR-SKIPCHECK","GLOBAL",0) !Global("A7CHR-CHECKED","LOCALS",0)~ + @1014 /* Sure, you can tag along for a while. */
+  + ~OR(2) !Global("A7CHR-SKIPCHECK","LOCALS",0) !Global("A7CHR-CHECKED","LOCALS",0)~ + @1014 /* Sure, you can tag along for a while. */
     DO ~ChangeAIScript("DPLAYER3",DEFAULT)
         ChangeEnemyAlly(Myself,FAMILIAR)
         AddFamiliar()
@@ -18,45 +18,45 @@ IF ~NumTimesTalkedTo(0) Class(Myself,MONK) !InParty(Myself) Global("A7CHR-FOLLOW
         SetGlobal("A7CHR-FOLLOWER","LOCALS",1)
         SetGlobal("A7CHR-CHECKED","LOCALS",1)~ EXIT
 
-  + ~Global("A7CHR-SKIPCHECK","GLOBAL",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_GOOD) ReputationGT(Player1,8) ReputationLT(Player1,13) CheckStatGT(Player1,13,CHR)~ + @1002 /* Yes, please join the party. */ + Join.Good.1
-  + ~Global("A7CHR-SKIPCHECK","GLOBAL",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_GOOD) ReputationGT(Player1,8) ReputationLT(Player1,13) CheckStatGT(Player1,13,CHR)~ + @1014 /* Sure, you can tag along for a while. */ + Follow.Good.1
-  + ~Global("A7CHR-SKIPCHECK","GLOBAL",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_GOOD) ReputationGT(Player1,12)~ + @1002 /* Yes, please join the party. */ + Join.Good.1
-  + ~Global("A7CHR-SKIPCHECK","GLOBAL",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_GOOD) ReputationGT(Player1,12)~ + @1014 /* Sure, you can tag along for a while. */ + Follow.Good.1
+  + ~Global("A7CHR-SKIPCHECK","LOCALS",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_GOOD) ReputationGT(Player1,8) ReputationLT(Player1,13) CheckStatGT(Player1,13,CHR)~ + @1002 /* Yes, please join the party. */ + Join.Good.1
+  + ~Global("A7CHR-SKIPCHECK","LOCALS",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_GOOD) ReputationGT(Player1,8) ReputationLT(Player1,13) CheckStatGT(Player1,13,CHR)~ + @1014 /* Sure, you can tag along for a while. */ + Follow.Good.1
+  + ~Global("A7CHR-SKIPCHECK","LOCALS",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_GOOD) ReputationGT(Player1,12)~ + @1002 /* Yes, please join the party. */ + Join.Good.1
+  + ~Global("A7CHR-SKIPCHECK","LOCALS",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_GOOD) ReputationGT(Player1,12)~ + @1014 /* Sure, you can tag along for a while. */ + Follow.Good.1
 
-  + ~Global("A7CHR-SKIPCHECK","GLOBAL",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_GOOD) ReputationLT(Player1,9)~ + @1002 /* Yes, please join the party. */ + Reject.Good.1
-  + ~Global("A7CHR-SKIPCHECK","GLOBAL",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_GOOD) ReputationLT(Player1,9)~ + @1014 /* Sure, you can tag along for a while. */ + Reject.Good.1
-  + ~Global("A7CHR-SKIPCHECK","GLOBAL",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_GOOD) ReputationGT(Player1,8) ReputationLT(Player1,13) CheckStatLT(Player1,14,CHR)~ + @1002 /* Yes, please join the party. */ + Reject.Good.1
-  + ~Global("A7CHR-SKIPCHECK","GLOBAL",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_GOOD) ReputationGT(Player1,8) ReputationLT(Player1,13) CheckStatLT(Player1,14,CHR)~ + @1014 /* Sure, you can tag along for a while. */ + Reject.Good.1
+  + ~Global("A7CHR-SKIPCHECK","LOCALS",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_GOOD) ReputationLT(Player1,9)~ + @1002 /* Yes, please join the party. */ + Reject.Good.1
+  + ~Global("A7CHR-SKIPCHECK","LOCALS",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_GOOD) ReputationLT(Player1,9)~ + @1014 /* Sure, you can tag along for a while. */ + Reject.Good.1
+  + ~Global("A7CHR-SKIPCHECK","LOCALS",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_GOOD) ReputationGT(Player1,8) ReputationLT(Player1,13) CheckStatLT(Player1,14,CHR)~ + @1002 /* Yes, please join the party. */ + Reject.Good.1
+  + ~Global("A7CHR-SKIPCHECK","LOCALS",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_GOOD) ReputationGT(Player1,8) ReputationLT(Player1,13) CheckStatLT(Player1,14,CHR)~ + @1014 /* Sure, you can tag along for a while. */ + Reject.Good.1
 
-  + ~Global("A7CHR-SKIPCHECK","GLOBAL",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_GENEUTRAL) ReputationLT(Player1,5) CheckStatGT(Player1,13,CHR)~ + @1002 /* Yes, please join the party. */ + Join.Neutral.3
-  + ~Global("A7CHR-SKIPCHECK","GLOBAL",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_GENEUTRAL) ReputationLT(Player1,5) CheckStatGT(Player1,13,CHR)~ + @1014 /* Sure, you can tag along for a while. */ + Follow.Neutral.3
-  + ~Global("A7CHR-SKIPCHECK","GLOBAL",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_GENEUTRAL) ReputationGT(Player1,4) ReputationLT(Player1,17) CheckStatLT(Player1,14,CHR)~ + @1002 /* Yes, please join the party. */ + Join.Neutral.2
-  + ~Global("A7CHR-SKIPCHECK","GLOBAL",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_GENEUTRAL) ReputationGT(Player1,4) ReputationLT(Player1,17) CheckStatLT(Player1,14,CHR)~ + @1014 /* Sure, you can tag along for a while. */ + Follow.Neutral.2
-  + ~Global("A7CHR-SKIPCHECK","GLOBAL",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_GENEUTRAL) ReputationGT(Player1,4) ReputationLT(Player1,17) CheckStatGT(Player1,13,CHR)~ + @1002 /* Yes, please join the party. */ + Join.Neutral.1
-  + ~Global("A7CHR-SKIPCHECK","GLOBAL",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_GENEUTRAL) ReputationGT(Player1,4) ReputationLT(Player1,17) CheckStatGT(Player1,13,CHR)~ + @1014 /* Sure, you can tag along for a while. */ + Follow.Neutral.1
-  + ~Global("A7CHR-SKIPCHECK","GLOBAL",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_GENEUTRAL) ReputationGT(Player1,16) CheckStatGT(Player1,13,CHR)~ + @1002 /* Yes, please join the party. */ + Join.Neutral.2
-  + ~Global("A7CHR-SKIPCHECK","GLOBAL",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_GENEUTRAL) ReputationGT(Player1,16) CheckStatGT(Player1,13,CHR)~ + @1014 /* Sure, you can tag along for a while. */ + Follow.Neutral.2
+  + ~Global("A7CHR-SKIPCHECK","LOCALS",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_GENEUTRAL) ReputationLT(Player1,5) CheckStatGT(Player1,13,CHR)~ + @1002 /* Yes, please join the party. */ + Join.Neutral.3
+  + ~Global("A7CHR-SKIPCHECK","LOCALS",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_GENEUTRAL) ReputationLT(Player1,5) CheckStatGT(Player1,13,CHR)~ + @1014 /* Sure, you can tag along for a while. */ + Follow.Neutral.3
+  + ~Global("A7CHR-SKIPCHECK","LOCALS",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_GENEUTRAL) ReputationGT(Player1,4) ReputationLT(Player1,17) CheckStatLT(Player1,14,CHR)~ + @1002 /* Yes, please join the party. */ + Join.Neutral.2
+  + ~Global("A7CHR-SKIPCHECK","LOCALS",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_GENEUTRAL) ReputationGT(Player1,4) ReputationLT(Player1,17) CheckStatLT(Player1,14,CHR)~ + @1014 /* Sure, you can tag along for a while. */ + Follow.Neutral.2
+  + ~Global("A7CHR-SKIPCHECK","LOCALS",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_GENEUTRAL) ReputationGT(Player1,4) ReputationLT(Player1,17) CheckStatGT(Player1,13,CHR)~ + @1002 /* Yes, please join the party. */ + Join.Neutral.1
+  + ~Global("A7CHR-SKIPCHECK","LOCALS",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_GENEUTRAL) ReputationGT(Player1,4) ReputationLT(Player1,17) CheckStatGT(Player1,13,CHR)~ + @1014 /* Sure, you can tag along for a while. */ + Follow.Neutral.1
+  + ~Global("A7CHR-SKIPCHECK","LOCALS",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_GENEUTRAL) ReputationGT(Player1,16) CheckStatGT(Player1,13,CHR)~ + @1002 /* Yes, please join the party. */ + Join.Neutral.2
+  + ~Global("A7CHR-SKIPCHECK","LOCALS",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_GENEUTRAL) ReputationGT(Player1,16) CheckStatGT(Player1,13,CHR)~ + @1014 /* Sure, you can tag along for a while. */ + Follow.Neutral.2
 
-  + ~Global("A7CHR-SKIPCHECK","GLOBAL",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_GENEUTRAL) ReputationLT(Player1,5) CheckStatLT(Player1,14,CHR)~ + @1002 /* Yes, please join the party. */ + Reject.Neutral.1
-  + ~Global("A7CHR-SKIPCHECK","GLOBAL",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_GENEUTRAL) ReputationLT(Player1,5) CheckStatLT(Player1,14,CHR)~ + @1014 /* Sure, you can tag along for a while. */ + Reject.Neutral.1
-  + ~Global("A7CHR-SKIPCHECK","GLOBAL",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_GENEUTRAL) ReputationGT(Player1,16) CheckStatLT(Player1,14,CHR)~ + @1002 /* Yes, please join the party. */ + Reject.Neutral.2
-  + ~Global("A7CHR-SKIPCHECK","GLOBAL",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_GENEUTRAL) ReputationGT(Player1,16) CheckStatLT(Player1,14,CHR)~ + @1014 /* Sure, you can tag along for a while. */ + Reject.Neutral.2
+  + ~Global("A7CHR-SKIPCHECK","LOCALS",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_GENEUTRAL) ReputationLT(Player1,5) CheckStatLT(Player1,14,CHR)~ + @1002 /* Yes, please join the party. */ + Reject.Neutral.1
+  + ~Global("A7CHR-SKIPCHECK","LOCALS",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_GENEUTRAL) ReputationLT(Player1,5) CheckStatLT(Player1,14,CHR)~ + @1014 /* Sure, you can tag along for a while. */ + Reject.Neutral.1
+  + ~Global("A7CHR-SKIPCHECK","LOCALS",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_GENEUTRAL) ReputationGT(Player1,16) CheckStatLT(Player1,14,CHR)~ + @1002 /* Yes, please join the party. */ + Reject.Neutral.2
+  + ~Global("A7CHR-SKIPCHECK","LOCALS",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_GENEUTRAL) ReputationGT(Player1,16) CheckStatLT(Player1,14,CHR)~ + @1014 /* Sure, you can tag along for a while. */ + Reject.Neutral.2
 
-  + ~Global("A7CHR-SKIPCHECK","GLOBAL",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_EVIL) ReputationLT(Player1,9) CheckStatLT(Player1,14,CHR)~ + @1002 /* Yes, please join the party. */ + Join.Evil.2
-  + ~Global("A7CHR-SKIPCHECK","GLOBAL",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_EVIL) ReputationLT(Player1,9) CheckStatLT(Player1,14,CHR)~ + @1014 /* Sure, you can tag along for a while. */ + Follow.Evil.2
-  + ~Global("A7CHR-SKIPCHECK","GLOBAL",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_EVIL) ReputationLT(Player1,9) CheckStatGT(Player1,13,CHR)~ + @1002 /* Yes, please join the party. */ + Join.Evil.1
-  + ~Global("A7CHR-SKIPCHECK","GLOBAL",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_EVIL) ReputationLT(Player1,9) CheckStatGT(Player1,13,CHR)~ + @1014 /* Sure, you can tag along for a while. */ + Follow.Evil.1
-  + ~Global("A7CHR-SKIPCHECK","GLOBAL",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_EVIL) ReputationGT(Player1,8) ReputationLT(Player1,13) CheckStatLT(Player1,14,CHR)~ + @1002 /* Yes, please join the party. */ + Join.Evil.3
-  + ~Global("A7CHR-SKIPCHECK","GLOBAL",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_EVIL) ReputationGT(Player1,8) ReputationLT(Player1,13) CheckStatLT(Player1,14,CHR)~ + @1014 /* Sure, you can tag along for a while. */ + Follow.Evil.3
-  + ~Global("A7CHR-SKIPCHECK","GLOBAL",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_EVIL) ReputationGT(Player1,8) ReputationLT(Player1,13) CheckStatGT(Player1,13,CHR)~ + @1002 /* Yes, please join the party. */ + Join.Evil.2
-  + ~Global("A7CHR-SKIPCHECK","GLOBAL",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_EVIL) ReputationGT(Player1,8) ReputationLT(Player1,13) CheckStatGT(Player1,13,CHR)~ + @1014 /* Sure, you can tag along for a while. */ + Follow.Evil.2
-  + ~Global("A7CHR-SKIPCHECK","GLOBAL",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_EVIL) ReputationGT(Player1,12) ReputationLT(Player1,17) CheckStatGT(Player1,13,CHR)~ + @1002 /* Yes, please join the party. */ + Join.Evil.4
-  + ~Global("A7CHR-SKIPCHECK","GLOBAL",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_EVIL) ReputationGT(Player1,12) ReputationLT(Player1,17) CheckStatGT(Player1,13,CHR)~ + @1014 /* Sure, you can tag along for a while. */ + Follow.Evil.4
+  + ~Global("A7CHR-SKIPCHECK","LOCALS",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_EVIL) ReputationLT(Player1,9) CheckStatLT(Player1,14,CHR)~ + @1002 /* Yes, please join the party. */ + Join.Evil.2
+  + ~Global("A7CHR-SKIPCHECK","LOCALS",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_EVIL) ReputationLT(Player1,9) CheckStatLT(Player1,14,CHR)~ + @1014 /* Sure, you can tag along for a while. */ + Follow.Evil.2
+  + ~Global("A7CHR-SKIPCHECK","LOCALS",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_EVIL) ReputationLT(Player1,9) CheckStatGT(Player1,13,CHR)~ + @1002 /* Yes, please join the party. */ + Join.Evil.1
+  + ~Global("A7CHR-SKIPCHECK","LOCALS",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_EVIL) ReputationLT(Player1,9) CheckStatGT(Player1,13,CHR)~ + @1014 /* Sure, you can tag along for a while. */ + Follow.Evil.1
+  + ~Global("A7CHR-SKIPCHECK","LOCALS",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_EVIL) ReputationGT(Player1,8) ReputationLT(Player1,13) CheckStatLT(Player1,14,CHR)~ + @1002 /* Yes, please join the party. */ + Join.Evil.3
+  + ~Global("A7CHR-SKIPCHECK","LOCALS",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_EVIL) ReputationGT(Player1,8) ReputationLT(Player1,13) CheckStatLT(Player1,14,CHR)~ + @1014 /* Sure, you can tag along for a while. */ + Follow.Evil.3
+  + ~Global("A7CHR-SKIPCHECK","LOCALS",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_EVIL) ReputationGT(Player1,8) ReputationLT(Player1,13) CheckStatGT(Player1,13,CHR)~ + @1002 /* Yes, please join the party. */ + Join.Evil.2
+  + ~Global("A7CHR-SKIPCHECK","LOCALS",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_EVIL) ReputationGT(Player1,8) ReputationLT(Player1,13) CheckStatGT(Player1,13,CHR)~ + @1014 /* Sure, you can tag along for a while. */ + Follow.Evil.2
+  + ~Global("A7CHR-SKIPCHECK","LOCALS",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_EVIL) ReputationGT(Player1,12) ReputationLT(Player1,17) CheckStatGT(Player1,13,CHR)~ + @1002 /* Yes, please join the party. */ + Join.Evil.4
+  + ~Global("A7CHR-SKIPCHECK","LOCALS",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_EVIL) ReputationGT(Player1,12) ReputationLT(Player1,17) CheckStatGT(Player1,13,CHR)~ + @1014 /* Sure, you can tag along for a while. */ + Follow.Evil.4
 
-  + ~Global("A7CHR-SKIPCHECK","GLOBAL",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_EVIL) ReputationGT(Player1,12) ReputationLT(Player1,17) CheckStatLT(Player1,14,CHR)~ + @1002 /* Yes, please join the party. */ + Reject.Evil.1
-  + ~Global("A7CHR-SKIPCHECK","GLOBAL",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_EVIL) ReputationGT(Player1,12) ReputationLT(Player1,17) CheckStatLT(Player1,14,CHR)~ + @1014 /* Sure, you can tag along for a while. */ + Reject.Evil.1
-  + ~Global("A7CHR-SKIPCHECK","GLOBAL",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_EVIL) ReputationGT(Player1,16)~ + @1002 /* Yes, please join the party. */ + Reject.Evil.1
-  + ~Global("A7CHR-SKIPCHECK","GLOBAL",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_EVIL) ReputationGT(Player1,16)~ + @1014 /* Sure, you can tag along for a while. */ + Reject.Evil.1
+  + ~Global("A7CHR-SKIPCHECK","LOCALS",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_EVIL) ReputationGT(Player1,12) ReputationLT(Player1,17) CheckStatLT(Player1,14,CHR)~ + @1002 /* Yes, please join the party. */ + Reject.Evil.1
+  + ~Global("A7CHR-SKIPCHECK","LOCALS",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_EVIL) ReputationGT(Player1,12) ReputationLT(Player1,17) CheckStatLT(Player1,14,CHR)~ + @1014 /* Sure, you can tag along for a while. */ + Reject.Evil.1
+  + ~Global("A7CHR-SKIPCHECK","LOCALS",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_EVIL) ReputationGT(Player1,16)~ + @1002 /* Yes, please join the party. */ + Reject.Evil.1
+  + ~Global("A7CHR-SKIPCHECK","LOCALS",0) Global("A7CHR-CHECKED","LOCALS",0) Alignment(Myself,MASK_EVIL) ReputationGT(Player1,16)~ + @1014 /* Sure, you can tag along for a while. */ + Reject.Evil.1
 
   ++ @1003 /* No. */ EXIT
 END

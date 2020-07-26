@@ -229,8 +229,8 @@ END
 ///////////////////////////////////////////////////////////
 BEGIN @20 // Enable alignment checks for custom NPCs
 REQUIRE_PREDICATE (GAME_IS ~tob tutu tutu_totsc bgt bgee bg2ee eet~) @500 // Game is not supported.
-REQUIRE_PREDICATE (FILE_EXISTS_IN_GAME ~a7-npc.2da~) @501 // No installed NPCs found.
-REQUIRE_PREDICATE (FILE_CONTAINS_EVALUATED(~baldur.bcs~ ~GLOBALA7CHR-SKIPCHECK_CHECKED~)) @506 // Alignment check already enabled.
+REQUIRE_PREDICATE (FILE_EXISTS_IN_GAME ~a7-npc.2da~ && FILE_EXISTS_IN_GAME ~a7chrnpc.bcs~) @501 // No installed NPCs found.
+REQUIRE_PREDICATE (FILE_CONTAINS_EVALUATED(~a7chrnpc.bcs~ ~LOCALSA7CHR-SKIPCHECK_CHECKED~)) @506 // Alignment check already enabled.
 DESIGNATED 20
 NO_LOG_RECORD
 
@@ -244,8 +244,8 @@ LAF REMOVE_DISABLED_ALIGNMENT_CHECK END
 ///////////////////////////////////////////////////////////
 BEGIN @21 // Disable alignment checks for custom NPCs
 REQUIRE_PREDICATE (GAME_IS ~tob tutu tutu_totsc bgt bgee bg2ee eet~) @500 // Game is not supported.
-REQUIRE_PREDICATE (FILE_EXISTS_IN_GAME ~a7-npc.2da~) @501 // No installed NPCs found.
-REQUIRE_PREDICATE (NOT FILE_CONTAINS_EVALUATED(~baldur.bcs~ ~GLOBALA7CHR-SKIPCHECK_CHECKED~)) @507 // Alignment check already disabled.
+REQUIRE_PREDICATE (FILE_EXISTS_IN_GAME ~a7-npc.2da~ && FILE_EXISTS_IN_GAME ~a7chrnpc.bcs~) @501 // No installed NPCs found.
+REQUIRE_PREDICATE (NOT FILE_CONTAINS_EVALUATED(~a7chrnpc.bcs~ ~LOCALSA7CHR-SKIPCHECK_CHECKED~)) @507 // Alignment check already disabled.
 DESIGNATED 21
 NO_LOG_RECORD
 

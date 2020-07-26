@@ -146,15 +146,17 @@ Evil NPCs:
 - Join for 1000 gold if reputation is between 13 and 16 and the protagonist's charisma is 14 or higher.
 
 NOTE:
-This setting will be stored in saved games. Toggling this check later won't have an effect unless
-you load an earlier save. Alternatively you can toggle this check manually in the game if the debug
-console is enabled.
+This option is set on a per NPC basis as soon as the party enters the respective area. Toggling
+this check later won't have an effect on these NPCs unless you load an earlier save. Alternatively
+you can enable or disable the check manually for selected NPCs in the debug console of the game.
 
-To disable alignment checks enter this code (replace "CLUAConsole" by "C" for the Enhanced Editions):
-CLUAConsole:SetGlobal("A7CHR-SKIPCHECK","GLOBAL",1)
+To disable the alignment check of an NPC execute this code while the mouse cursor is placed over the
+NPC's selection circle (replace "CLUAConsole" by "C" for the Enhanced Edition games):
+CLUAConsole:SetGlobal("A7CHR-SKIPCHECK","LOCALS",1)
 
-To enable alignment checks enter this code (replace "CLUAConsole" by "C" for the Enhanced Editions):
-CLUAConsole:SetGlobal("A7CHR-SKIPCHECK","GLOBAL",0)
+To enable the alignment check of an NPC execute this code while the mouse cursor is placed over the
+NPC's selection circle (replace "CLUAConsole" by "C" for the Enhanced Edition games):
+CLUAConsole:SetGlobal("A7CHR-SKIPCHECK","LOCALS",0)
 
 
 *** 3. Remove custom NPCs from the game ***

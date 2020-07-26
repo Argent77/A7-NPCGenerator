@@ -424,39 +424,3 @@ BEGIN
     END
   END
 END
-
-
-// Retrieves all available global game scripts and returns them as array of resrefs.
-DEFINE_ACTION_FUNCTION GET_GLOBAL_SCRIPTS
-RET
-  scripts // number of available scripts
-RET_ARRAY
-  scripts // indexed array containing script resrefs
-BEGIN
-  OUTER_SET scripts = 0
-  ACTION_IF (FILE_EXISTS_IN_GAME ~baldur.bcs~) BEGIN
-    OUTER_TEXT_SPRINT $scripts(~%scripts%~) ~BALDUR~
-    OUTER_SET scripts += 1
-  END
-  ACTION_IF (FILE_EXISTS_IN_GAME ~baldur25.bcs~) BEGIN
-    OUTER_TEXT_SPRINT $scripts(~%scripts%~) ~BALDUR25~
-    OUTER_SET scripts += 1
-  END
-  ACTION_IF (FILE_EXISTS_IN_GAME ~campaign.2da~) BEGIN
-    COPY_EXISTING ~campaign.2da~ ~override~
-      READ_2DA_ENTRIES_NOW table 1
-      FOR (row = 3; row < table; ++row) BEGIN
-        READ_2DA_ENTRY_FORMER table row 1 value
-        TO_UPPER ~value~
-        PATCH_IF (NOT ~%value%~ STR_EQ ~BALDUR~ && NOT ~%value%~ STR_EQ ~BALDUR25~) BEGIN
-          TEXT_SPRINT $scripts(~%scripts%~) ~%value%~
-          SET scripts += 1
-        END
-      END
-    BUT_ONLY
-  END
-  ACTION_IF (scripts = 0) BEGIN
-    // Workaround for buggy WeiDU function regarding empty arrays
-    OUTER_TEXT_SPRINT $scripts(~0~) ~~
-  END
-END
