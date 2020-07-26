@@ -34,7 +34,7 @@ This component won't be registered in the WeiDU.log and can therefore be called 
 
 ### Enable/Disable alignment checks for custom NPCs (not available for IWD:EE)
 
-By default installed NPCs won't always join or follow the party right away. If their goals don't align with yours they might ask for a fee or outright refuse to join.
+By default installed NPCs won't always join or follow the party right away. If their goals don't align with the party's they might ask for a fee or outright refuse to join.
 
 With this component it is possible to toggle this check on or off. When disabled then every installed NPC will automatically join or follow your party when asked.
 

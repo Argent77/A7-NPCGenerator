@@ -85,7 +85,7 @@ Manual installation:
 A character selection menu allows you to select one or more characters for installation. The mod
 scans the "characters" folder for exported character files and/or characters in the game resources
 (depending on selected option) and lists available characters with a short summary of gender,
-class/kit and level.
+alignment, class/kit and level.
 To select a character, enter the number of the menu entry. A selection can be reverted by entering
 the number of an already selected character again. Enter 'A' to install all available characters
 at once. Otherwise, enter 'X' to finish selection and start the actual installation process.
@@ -120,7 +120,7 @@ effect re-applied. Enhanced Editions are not affected.
 *** 2. Enable/Disable alignment checks for custom NPCs (not available for IWD:EE) ***
 
 By default installed NPCs won't always join or follow the party right away. If their goals don't
-align with yours they might ask for a fee or outright refuse to join.
+align with the party's they might ask for a fee or outright refuse to join.
 
 This check is only performed when asked to join or follow the first time. Subsequent requests are
 always accepted.

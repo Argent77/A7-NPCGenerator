@@ -42,6 +42,7 @@ END
 // $char_ref: indexed array containing CHR filespec entries (numeric "char_ref" variable contains total number of entries)
 // $char_name: associative array containing CHR filespec => character name entries.
 // $char_gender: associative array containing CHR filespec => character gender entries.
+// @char_alignment: associative array containing CHR filespec => character alignment entries.
 // $char_class: associative array containing CHR filespec => character class entries.
 // $char_kit: associative array containing CHR filespec => character kit entries.
 // $char_level: associative array containing CHR filespec => character level entries.
@@ -61,10 +62,11 @@ BEGIN
 
   READ_ASCII 0 sig (4)
   PATCH_IF (~%sig%~ STR_EQ ~CHR ~) BEGIN
-    LPF GET_CRE_INFO RET name gender_desc class_desc kit_desc level_desc END
+    LPF GET_CRE_INFO RET name gender_desc alignment_desc class_desc kit_desc level_desc END
     TEXT_SPRINT $char_ref(~%char_ref%~) ~%SOURCE_FILE%~
     TEXT_SPRINT $char_name(~%SOURCE_FILE%~) ~%name%~
     TEXT_SPRINT $char_gender(~%SOURCE_FILE%~) ~%gender_desc%~
+    TEXT_SPRINT $char_alignment(~%SOURCE_FILE%~) ~%alignment_desc%~
     TEXT_SPRINT $char_class(~%SOURCE_FILE%~) ~%class_desc%~
     TEXT_SPRINT $char_kit(~%SOURCE_FILE%~) ~%kit_desc%~
     TEXT_SPRINT $char_level(~%SOURCE_FILE%~) ~%level_desc%~
@@ -86,6 +88,7 @@ BEGIN
   LOCAL_SPRINT title @50        // Available characters:
   LOCAL_SPRINT prompt @51       // Enter character index, A or X:
   LOCAL_SPRINT label_gender @90 // Gender
+  LOCAL_SPRINT label_alignment @94  // Alignment
   LOCAL_SPRINT label_class @91  // Class
   LOCAL_SPRINT label_kit @92    // Kit
   LOCAL_SPRINT label_level @93  // Level
@@ -139,6 +142,7 @@ BEGIN
       LAF RES_OF_FILESPEC STR_VAR filespec RET resref = res END
       OUTER_TEXT_SPRINT name $char_name(~%filespec%~)
       OUTER_TEXT_SPRINT gender $char_gender(~%filespec%~)
+      OUTER_TEXT_SPRINT alignment $char_alignment(~%filespec%~)
       OUTER_TEXT_SPRINT class $char_class(~%filespec%~)
       OUTER_TEXT_SPRINT kit $char_kit(~%filespec%~)
       OUTER_TEXT_SPRINT level $char_level(~%filespec%~)
@@ -148,7 +152,7 @@ BEGIN
       END ELSE BEGIN
         OUTER_TEXT_SPRINT index ~%idx%)~
       END
-      OUTER_TEXT_SPRINT entry ~%index% %name% (%resref%.%char_ext%) - %label_gender% %gender%, %label_class% %class%~
+      OUTER_TEXT_SPRINT entry ~%index% %name% (%resref%.%char_ext%) - %label_gender% %gender%, %label_alignment% %alignment%, %label_class% %class%~
       ACTION_IF (NOT ~%kit%~ STR_EQ ~~) BEGIN
         OUTER_TEXT_SPRINT entry ~%entry%, %label_kit% %kit%~
       END

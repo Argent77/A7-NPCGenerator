@@ -32,6 +32,7 @@
 @91 = ~Klasse:~
 @92 = ~Kit:~
 @93 = ~Stufe:~
+@94 = ~Gesinnung:~
 
 // Character gender
 @100 = ~(unbekannt)~
@@ -64,6 +65,17 @@
 // Character class type
 @140 = ~Kombination~
 @141 = ~Mehrklassig~
+
+// Character alignment
+@150 = ~Rechtschaffen gut~
+@151 = ~Rechtschaffen neutral~
+@152 = ~Rechtschaffen boese~
+@153 = ~Neutral gut~
+@154 = ~Neutral~
+@155 = ~Neutral boese~
+@156 = ~Chaotisch gut~
+@157 = ~Chaotisch neutral~
+@158 = ~Chaotisch boese~
 
 
 // Messages

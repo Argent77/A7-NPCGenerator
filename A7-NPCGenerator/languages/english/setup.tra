@@ -32,6 +32,7 @@
 @91 = ~Class:~
 @92 = ~Kit:~
 @93 = ~Level:~
+@94 = ~Alignment:~
 
 // Character gender
 @100 = ~(unknown)~
@@ -64,6 +65,17 @@
 // Character class type
 @140 = ~multi~
 @141 = ~dual~
+
+// Character alignment
+@150 = ~Lawful Good~
+@151 = ~Lawful Neutral~
+@152 = ~Lawful Evil~
+@153 = ~Neutral Good~
+@154 = ~True Neutral~
+@155 = ~Neutral Evil~
+@156 = ~Chaotic Good~
+@157 = ~Chaotic Neutral~
+@158 = ~Chaotic Evil~
 
 
 // Messages

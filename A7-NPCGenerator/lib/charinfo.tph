@@ -3,6 +3,7 @@ DEFINE_PATCH_FUNCTION GET_CRE_INFO
 RET
   name
   gender_desc
+  alignment_desc
   class_desc
   kit_desc
   level_desc
@@ -34,6 +35,9 @@ BEGIN
     // getting gender
     READ_BYTE (ofs_base + 0x275) gender
     LPF __GET_GENDER_INFO INT_VAR gender RET gender_desc END
+    // getting alignment
+    READ_BYTE (ofs_base + 0x27b) alignment
+    LPF __GET_ALIGNMENT_INFO INT_VAR alignment RET alignment_desc END
     // getting class
     READ_BYTE (ofs_base + 0x10) flags
     READ_BYTE (ofs_base + 0x273) class
@@ -57,7 +61,30 @@ BEGIN
   PATCH_MATCH ~%gender%~ WITH
     1 BEGIN SPRINT gender_desc @101 END // Male
     2 BEGIN SPRINT gender_desc @102 END // Female
-    DEFAULT SPRINT gender_desc @100 // (unknown)
+    DEFAULT
+      SPRINT gender_desc @100 // (unknown)
+      SPRINT gender_desc ~%gender% %gender_desc%~
+  END
+END
+
+
+DEFINE_PATCH_FUNCTION __GET_ALIGNMENT_INFO
+INT_VAR alignment = "-1"
+RET alignment_desc
+BEGIN
+  PATCH_MATCH ~%alignment%~ WITH
+    0x11 BEGIN SPRINT alignment_desc @150 END // Lawful Good
+    0x12 BEGIN SPRINT alignment_desc @151 END // Lawful Neutral
+    0x13 BEGIN SPRINT alignment_desc @152 END // Lawful Evil
+    0x21 BEGIN SPRINT alignment_desc @153 END // Neutral Good
+    0x22 BEGIN SPRINT alignment_desc @154 END // True Neutral
+    0x23 BEGIN SPRINT alignment_desc @155 END // Neutral Evil
+    0x31 BEGIN SPRINT alignment_desc @156 END // Chaotic Good
+    0x32 BEGIN SPRINT alignment_desc @157 END // Chaotic Neutral
+    0x33 BEGIN SPRINT alignment_desc @158 END // Chaotic Evil
+    DEFAULT
+      SPRINT alignment_desc @100 // (unknown)
+      SPRINT alignment_desc ~%alignment% %alignment_desc%~
   END
 END
 
