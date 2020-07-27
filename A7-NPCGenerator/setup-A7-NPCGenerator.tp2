@@ -86,11 +86,6 @@ LAM INIT_LOCATIONS
 // Processing character selection
 LAM INSTALL_CHARACTERS
 
-// Disable alignment check for custom NPCs in IWDEE by default
-ACTION_IF (GAME_IS ~iwdee~) BEGIN
-  LAF ADD_DISABLED_ALIGNMENT_CHECK END
-END
-
 
 BEGIN @3  // Game characters only
 SUBCOMPONENT @1 // Add custom NPCs to the game
@@ -125,11 +120,6 @@ LAM INIT_LOCATIONS
 
 // Processing character selection
 LAM INSTALL_CHARACTERS
-
-// Disable alignment check for custom NPCs in IWDEE by default
-ACTION_IF (GAME_IS ~iwdee~) BEGIN
-  LAF ADD_DISABLED_ALIGNMENT_CHECK END
-END
 
 
 BEGIN @4  // Game characters and user characters
@@ -170,11 +160,6 @@ LAM INIT_LOCATIONS
 
 // Processing character selection
 LAM INSTALL_CHARACTERS
-
-// Disable alignment check for custom NPCs in IWDEE by default
-ACTION_IF (GAME_IS ~iwdee~) BEGIN
-  LAF ADD_DISABLED_ALIGNMENT_CHECK END
-END
 
 
 BEGIN @5 // Automated installation (from settings.tpa)
@@ -217,11 +202,6 @@ LAM INIT_LOCATIONS
 
 // Processing character selection
 LAM INSTALL_CHARACTERS
-
-// Disable alignment check for custom NPCs in IWDEE by default
-ACTION_IF (GAME_IS ~iwdee~) BEGIN
-  LAF ADD_DISABLED_ALIGNMENT_CHECK END
-END
 
 
 ///////////////////////////////////////////////////////////

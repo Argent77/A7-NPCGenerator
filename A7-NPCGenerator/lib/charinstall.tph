@@ -63,7 +63,11 @@ BEGIN
 
   ACTION_IF (char_selected > 0) BEGIN
     ACTION_IF (NOT FILE_EXISTS_IN_GAME ~A7CHRNPC.DLG~) BEGIN
-      COMPILE ~%MOD_FOLDER%/dialogs/a7chrnpc.d~
+      ACTION_IF (GAME_IS ~iwdee~) BEGIN
+        COMPILE ~%MOD_FOLDER%/dialogs/a7chrnpc-iwdee.d~
+      END ELSE BEGIN
+        COMPILE ~%MOD_FOLDER%/dialogs/a7chrnpc.d~
+      END
     END
 
     // Spell effect "Clear Fog of War" used in companion mode
