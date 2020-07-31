@@ -5,7 +5,8 @@ Version:    1.0
 Author:     Argent77
 
 Download:   https://github.com/Argent77/A7-NPCGenerator/releases
-Discussion: https://
+Discussion: https://www.gibberlings3.net/forums/topic/31809-npc-generator-npc-creation-made-easy/
+            https://forums.beamdog.com/discussion/80057/mod-npc-generator-npc-creation-made-easy
 
 
 Overview
