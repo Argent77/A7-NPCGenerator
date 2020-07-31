@@ -1,6 +1,6 @@
 BACKUP ~A7-NPCGenerator/backup~
 SUPPORT ~https://github.com/Argent77/A7-NPCGenerator~
-VERSION ~0.9beta~
+VERSION ~1.0~
 
 ALWAYS
   // Platform-specific line breaks

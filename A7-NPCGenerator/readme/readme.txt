@@ -1,7 +1,7 @@
 NPC Generator
 ~~~~~~~~~~~~~
 
-Version:    0.9beta
+Version:    1.0
 Author:     Argent77
 
 Download:   https://github.com/Argent77/A7-NPCGenerator/releases
