@@ -11,8 +11,8 @@ Discussion: https://
 Overview
 ~~~~~~~~
 
-Have you ever regretted that the game only allowed you to create the protagonist or (with some
-effort) up to five additional characters? Not anymore!
+Have you ever regretted that the game only allowed you to create an initial party consisting of
+the protagonist and (with some effort) a small number of additional characters? Not anymore!
 
 This mod allows you to install any number of pregenerated or exported characters as regular NPCs.
 They can be met at predetermined locations where you have the chance to invite them into your
