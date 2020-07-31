@@ -19,6 +19,9 @@ They can be met at predetermined locations where you have the chance to invite t
 party or have them tag along without occupying party slots at any time in the game. Kicked out
 NPCs can be instructed to wait or return to the original meeting place.
 
+The mod isn't registered in the WeiDU.log and can therefore be called at any time and as often as
+you like to install or remove NPCs to or from the game.
+
 The mod supports the following games and game variants:
 - Original BG2
 - Tutu/EasyTutu
@@ -79,6 +82,10 @@ at one point or another. Characters will move automatically to any of the locati
 - Root Cellar Tavern and Evening Shade Inn (both Kuldahar)
 - The Whistling Gallows - first and second floor, in Lonelywood (HoW campaign only)
 
+Note: Since the Winter's Cradle Tavern in Easthaven is used as the starting area NPCs will gather
+      at this place only after the party leaves the tavern to avoid interference with the opening
+      cutscene.
+
 This component provides two installation modes:
 
 Manual installation:
@@ -102,12 +109,7 @@ By default it will install all available characters from the "characters" folder
 adaptation. See the settings file (settings.tpa) for more detailed comments about individual
 settings.
 
-NOTE #1:
-This component won't be registered in the WeiDU.log and can therefore be called anytime and as
-many times you want to install characters as NPCs. To uninstall NPCs use the second component of
-the mod ("Remove custom NPCs from the game").
-
-NOTE #2:
+NOTE:
 NPCs in companion mode have the spell effect "Clear Fog of War" applied, so that they don't vanish
 into the fog of war when they move out of party range. However, this effect is supported for only
 up to 8 characters by the game engine, party members included. Additional followers can still be

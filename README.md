@@ -7,6 +7,8 @@ Have you ever regretted that the game only allowed you to create the protagonist
 
 This mod allows you to install any number of pregenerated or exported characters as regular NPCs. They can be met at predetermined locations where you have the chance to invite them into your party or have them tag along without occupying party slots at any time in the game. Kicked out NPCs can be instructed to wait or return to the original meeting place.
 
+**NOTE:** The mod isn't registered in the WeiDU.log and can therefore be called at any time and as often as you like to install or remove NPCs to or from the game.
+
 The mod supports the following games and game variants:
 - Original BG2
 - Tutu/EasyTutu
@@ -28,9 +30,6 @@ With this component it is possible to install any number of individual character
 This component offers two installation modes: *manual* and *automated*.
 
 Manual installation provides a menu-driven character selection. Automated installation is controlled by a settings file and requires no manual input. It is therefore the best choice for mod managers or scripted mod installations.
-
-**NOTE:**
-This component won't be registered in the WeiDU.log and can therefore be called anytime and as many times you want to install characters as NPCs. To uninstall NPCs use the second component of the mod ("Remove custom NPCs from the game").
 
 ### Enable/Disable alignment checks for custom NPCs (not available for IWD:EE)
 
