@@ -139,7 +139,7 @@ Good-aligned NPCs:
 Neutral NPCs:
 - Join for free if reputation is between 5 and 16 and the protagonist's charisma is 14 or higher.
 - Join for 250 gold if reputation is between 5 and 16 and the protagonist's charisma is 13 or lower.
-- Join for 250 gold if reputation is 16 or higher and the protagonist's charisma is 14 or higher.
+- Join for 250 gold if reputation is 17 or higher and the protagonist's charisma is 14 or higher.
 - Join for 500 gold if reputation is 4 or lower and the protagonist's charisma is 14 or higher.
 Evil NPCs:
 - Join for free if reputation is 8 or lower and the protagonist's charisma is 14 or higher.
