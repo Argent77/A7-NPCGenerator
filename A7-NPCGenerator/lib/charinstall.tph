@@ -284,6 +284,80 @@ BEGIN
     WRITE_ASCII SCRIPT_DEFAULT ~~ (8)
     WRITE_ASCIIE DEATHVAR ~%script_name%~ (32)
     LPF ADD_LOCAL_VARIABLE INT_VAR value = 1 STR_VAR name = ~A7CHR-CUSTOM~ END
+
+    // removing invalid kit
+    SET TRUECLASS = 0x4000
+    SET kit_value = ((SHORT_AT 0x244) << 16) | (SHORT_AT 0x246)
+    PATCH_IF (kit_value != TRUECLASS) BEGIN
+      LOOKUP_IDS_SYMBOL_OF_INT kit_symbol ~kit~ kit_value
+      PATCH_IF (~%kit_symbol%~ STR_EQ ~%kit_value%~) BEGIN
+        SET kit_value = TRUECLASS
+        WRITE_SHORT 0x244 (kit_value >> 16) & 0xffff
+        WRITE_SHORT 0x246 kit_value & 0xffff
+      END
+    END
+
+    // removing invalid known and memorized spells
+    READ_LONG 0x2a0 ofs_known
+    READ_LONG 0x2a4 num_known
+    SET spells = 0
+    FOR (idx = 0; idx < num_known; ++idx) BEGIN
+      SET ofs = ofs_known + idx * 12
+      READ_ASCII ofs resref (8) NULL
+      PATCH_IF (STRING_LENGTH ~%resref%~ > 0 && NOT FILE_EXISTS_IN_GAME ~%resref%.SPL~) BEGIN
+        TEXT_SPRINT $spells(~%spells%~) ~%resref%~
+        SET spells += 1
+      END
+    END
+    FOR (idx = 0; idx < spells; ++idx) BEGIN
+      TEXT_SPRINT resref $spells(~%idx%~)
+      REMOVE_MEMORIZED_SPELL ~%resref%~
+      REMOVE_KNOWN_SPELL ~%resref%~
+    END
+
+    // removing invalid items
+    READ_LONG 0x2bc ofs_items
+    READ_LONG 0x2c0 num_items
+    SET items = 0
+    FOR (idx = 0; idx < num_items; ++idx) BEGIN
+      SET ofs = ofs_items + idx * 20
+      READ_ASCII ofs resref (8) NULL
+      PATCH_IF (STRING_LENGTH ~%resref%~ > 0 && NOT FILE_EXISTS_IN_GAME ~%resref%.ITM~) BEGIN
+        TEXT_SPRINT $items(~%items%~) ~%resref%~
+        SET items += 1
+      END
+    END
+    FOR (idx = 0; idx < items; ++idx) BEGIN
+      TEXT_SPRINT resref $items(~%idx%~)
+      REMOVE_CRE_ITEM ~%resref%~
+    END
+
+    // removing invalid effects
+    PATCH_IF ((BYTE_AT 0x33) = 1) BEGIN // check only effect v2 entries
+      READ_LONG 0x2c4 ofs_fx
+      READ_LONG 0x2c8 num_fx
+      SET fx_size = 264
+      SET num_deleted = 0
+      FOR (idx = num_fx - 1; idx >= 0; --idx) BEGIN
+        SET ofs = ofs_fx + idx * fx_size
+        READ_ASCII (ofs + 0x8c) resref (8) NULL
+        PATCH_IF (STRING_LENGTH ~%resref%~ > 0 && NOT ~%resref%~ STR_EQ ~NONE~ && NOT FILE_EXISTS_IN_GAME ~%resref%.SPL~) BEGIN
+          DELETE_BYTES ofs fx_size
+          SET num_deleted += 1
+        END
+      END
+      PATCH_IF (num_deleted > 0) BEGIN
+        // updating effects count
+        WRITE_LONG 0x2c8 (num_fx - num_deleted)
+        // updating offsets
+        SET bytes_removed = num_deleted * fx_size
+        PATCH_FOR_EACH ofs IN ~0x2a0~ ~0x2a8~ ~0x2b0~ ~0x2b8~ ~0x2bc~ BEGIN
+          WRITE_LONG ofs ((THIS > ofs_fx) ? (THIS - bytes_removed) : THIS)
+        END
+      END
+    END
+
+    // resetting CRE experience
     PATCH_IF (adapt_xp) BEGIN
       WRITE_LONG 0x18 0
       LPF ADD_LOCAL_VARIABLE INT_VAR value = 1 STR_VAR name = ~A7CHR-ADAPT-XP~ END
