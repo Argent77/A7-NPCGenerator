@@ -5,7 +5,7 @@ Version:    1.0
 Author:     Argent77
 
 Download:   https://github.com/Argent77/A7-NPCGenerator/releases
-Discussion: https://www.gibberlings3.net/forums/topic/31809-npc-generator-npc-creation-made-easy/
+Discussion: https://www.gibberlings3.net/forums/topic/31809-npc-generator-npc-creation-made-easy
             https://forums.beamdog.com/discussion/80057/mod-npc-generator-npc-creation-made-easy
 
 
@@ -110,7 +110,7 @@ By default it will install all available characters from the "characters" folder
 adaptation. See the settings file (settings.tpa) for more detailed comments about individual
 settings.
 
-NOTE:
+NOTE 1:
 NPCs in companion mode have the spell effect "Clear Fog of War" applied, so that they don't vanish
 into the fog of war when they move out of party range. However, this effect is supported for only
 up to 8 characters by the game engine, party members included. Additional followers can still be
@@ -118,6 +118,12 @@ selected while in the fog of war, but don't clear it.
 Because of technical limitations this effect can be dispelled via Ctrl+R cheat in the original
 BG2 engine if cheat keys are enabled. The NPC has to be kicked out and invited again to have the
 effect re-applied. Enhanced Editions are not affected.
+
+NOTE 2:
+Unlike regular party members NPCs in companion mode do not automatically gain experience from
+killing monsters or completing quests. The former issue has been worked around by granting an
+approximated amount of XP for monsters killed by the NPCs themselves. The level up process is
+still only available when the NPC is a regular party member.
 
 
 *** 2. Enable/Disable alignment checks for custom NPCs (not available for IWD:EE) ***
@@ -189,6 +195,11 @@ International License" (http://creativecommons.org/licenses/by-sa/4.0/).
 
 History
 ~~~~~~~
+
+1.1
+- NPC followers may gain experience from killing creatures.
+- Invalid character data (kits, spells, items, etc.) will be automatically fixed when NPCs are installed.
+- Fixed typos in readme
 
 1.0
 - Initial release
