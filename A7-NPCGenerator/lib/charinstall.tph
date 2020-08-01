@@ -154,7 +154,11 @@ BEGIN
     END
 
     ACTION_IF (NOT FILE_EXISTS_IN_GAME ~A7CHRXP.BCS~) BEGIN
-      COMPILE ~%MOD_FOLDER%/scripts/a7chrxp.baf~
+      ACTION_IF (IS_EE) BEGIN
+        COMPILE ~%MOD_FOLDER%/scripts/ee/a7chrxp.baf~
+      END ELSE BEGIN
+        COMPILE ~%MOD_FOLDER%/scripts/a7chrxp.baf~
+      END
     END
 
     // Installing NPCs

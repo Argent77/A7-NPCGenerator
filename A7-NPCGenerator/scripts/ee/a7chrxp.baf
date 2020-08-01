@@ -1,8 +1,9 @@
-// Gain XP for killing creatures (non-EE games): based on current character level
+// Gain XP for killing creatures (EE games): based on XP of killed creature
 IF
   !Global("A7CHR-FOLLOWER","LOCALS",0)
-  LevelLT(Myself,3)
   Killed([ANYONE])
+  CheckStatGT(LastKilled,0,XPVALUE)
+  CheckStatLT(LastKilled,40,XPVALUE)
 THEN
   RESPONSE #100
     AddXPObject(Myself,10)
@@ -11,9 +12,9 @@ END
 
 IF
   !Global("A7CHR-FOLLOWER","LOCALS",0)
-  LevelGT(Myself,2)
-  LevelLT(Myself,5)
   Killed([ANYONE])
+  CheckStatGT(LastKilled,39,XPVALUE)
+  CheckStatLT(LastKilled,100,XPVALUE)
 THEN
   RESPONSE #100
     AddXPObject(Myself,25)
@@ -22,9 +23,9 @@ END
 
 IF
   !Global("A7CHR-FOLLOWER","LOCALS",0)
-  LevelGT(Myself,4)
-  LevelLT(Myself,7)
   Killed([ANYONE])
+  CheckStatGT(LastKilled,99,XPVALUE)
+  CheckStatLT(LastKilled,200,XPVALUE)
 THEN
   RESPONSE #100
     AddXPObject(Myself,50)
@@ -33,9 +34,9 @@ END
 
 IF
   !Global("A7CHR-FOLLOWER","LOCALS",0)
-  LevelGT(Myself,6)
-  LevelLT(Myself,9)
   Killed([ANYONE])
+  CheckStatGT(LastKilled,199,XPVALUE)
+  CheckStatLT(LastKilled,300,XPVALUE)
 THEN
   RESPONSE #100
     AddXPObject(Myself,75)
@@ -44,9 +45,9 @@ END
 
 IF
   !Global("A7CHR-FOLLOWER","LOCALS",0)
-  LevelGT(Myself,8)
-  LevelLT(Myself,11)
   Killed([ANYONE])
+  CheckStatGT(LastKilled,299,XPVALUE)
+  CheckStatLT(LastKilled,400,XPVALUE)
 THEN
   RESPONSE #100
     AddXPObject(Myself,100)
@@ -55,9 +56,9 @@ END
 
 IF
   !Global("A7CHR-FOLLOWER","LOCALS",0)
-  LevelGT(Myself,10)
-  LevelLT(Myself,13)
   Killed([ANYONE])
+  CheckStatGT(LastKilled,399,XPVALUE)
+  CheckStatLT(LastKilled,600,XPVALUE)
 THEN
   RESPONSE #100
     AddXPObject(Myself,150)
@@ -66,9 +67,9 @@ END
 
 IF
   !Global("A7CHR-FOLLOWER","LOCALS",0)
-  LevelGT(Myself,12)
-  LevelLT(Myself,15)
   Killed([ANYONE])
+  CheckStatGT(LastKilled,599,XPVALUE)
+  CheckStatLT(LastKilled,800,XPVALUE)
 THEN
   RESPONSE #100
     AddXPObject(Myself,200)
@@ -77,9 +78,9 @@ END
 
 IF
   !Global("A7CHR-FOLLOWER","LOCALS",0)
-  LevelGT(Myself,14)
-  LevelLT(Myself,17)
   Killed([ANYONE])
+  CheckStatGT(LastKilled,799,XPVALUE)
+  CheckStatLT(LastKilled,1200,XPVALUE)
 THEN
   RESPONSE #100
     AddXPObject(Myself,300)
@@ -88,9 +89,9 @@ END
 
 IF
   !Global("A7CHR-FOLLOWER","LOCALS",0)
-  LevelGT(Myself,16)
-  LevelLT(Myself,19)
   Killed([ANYONE])
+  CheckStatGT(LastKilled,1199,XPVALUE)
+  CheckStatLT(LastKilled,2000,XPVALUE)
 THEN
   RESPONSE #100
     AddXPObject(Myself,500)
@@ -99,9 +100,9 @@ END
 
 IF
   !Global("A7CHR-FOLLOWER","LOCALS",0)
-  LevelGT(Myself,18)
-  LevelLT(Myself,21)
   Killed([ANYONE])
+  CheckStatGT(LastKilled,1999,XPVALUE)
+  CheckStatLT(LastKilled,3000,XPVALUE)
 THEN
   RESPONSE #100
     AddXPObject(Myself,750)
@@ -110,9 +111,9 @@ END
 
 IF
   !Global("A7CHR-FOLLOWER","LOCALS",0)
-  LevelGT(Myself,20)
-  LevelLT(Myself,23)
   Killed([ANYONE])
+  CheckStatGT(LastKilled,2999,XPVALUE)
+  CheckStatLT(LastKilled,5000,XPVALUE)
 THEN
   RESPONSE #100
     AddXPObject(Myself,1250)
@@ -121,9 +122,9 @@ END
 
 IF
   !Global("A7CHR-FOLLOWER","LOCALS",0)
-  LevelGT(Myself,22)
-  LevelLT(Myself,25)
   Killed([ANYONE])
+  CheckStatGT(LastKilled,4999,XPVALUE)
+  CheckStatLT(LastKilled,8000,XPVALUE)
 THEN
   RESPONSE #100
     AddXPObject(Myself,2000)
@@ -132,9 +133,9 @@ END
 
 IF
   !Global("A7CHR-FOLLOWER","LOCALS",0)
-  LevelGT(Myself,24)
-  LevelLT(Myself,27)
   Killed([ANYONE])
+  CheckStatGT(LastKilled,7999,XPVALUE)
+  CheckStatLT(LastKilled,12000,XPVALUE)
 THEN
   RESPONSE #100
     AddXPObject(Myself,3000)
@@ -143,9 +144,9 @@ END
 
 IF
   !Global("A7CHR-FOLLOWER","LOCALS",0)
-  LevelGT(Myself,26)
-  LevelLT(Myself,29)
   Killed([ANYONE])
+  CheckStatGT(LastKilled,11999,XPVALUE)
+  CheckStatLT(LastKilled,20000,XPVALUE)
 THEN
   RESPONSE #100
     AddXPObject(Myself,5000)
@@ -154,9 +155,9 @@ END
 
 IF
   !Global("A7CHR-FOLLOWER","LOCALS",0)
-  LevelGT(Myself,28)
-  LevelLT(Myself,31)
   Killed([ANYONE])
+  CheckStatGT(LastKilled,19999,XPVALUE)
+  CheckStatLT(LastKilled,32000,XPVALUE)
 THEN
   RESPONSE #100
     AddXPObject(Myself,8000)
@@ -165,8 +166,8 @@ END
 
 IF
   !Global("A7CHR-FOLLOWER","LOCALS",0)
-  LevelGT(Myself,30)
   Killed([ANYONE])
+  CheckStatGT(LastKilled,31999,XPVALUE)
 THEN
   RESPONSE #100
     AddXPObject(Myself,12000)
