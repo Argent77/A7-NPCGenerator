@@ -1,0 +1,163 @@
+// Gain XP for killing creatures
+IF
+  !Global("A7CHR-FOLLOWER","LOCALS",0)
+  LevelLT(Myself,3)
+  Killed([ANYONE])
+THEN
+  RESPONSE #100
+    AddXPObject(Myself,25)
+    Continue()
+END
+
+IF
+  !Global("A7CHR-FOLLOWER","LOCALS",0)
+  LevelGT(Myself,2)
+  LevelLT(Myself,5)
+  Killed([ANYONE])
+THEN
+  RESPONSE #100
+    AddXPObject(Myself,50)
+    Continue()
+END
+
+IF
+  !Global("A7CHR-FOLLOWER","LOCALS",0)
+  LevelGT(Myself,4)
+  LevelLT(Myself,7)
+  Killed([ANYONE])
+THEN
+  RESPONSE #100
+    AddXPObject(Myself,75)
+    Continue()
+END
+
+IF
+  !Global("A7CHR-FOLLOWER","LOCALS",0)
+  LevelGT(Myself,6)
+  LevelLT(Myself,9)
+  Killed([ANYONE])
+THEN
+  RESPONSE #100
+    AddXPObject(Myself,100)
+    Continue()
+END
+
+IF
+  !Global("A7CHR-FOLLOWER","LOCALS",0)
+  LevelGT(Myself,8)
+  LevelLT(Myself,11)
+  Killed([ANYONE])
+THEN
+  RESPONSE #100
+    AddXPObject(Myself,150)
+    Continue()
+END
+
+IF
+  !Global("A7CHR-FOLLOWER","LOCALS",0)
+  LevelGT(Myself,10)
+  LevelLT(Myself,13)
+  Killed([ANYONE])
+THEN
+  RESPONSE #100
+    AddXPObject(Myself,200)
+    Continue()
+END
+
+IF
+  !Global("A7CHR-FOLLOWER","LOCALS",0)
+  LevelGT(Myself,12)
+  LevelLT(Myself,15)
+  Killed([ANYONE])
+THEN
+  RESPONSE #100
+    AddXPObject(Myself,300)
+    Continue()
+END
+
+IF
+  !Global("A7CHR-FOLLOWER","LOCALS",0)
+  LevelGT(Myself,14)
+  LevelLT(Myself,17)
+  Killed([ANYONE])
+THEN
+  RESPONSE #100
+    AddXPObject(Myself,500)
+    Continue()
+END
+
+IF
+  !Global("A7CHR-FOLLOWER","LOCALS",0)
+  LevelGT(Myself,16)
+  LevelLT(Myself,19)
+  Killed([ANYONE])
+THEN
+  RESPONSE #100
+    AddXPObject(Myself,750)
+    Continue()
+END
+
+IF
+  !Global("A7CHR-FOLLOWER","LOCALS",0)
+  LevelGT(Myself,18)
+  LevelLT(Myself,21)
+  Killed([ANYONE])
+THEN
+  RESPONSE #100
+    AddXPObject(Myself,1250)
+    Continue()
+END
+
+IF
+  !Global("A7CHR-FOLLOWER","LOCALS",0)
+  LevelGT(Myself,20)
+  LevelLT(Myself,23)
+  Killed([ANYONE])
+THEN
+  RESPONSE #100
+    AddXPObject(Myself,2000)
+    Continue()
+END
+
+IF
+  !Global("A7CHR-FOLLOWER","LOCALS",0)
+  LevelGT(Myself,22)
+  LevelLT(Myself,25)
+  Killed([ANYONE])
+THEN
+  RESPONSE #100
+    AddXPObject(Myself,3000)
+    Continue()
+END
+
+IF
+  !Global("A7CHR-FOLLOWER","LOCALS",0)
+  LevelGT(Myself,24)
+  LevelLT(Myself,27)
+  Killed([ANYONE])
+THEN
+  RESPONSE #100
+    AddXPObject(Myself,5000)
+    Continue()
+END
+
+IF
+  !Global("A7CHR-FOLLOWER","LOCALS",0)
+  LevelGT(Myself,26)
+  LevelLT(Myself,29)
+  Killed([ANYONE])
+THEN
+  RESPONSE #100
+    AddXPObject(Myself,8000)
+    Continue()
+END
+
+IF
+  !Global("A7CHR-FOLLOWER","LOCALS",0)
+  LevelGT(Myself,28)
+  Killed([ANYONE])
+THEN
+  RESPONSE #100
+    AddXPObject(Myself,12000)
+    Continue()
+END

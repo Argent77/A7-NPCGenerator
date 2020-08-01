@@ -153,6 +153,10 @@ BEGIN
       END
     END
 
+    ACTION_IF (NOT FILE_EXISTS_IN_GAME ~A7CHRXP.BCS~) BEGIN
+      COMPILE ~%MOD_FOLDER%/scripts/a7chrxp.baf~
+    END
+
     // Installing NPCs
     OUTER_FOR (char_idx = 0; char_idx < char_ref; ++char_idx) BEGIN
       ACTION_IF (VARIABLE_IS_SET $char_selected(~%char_idx%~)) BEGIN
@@ -276,6 +280,7 @@ BEGIN
     WRITE_BYTE 0x270 128 // Allegiance = NEUTRAL
     WRITE_ASCII DIALOG ~A7CHRNPC~ (8)
     WRITE_ASCII SCRIPT_OVERRIDE ~A7CHRNPC~ (8)
+    WRITE_ASCII SCRIPT_RACE ~A7CHRXP~ (8)
     WRITE_ASCII SCRIPT_DEFAULT ~~ (8)
     WRITE_ASCIIE DEATHVAR ~%script_name%~ (32)
     LPF ADD_LOCAL_VARIABLE INT_VAR value = 1 STR_VAR name = ~A7CHR-CUSTOM~ END
