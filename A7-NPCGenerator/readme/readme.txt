@@ -1,7 +1,7 @@
 NPC Generator
 ~~~~~~~~~~~~~
 
-Version:    1.0
+Version:    1.1
 Author:     Argent77
 
 Download:   https://github.com/Argent77/A7-NPCGenerator/releases
@@ -197,9 +197,9 @@ History
 ~~~~~~~
 
 1.1
-- NPC followers may gain experience from killing creatures.
-- Invalid character data (kits, spells, items, etc.) will be automatically fixed when NPCs are installed.
-- Fixed typos in readme
+- NPC followers gain experience from killing creatures.
+- Invalid character data (kits, spells, items, etc.) is automatically fixed when NPCs are installed.
+- Fixed typos in readme.
 
 1.0
 - Initial release
