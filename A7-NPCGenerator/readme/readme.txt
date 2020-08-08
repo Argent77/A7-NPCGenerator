@@ -33,7 +33,7 @@ The mod supports the following games and game variants:
 - EET (Enhanced Edition Trilogy)
 - IWD:EE
 
-The mod is currently available in English and German.
+The mod is currently available in English, German and Russian.
 
 
 Installation
@@ -185,6 +185,8 @@ Credits
 
 Coding and testing: Argent77
 
+Russian translation: yota13
+
 
 Copyright Notice
 ~~~~~~~~~~~~~~~~
@@ -195,6 +197,9 @@ International License" (http://creativecommons.org/licenses/by-sa/4.0/).
 
 History
 ~~~~~~~
+
+1.2
+- Added Russian translation (thanks yota13)
 
 1.1
 - NPC followers gain experience from killing creatures.

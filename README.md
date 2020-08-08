@@ -19,7 +19,7 @@ The mod supports the following games and game variants:
 - EET (Enhanced Edition Trilogy)
 - IWD:EE
 
-The mod is currently available in English and German.
+The mod is currently available in English, German and Russian.
 
 ## Components
 

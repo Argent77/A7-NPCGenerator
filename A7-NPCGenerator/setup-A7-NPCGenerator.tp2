@@ -45,6 +45,12 @@ LANGUAGE ~Deutsch~
          ~%MOD_FOLDER%/languages/english/mod.tra~
          ~%MOD_FOLDER%/languages/german/setup.tra~
          ~%MOD_FOLDER%/languages/german/mod.tra~
+LANGUAGE ~Russian~
+         ~russian~
+         ~%MOD_FOLDER%/languages/english/setup.tra~
+         ~%MOD_FOLDER%/languages/english/mod.tra~
+         ~%MOD_FOLDER%/languages/russian/setup.tra~
+         ~%MOD_FOLDER%/languages/russian/mod.tra~
 
 
 ///////////////////////////////////////////////////////////
