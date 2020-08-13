@@ -151,13 +151,10 @@ BEGIN
           END
         BUT_ONLY
       END
-    END
-
-    ACTION_IF (NOT FILE_EXISTS_IN_GAME ~A7CHRXP.BCS~) BEGIN
       ACTION_IF (IS_EE) BEGIN
-        COMPILE ~%MOD_FOLDER%/scripts/ee/a7chrxp.baf~
+        EXTEND_BOTTOM ~A7CHRNPC.BCS~ ~%MOD_FOLDER%/scripts/ee/a7chrxp-append.baf~
       END ELSE BEGIN
-        COMPILE ~%MOD_FOLDER%/scripts/a7chrxp.baf~
+        EXTEND_BOTTOM ~A7CHRNPC.BCS~ ~%MOD_FOLDER%/scripts/a7chrxp-append.baf~
       END
     END
 
@@ -284,7 +281,6 @@ BEGIN
     WRITE_BYTE 0x270 128 // Allegiance = NEUTRAL
     WRITE_ASCII DIALOG ~A7CHRNPC~ (8)
     WRITE_ASCII SCRIPT_OVERRIDE ~A7CHRNPC~ (8)
-    WRITE_ASCII SCRIPT_RACE ~A7CHRXP~ (8)
     WRITE_ASCII SCRIPT_DEFAULT ~~ (8)
     WRITE_ASCIIE DEATHVAR ~%script_name%~ (32)
     LPF ADD_LOCAL_VARIABLE INT_VAR value = 1 STR_VAR name = ~A7CHR-CUSTOM~ END

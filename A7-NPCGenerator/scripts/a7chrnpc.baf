@@ -19,7 +19,7 @@ THEN
 END
 
 
-// Fixing dialog and script slots
+// Fixing dialog
 IF
   Global("A7CHR-DIALOG-INIT","LOCALS",2)
   !InParty(Myself)
@@ -29,7 +29,6 @@ THEN
     SetGlobal("A7CHR-DIALOG-INIT","LOCALS",0)
     SetGlobal("A7CHR-KICKEDOUT","LOCALS",1)
     SetDialog("A7CHRNPC")
-    ChangeAIScript("A7CHRXP",RACE)
     Dialog([PC])
 END
 
@@ -41,7 +40,6 @@ THEN
   RESPONSE #100
     SetGlobal("A7CHR-DIALOG-INIT","LOCALS",0)
     SetDialog("A7CHRNPC")
-    ChangeAIScript("A7CHRXP",RACE)
     Continue()
 END
 
@@ -54,7 +52,6 @@ THEN
   RESPONSE #100
     SetGlobal("A7CHR-DIALOG-INIT","LOCALS",2)
     SetDialog("A7CHRNPC")
-    ChangeAIScript("A7CHRXP",RACE)
     Continue()
 END
 
