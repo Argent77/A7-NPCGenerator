@@ -1,7 +1,7 @@
 NPC Generator
 ~~~~~~~~~~~~~
 
-Version:    1.1
+Version:    1.2
 Author:     Argent77
 
 Download:   https://github.com/Argent77/A7-NPCGenerator/releases
@@ -200,6 +200,7 @@ History
 
 1.2
 - Added Russian translation (thanks yota13)
+- Internal optimizations
 
 1.1
 - NPC followers gain experience from killing creatures.
