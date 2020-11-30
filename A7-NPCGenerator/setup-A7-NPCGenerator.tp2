@@ -15,6 +15,7 @@ ALWAYS
 
   // Needed for scripts
   APPEND ~STATE.IDS~ ~0x80101FEF CD_STATE_NOTVALID~ UNLESS ~\bCD_STATE_NOTVALID\b~
+  APPEND ~OBJECT.IDS~ ~94 LastKilled~ UNLESS ~\bLastKilled\b~
 
   // Loading BG1 area code mappings
   INCLUDE ~%MOD_FOLDER%/lib/areacodes.tpa~

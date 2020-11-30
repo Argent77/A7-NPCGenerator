@@ -201,6 +201,7 @@ History
 1.3
 - Added NPC/follower removal at the end of SoD campaign
 - Properly deal with followers during SoA Spellhold dream sequence
+- Fixed missing IDS symbols in IWD:EE
 
 1.2
 - Added Russian translation (thanks yota13)
