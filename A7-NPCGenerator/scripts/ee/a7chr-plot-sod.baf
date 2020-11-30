@@ -1,0 +1,85 @@
+// Leave party after Skie incident
+IF
+  Global("bd_plot","GLOBAL",591)
+  Global("A7CHR-SODLEAVE","LOCALS",0)
+  ReputationLT(Player1,10)
+  AreaCheck("BD4100")
+  OR(2)
+    InParty(Myself)
+    !Global("A7CHR-FOLLOWER","LOCALS",0)
+THEN
+  RESPONSE #100
+    SetGlobal("A7CHR-SODLEAVE","LOCALS",1)
+    SetGlobalTimerRandom("A7CHR-SODLEAVE_TIMER","LOCALS",1,5)
+    SetGlobalTimer("bd_mdd1352_ot_timer","bd4100",6)
+    DisplayStringHead(Myself,@1045) // I should have known that <CHARNAME> is capable of this. I'm out of here.
+  RESPONSE #100
+    SetGlobal("A7CHR-SODLEAVE","LOCALS",1)
+    SetGlobalTimerRandom("A7CHR-SODLEAVE_TIMER","LOCALS",1,5)
+    SetGlobalTimer("bd_mdd1352_ot_timer","bd4100",6)
+    DisplayStringHead(Myself,@1046) // Now you have done it, <CHARNAME>! There is no reason to be with you any longer.
+  RESPONSE #100
+    SetGlobal("A7CHR-SODLEAVE","LOCALS",1)
+    SetGlobalTimerRandom("A7CHR-SODLEAVE_TIMER","LOCALS",1,5)
+    SetGlobalTimer("bd_mdd1352_ot_timer","bd4100",6)
+    DisplayStringHead(Myself,@1047) // It looks like you have finally taken an interest in your father's legacy.
+END
+
+IF
+  Global("bd_plot","GLOBAL",591)
+  Global("A7CHR-SODLEAVE","LOCALS",0)
+  !ReputationLT(Player1,10)
+  AreaCheck("BD4100")
+  OR(2)
+    InParty(Myself)
+    !Global("A7CHR-FOLLOWER","LOCALS",0)
+THEN
+  RESPONSE #100
+    SetGlobal("A7CHR-SODLEAVE","LOCALS",1)
+    SetGlobalTimerRandom("A7CHR-SODLEAVE_TIMER","LOCALS",1,5)
+    SetGlobalTimer("bd_mdd1352_ot_timer","bd4100",6)
+    DisplayStringHead(Myself,@1048) // No! I can't believe <CHARNAME> is capable of that.
+  RESPONSE #100
+    SetGlobal("A7CHR-SODLEAVE","LOCALS",1)
+    SetGlobalTimerRandom("A7CHR-SODLEAVE_TIMER","LOCALS",1,5)
+    SetGlobalTimer("bd_mdd1352_ot_timer","bd4100",6)
+    DisplayStringHead(Myself,@1049) // Am I the only one to see that <CHARNAME> is being made the fall guy for this crime?
+  RESPONSE #100
+    SetGlobal("A7CHR-SODLEAVE","LOCALS",1)
+    SetGlobalTimerRandom("A7CHR-SODLEAVE_TIMER","LOCALS",1,5)
+    SetGlobalTimer("bd_mdd1352_ot_timer","bd4100",6)
+    DisplayStringHead(Myself,@1050) // This cannot be! <CHARNAME> has always fought against <PRO_HISHER> taint.
+END
+
+IF
+  Global("bd_plot","GLOBAL",591)
+  Global("A7CHR-SODLEAVE","LOCALS",1)
+  GlobalTimerExpired("A7CHR-SODLEAVE_TIMER","LOCALS")
+  InParty(Myself)
+THEN
+  RESPONSE #100
+    SetGlobal("A7CHR-SODLEAVE","LOCALS",2)
+    SetGlobal("A7CHR-DIALOG-INIT","LOCALS",1)
+    SetGlobal("A7CHR-RETURN","LOCALS",1)
+    LeaveParty()
+END
+
+IF
+  Global("bd_plot","GLOBAL",591)
+  Global("A7CHR-SODLEAVE","LOCALS",1)
+  GlobalTimerExpired("A7CHR-SODLEAVE_TIMER","LOCALS")
+  AreaCheck("BD4100")
+  !InParty(Myself)
+  !Global("A7CHR-FOLLOWER","LOCALS",0)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-SODLEAVE","LOCALS",2)
+    SetGlobal("A7CHR-FOLLOWER","LOCALS",0)
+    ApplySpellRES("a7chrxv2",Myself)
+    RemoveFamiliar()
+    ChangeEnemyAlly(Myself,NEUTRAL)
+    SetGlobal("A7CHR-DIALOG-INIT","LOCALS",1)
+    SetGlobal("A7CHR-RETURN","LOCALS",1)
+    SetInterrupt(TRUE)
+END

@@ -19,6 +19,14 @@ ALWAYS
   // Loading BG1 area code mappings
   INCLUDE ~%MOD_FOLDER%/lib/areacodes.tpa~
 
+  // EET-specific: Setting bg2_chapter_1, bg2_chapter_2, ... to actual chapter value for BG2 part of the game
+  OUTER_SET bg2_chapter = (GAME_IS ~eet~) ? 12 : 0
+  OUTER_FOR (i = 1; i < 11; ++i) BEGIN
+    OUTER_SET bg2_chapter += 1
+    OUTER_TEXT_SPRINT name_source ~bg2_chapter_%i%~
+    OUTER_SET EVAL ~%name_source%~ = bg2_chapter
+  END
+
   // convert strings to UTF-8 for BGEE/BG2EE
   ACTION_DEFINE_ARRAY noconvert BEGIN setup END
   ACTION_DEFINE_ARRAY reload BEGIN mod END

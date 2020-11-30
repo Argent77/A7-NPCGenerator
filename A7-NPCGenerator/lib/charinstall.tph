@@ -151,7 +151,13 @@ BEGIN
           END
         BUT_ONLY
       END
+      ACTION_IF (GAME_INCLUDES ~soa~) BEGIN
+        EXTEND_BOTTOM ~A7CHRNPC.BCS~ ~%MOD_FOLDER%/scripts/a7chr-plot-soa.baf~ EVAL
+      END
       ACTION_IF (IS_EE) BEGIN
+        ACTION_IF (GAME_INCLUDES ~sod~) BEGIN
+          EXTEND_BOTTOM ~A7CHRNPC.BCS~ ~%MOD_FOLDER%/scripts/ee/a7chr-plot-sod.baf~
+        END
         EXTEND_BOTTOM ~A7CHRNPC.BCS~ ~%MOD_FOLDER%/scripts/ee/a7chrxp-append.baf~
       END ELSE BEGIN
         EXTEND_BOTTOM ~A7CHRNPC.BCS~ ~%MOD_FOLDER%/scripts/a7chrxp-append.baf~

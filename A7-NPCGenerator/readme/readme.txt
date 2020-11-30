@@ -198,6 +198,10 @@ International License" (http://creativecommons.org/licenses/by-sa/4.0/).
 History
 ~~~~~~~
 
+1.3
+- Added NPC/follower removal at the end of SoD campaign
+- Properly deal with followers during SoA Spellhold dream sequence
+
 1.2
 - Added Russian translation (thanks yota13)
 - Internal optimizations

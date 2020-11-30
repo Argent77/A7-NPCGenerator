@@ -1,0 +1,40 @@
+// Followers should not be available in Spellhold dream
+IF
+  Global("chapter","GLOBAL",%bg2_chapter_4%)
+  Global("A7CHR-SPELLHOLD","LOCALS",0)
+  AreaCheck("AR0028")
+  !InParty(Myself)
+  !Global("A7CHR-FOLLOWER","LOCALS",0)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-SPELLHOLD","LOCALS",1)
+    SetGlobal("A7CHR-FOLLOWER","LOCALS",0)
+    ApplySpellRES("a7chrxv2",Myself)
+    RemoveFamiliar()
+    ChangeEnemyAlly(Myself,NEUTRAL)
+    SetGlobal("A7CHR-DIALOG-INIT","LOCALS",1)
+    SetGlobal("A7CHR-RETURN","LOCALS",1)
+    MoveGlobal("AR1512",Myself,[1680.1560])
+    SetInterrupt(TRUE)
+END
+
+IF
+  Global("chapter","GLOBAL",%bg2_chapter_4%)
+  Global("A7CHR-SPELLHOLD","LOCALS",1)
+  AreaCheck("AR1512")
+  InMyArea(Player1)
+  !InParty(Myself)
+  Global("A7CHR-FOLLOWER","LOCALS",0)
+THEN
+  RESPONSE #100
+    SetInterrupt(FALSE)
+    SetGlobal("A7CHR-SPELLHOLD","LOCALS",2)
+    ChangeAIScript("DPLAYER3",DEFAULT)
+    ChangeEnemyAlly(Myself,FAMILIAR)
+    AddFamiliar()
+    ApplySpellRES("a7chrxv",Myself)
+    SetGlobal("A7CHR-FOLLOWER","LOCALS",1)
+    SetGlobal("A7CHR-CHECKED","LOCALS",1)
+    SetInterrupt(TRUE)
+END
