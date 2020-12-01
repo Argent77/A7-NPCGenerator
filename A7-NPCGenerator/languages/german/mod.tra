@@ -44,6 +44,8 @@
 @1042 = ~Hervorragend! Dann lasst uns aufbrechen.~
 @1043 = ~Vielen Dank dafür! Dann werde ich mitkommen.~
 @1044 = ~Also gut, bis dahin.~
+
+// display messages
 @1045 = ~Ich hätte wissen müssen, dass <CHARNAME> dazu in der Lage ist. Ich verdufte.~
 @1046 = ~Jetzt habt Ihr es getan, <CHARNAME>! Es gibt keinen Grund mehr, dass ich weiter bei Euch bleibe.~
 @1047 = ~Es sieht so aus, als ob Ihr jetzt doch ein Interesse am Erbe Eures Vaters zeigt.~
