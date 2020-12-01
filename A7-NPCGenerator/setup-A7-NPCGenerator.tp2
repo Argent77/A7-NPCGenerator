@@ -11,11 +11,13 @@ ALWAYS
   END
 
   // Detect EE game
-  OUTER_SET IS_EE = GAME_IS ~bgee bg2ee eet iwdee pstee~
+  OUTER_SET IS_EE = GAME_IS ~bgee bg2ee eet iwdee pstee~ && FILE_EXISTS ~engine.lua~
 
   // Needed for scripts
   APPEND ~STATE.IDS~ ~0x80101FEF CD_STATE_NOTVALID~ UNLESS ~\bCD_STATE_NOTVALID\b~
-  APPEND ~OBJECT.IDS~ ~94 LastKilled~ UNLESS ~\bLastKilled\b~
+  ACTION_IF (IS_EE) BEGIN
+    APPEND ~OBJECT.IDS~ ~94 LastKilled~ UNLESS ~\bLastKilled\b~
+  END
 
   // Loading BG1 area code mappings
   INCLUDE ~%MOD_FOLDER%/lib/areacodes.tpa~
