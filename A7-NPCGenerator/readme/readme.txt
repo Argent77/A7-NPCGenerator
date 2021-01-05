@@ -1,7 +1,7 @@
 NPC Generator
 ~~~~~~~~~~~~~
 
-Version:    1.3
+Version:    1.4
 Author:     Argent77
 
 Download:   https://github.com/Argent77/A7-NPCGenerator/releases
@@ -197,6 +197,12 @@ International License" (http://creativecommons.org/licenses/by-sa/4.0/).
 
 History
 ~~~~~~~
+
+1.4
+- Added Project Infinity metadata
+- Added German translation for WeiDU prompts
+- Fixed potential display issues with component names in WeiDU.log and Project Infinity
+- Compatibility improvements
 
 1.3
 - Added NPC/follower removal at the end of SoD campaign
