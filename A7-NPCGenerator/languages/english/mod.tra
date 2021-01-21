@@ -1,3 +1,4 @@
+// -*- coding: utf-8 -*-
 // dialog lines
 @1000 = ~Hello, <SIRMAAM>! I'm waiting for a chance to go out adventuring. Do you need another companion?~
 @1001 = ~Greetings again! Have you changed your mind? Do you need another companion?~
@@ -10,7 +11,7 @@
 @1008 = ~Hello, <SIRMAAM>! I'm waiting for a chance to entertain everyone in the world with my songs and poems. Do you need another companion?~
 @1009 = ~Hello, <SIRMAAM>! I'm waiting for a chance to smite evil in the name of my god. Do you need another companion?~
 @1010 = ~Hello, <SIRMAAM>! I'm waiting for a chance to wreak havoc in the world for the glory of my patron. Do you need another companion?~
-@1011 = ~Hello, <SIRMAAM>! I'm waiting for a chance to help mother nature in all of Faerûn. Do you need another companion?~
+@1011 = ~Hello, <SIRMAAM>! I'm waiting for a chance to help mother nature in all of FaerÃ»n. Do you need another companion?~
 @1012 = ~Hello, <SIRMAAM>! I'm waiting for a chance to hunt down monsters that threaten nature and people. Do you need another companion?~
 @1013 = ~Hello, <SIRMAAM>! I'm waiting for a chance to learn more about the world, and thus about myself. Do you need another companion?~
 @1014 = ~Sure, you can tag along for a while.~

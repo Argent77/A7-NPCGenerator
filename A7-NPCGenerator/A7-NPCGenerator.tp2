@@ -1,8 +1,13 @@
-BACKUP ~A7-NPCGenerator/backup~
+BACKUP ~weidu_external/backup/A7-NPCGenerator~
 SUPPORT ~https://www.gibberlings3.net/forums/topic/31809-npc-generator-npc-creation-made-easy~
 VERSION ~1.4~
 
 ALWAYS
+  // required because of non-standard BACKUP path
+  OUTER_TEXT_SPRINT MOD_FOLDER ~A7-NPCGenerator~
+  // root folder for mutable data
+  OUTER_TEXT_SPRINT WORK_FOLDER ~weidu_external~
+
   // Platform-specific line breaks
   ACTION_IF (~%WEIDU_OS%~ STR_EQ ~win32~) BEGIN
     OUTER_TEXT_SPRINT nl ~%WNL%~
@@ -31,20 +36,23 @@ ALWAYS
   END
 
   // convert strings to UTF-8 for BGEE/BG2EE
-  ACTION_DEFINE_ARRAY noconvert BEGIN setup END
-  ACTION_DEFINE_ARRAY reload BEGIN mod END
+  ACTION_DEFINE_ARRAY noconvert BEGIN ~setup~ END
+  ACTION_DEFINE_ARRAY reload BEGIN ~mod~ END
   LAF HANDLE_CHARSETS
   INT_VAR
-    infer_charsets = 1
+    from_utf8         = 1
+    infer_charsets    = 1
   STR_VAR
-    tra_path = EVAL ~%MOD_FOLDER%/languages~
-    noconvert_array = ~noconvert~
-    reload_array = ~reload~
+    default_language  = ~english~
+    tra_path          = EVAL ~%MOD_FOLDER%/languages~
+    out_path          = EVAL ~%WORK_FOLDER%/lang/%MOD_FOLDER%~
+    noconvert_array   = ~noconvert~
+    reload_array      = ~reload~
   END
 END
 
-README ~%MOD_FOLDER%/readme/readme-%LANGUAGE%.txt~
-       ~%MOD_FOLDER%/readme/readme.txt~
+README ~A7-NPCGenerator/readme/readme-%LANGUAGE%.txt~
+       ~A7-NPCGenerator/readme/readme.txt~
 
 LANGUAGE ~English~
          ~english~
