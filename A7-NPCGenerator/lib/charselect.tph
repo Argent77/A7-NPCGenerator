@@ -13,7 +13,7 @@ BEGIN
         RET registered
       END
       LAF GET_SAFE_RESREF STR_VAR resref = EVAL ~%BASH_FOR_RES%~ RET cre_resref = resref END
-      ACTION_IF (NOT registered && NOT FILE_EXISTS_IN_GAME ~%cre_resref%.CRE~) BEGIN
+      ACTION_IF (NOT registered) BEGIN
         COPY ~%BASH_FOR_FILESPEC%~ ~%BASH_FOR_FILESPEC%~
           LPM ADD_CHR_TO_LIST
         BUT_ONLY IF_EXISTS
@@ -31,7 +31,7 @@ BEGIN
       RET registered
     END
     LPF GET_SAFE_RESREF STR_VAR resref = EVAL ~%SOURCE_RES%~ RET cre_resref = resref END
-    PATCH_IF (NOT registered && NOT FILE_EXISTS_IN_GAME ~%cre_resref%.CRE~) BEGIN
+    PATCH_IF (NOT registered) BEGIN
       LPM ADD_CHR_TO_LIST
     END
   BUT_ONLY IF_EXISTS
@@ -63,14 +63,19 @@ BEGIN
   READ_ASCII 0 sig (4)
   PATCH_IF (~%sig%~ STR_EQ ~CHR ~) BEGIN
     LPF GET_CRE_INFO RET name gender_desc alignment_desc class_desc kit_desc level_desc END
-    TEXT_SPRINT $char_ref(~%char_ref%~) ~%SOURCE_FILE%~
-    TEXT_SPRINT $char_name(~%SOURCE_FILE%~) ~%name%~
-    TEXT_SPRINT $char_gender(~%SOURCE_FILE%~) ~%gender_desc%~
-    TEXT_SPRINT $char_alignment(~%SOURCE_FILE%~) ~%alignment_desc%~
-    TEXT_SPRINT $char_class(~%SOURCE_FILE%~) ~%class_desc%~
-    TEXT_SPRINT $char_kit(~%SOURCE_FILE%~) ~%kit_desc%~
-    TEXT_SPRINT $char_level(~%SOURCE_FILE%~) ~%level_desc%~
-    SET char_ref += 1
+    PATCH_IF (NOT FILE_EXISTS_IN_GAME ~%SOURCE_RES%.CRE~) BEGIN
+      TEXT_SPRINT $char_ref(~%char_ref%~) ~%SOURCE_FILE%~
+      TEXT_SPRINT $char_name(~%SOURCE_FILE%~) ~%name%~
+      TEXT_SPRINT $char_gender(~%SOURCE_FILE%~) ~%gender_desc%~
+      TEXT_SPRINT $char_alignment(~%SOURCE_FILE%~) ~%alignment_desc%~
+      TEXT_SPRINT $char_class(~%SOURCE_FILE%~) ~%class_desc%~
+      TEXT_SPRINT $char_kit(~%SOURCE_FILE%~) ~%kit_desc%~
+      TEXT_SPRINT $char_level(~%SOURCE_FILE%~) ~%level_desc%~
+      SET char_ref += 1
+    END ELSE BEGIN
+      TEXT_SPRINT cre_name ~%name%~
+      PATCH_PRINT @508 // %cre_name% (%cre_resref%.chr): A character with the same resource name already exists in the game. Skipping.
+    END
   END
 END
 
@@ -295,7 +300,7 @@ BEGIN
                 RET registered
               END
               LPF GET_SAFE_RESREF STR_VAR resref RET cre_resref = resref END
-              PATCH_IF (NOT registered && NOT FILE_EXISTS_IN_GAME ~%cre_resref%.CRE~) BEGIN
+              PATCH_IF (NOT registered) BEGIN
                 LPM ADD_CHR_TO_LIST
               END
             BUT_ONLY IF_EXISTS
@@ -309,7 +314,7 @@ BEGIN
                     RET registered
                   END
                   LPF GET_SAFE_RESREF STR_VAR resref RET cre_resref = resref END
-                  PATCH_IF (NOT registered && NOT FILE_EXISTS_IN_GAME ~%cre_resref%.CRE~) BEGIN
+                  PATCH_IF (NOT registered) BEGIN
                     LPM ADD_CHR_TO_LIST
                   END
                 BUT_ONLY IF_EXISTS

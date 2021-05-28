@@ -88,3 +88,4 @@
 @505 = ~No settings file found.~
 @506 = ~Alignment checks already enabled.~
 @507 = ~Alignment checks already disabled.~
+@508 = ~%cre_name% (%cre_resref%.chr): A character with the same resource name already exists in the game. Skipping.~

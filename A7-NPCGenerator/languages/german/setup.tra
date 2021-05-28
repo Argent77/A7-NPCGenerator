@@ -88,6 +88,7 @@
 @505 = ~Keine Konfigurationsdatei gefunden.~
 @506 = ~Gesinnungspruefung wurde bereits aktiviert.~
 @507 = ~Gesinnungspruefung wurde bereits deaktiviert.~
+@508 = ~%cre_name% (%cre_resref%.chr): Ein Charakter mit demselben Dateinamen existiert bereits im Spiel. Wird uebersprungen.~
 
 
 // WeiDU prompts
