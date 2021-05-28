@@ -205,6 +205,37 @@ BEGIN
             COPY ~%folder%/%chr_resref%.chr~ ~override/%cre_resref%.cre~
               LPF INSTALL_CHR_AS_CRE INT_VAR adapt_xp bio_strref STR_VAR script_name = EVAL ~A7CHR-%cre_resref%~ END
             IF_EXISTS
+
+            // handling epilogue
+            ACTION_IF (GAME_IS ~tob bgt bg2ee eet~) BEGIN
+              OUTER_SET epilogue_strref1 = "-1"
+              OUTER_SET epilogue_strref2 = "-1"
+              ACTION_IF (FILE_EXISTS ~%folder%/%chr_resref%.ep1~ && FILE_EXISTS ~%folder%/%chr_resref%.ep2~) BEGIN
+                // separate epilogues for ascension and mortal conclusion
+                COPY ~%folder%/%chr_resref%.ep1~ ~override~
+                  PATCH_IF (SOURCE_SIZE > 0) BEGIN
+                    READ_ASCII 0 text (SOURCE_SIZE)
+                    SET epilogue_strref1 = RESOLVE_STR_REF(~%text%~)
+                  END
+                BUT_ONLY IF_EXISTS
+                COPY ~%folder%/%chr_resref%.ep2~ ~override~
+                  PATCH_IF (SOURCE_SIZE > 0) BEGIN
+                    READ_ASCII 0 text (SOURCE_SIZE)
+                    SET epilogue_strref2 = RESOLVE_STR_REF(~%text%~)
+                  END
+                BUT_ONLY IF_EXISTS
+              END ELSE ACTION_IF (FILE_EXISTS ~%folder%/%chr_resref%.epi~) BEGIN
+                // unified epilogue for both outcomes
+                COPY ~%folder%/%chr_resref%.epi~ ~override~
+                  PATCH_IF (SOURCE_SIZE > 0) BEGIN
+                    READ_ASCII 0 text (SOURCE_SIZE)
+                    SET epilogue_strref1 = RESOLVE_STR_REF(~%text%~)
+                  END
+                BUT_ONLY IF_EXISTS
+              END
+
+              LAF INSTALL_EPILOGUE INT_VAR epilogue_strref1 epilogue_strref2 STR_VAR cre_resref END
+            END
           END
         END
 
@@ -433,4 +464,97 @@ BEGIN
       END
     END
   BUT_ONLY IF_EXISTS
+END
+
+// Installs epilogues for the specified NPC
+DEFINE_ACTION_FUNCTION INSTALL_EPILOGUE
+INT_VAR
+  epilogue_strref1 = "-1"
+  epilogue_strref2 = "-1"
+STR_VAR
+  cre_resref = ~~
+BEGIN
+  ACTION_IF (FILE_EXISTS_IN_GAME ~%cre_resref%.CRE~ && epilogue_strref1 >= 0) BEGIN
+    ACTION_CLEAR_ARRAY ~portrait_folders~
+    OUTER_TEXT_SPRINT $portrait_folders(~0~) ~portraits~
+    OUTER_SET portrait_folders = 1
+    ACTION_IF (IS_EE) BEGIN
+      OUTER_TEXT_SPRINT $portrait_folders(~1~) ~%USER_DIRECTORY%/portraits~
+      OUTER_SET portrait_folders += 1
+    END
+
+    // initializing epilogue
+    ACTION_IF (epilogue_strref2 < 0 || epilogue_strref1 = epilogue_strref2) BEGIN
+      // unified epilogue
+      OUTER_SET num_epilogues = 1
+
+      OUTER_SET $epi_strrefs(~0~) = epilogue_strref1
+      OUTER_TEXT_SPRINT $epi_triggers(~0~) ~~
+    END ELSE BEGIN
+      // event-specific epilogues
+      OUTER_SET num_epilogues = 2
+
+      OUTER_SET $epi_strrefs(~0~) = epilogue_strref1
+      OUTER_TEXT_SPRINT $epi_triggers(~0~) ~Global("PlayerChoseEssence","GLOBAL",1)~
+
+      OUTER_SET $epi_strrefs(~1~) = epilogue_strref2
+      OUTER_TEXT_SPRINT $epi_triggers(~1~) ~Global("PlayerChoseEssence","GLOBAL",0)~
+    END
+
+    COPY_EXISTING ~%cre_resref%.CRE~ ~override~
+      // getting portrait resref (%portrait_res%)
+      READ_ASCII 0x3c portrait_res (8) NULL
+      SET found = NOT ~%portrait_res%~ STR_EQ ~~ && FILE_EXISTS_IN_GAME ~%portrait_res%.BMP~
+      PATCH_IF (NOT found) BEGIN
+        PATCH_PHP_EACH portrait_folders AS _ => folder BEGIN
+          PATCH_IF (NOT found) BEGIN
+            SET found = FILE_EXISTS ~%folder%/%portrait_res%.BMP~
+          END
+        END
+      END
+      PATCH_IF (NOT found) BEGIN
+        READ_ASCII 0x34 portrait_res (8) NULL
+        SET found = NOT ~%portrait_res%~ STR_EQ ~~ && FILE_EXISTS_IN_GAME ~%portrait_res%.BMP~
+        PATCH_IF (NOT found) BEGIN
+          PATCH_PHP_EACH portrait_folders AS _ => folder BEGIN
+            PATCH_IF (NOT found) BEGIN
+              SET found = FILE_EXISTS ~%folder%/%portrait_res%.BMP~
+            END
+          END
+        END
+      END
+      PATCH_IF (NOT found) BEGIN
+        TEXT_SPRINT portrait_res ~NOPORTLG~
+      END
+
+      // getting CRE script name (%script_name%)
+      READ_ASCII DEATHVAR script_name (32) NULL
+    BUT_ONLY
+
+    // installing epilogues
+    OUTER_FOR (i = 0; i < num_epilogues; ++i) BEGIN
+      OUTER_SET suffix = i + 1
+      LAF GET_UNIQUE_RESREF
+        STR_VAR
+          base_resref = EVAL ~%cre_resref%~
+          base_suffix = EVAL ~%suffix%~
+          extension = ~2da~
+        RET
+          resref
+      END
+
+      ACTION_IF (NOT ~%resref%~ STR_EQ ~~) BEGIN
+        // installing epilogue text file
+        OUTER_TEXT_SPRINT epilogue_resref ~%resref%~
+        OUTER_SET epi_strref = $epi_strrefs(~%i%~)
+        COPY ~%MOD_FOLDER%/2da/epilogue.2da~ ~override/%epilogue_resref%.2da~ EVAL
+
+        // appending script
+        OUTER_TEXT_SPRINT choice_trigger $epi_triggers(~%i%~)
+        EXTEND_TOP ~AR6200.BCS~ ~%MOD_FOLDER%/scripts/a7chr-epilogue-tob.baf~ EVAL
+      END ELSE BEGIN
+        WARN ~Could not install epilogue %suffix% for %cre_resref%.~
+      END
+    END
+  END
 END

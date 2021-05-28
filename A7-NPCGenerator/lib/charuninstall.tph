@@ -55,6 +55,8 @@ STR_VAR
   search      = ~~    // the search string
 RET
   matches             // returns number of removed script blocks
+RET_ARRAY
+  blocks              // returns content of matching script blocks as indexed array
 BEGIN
   OUTER_SET matches = 0
   ACTION_IF (NOT ~%bcs_resref%~ STR_EQ ~~ && NOT ~%search%~ STR_EQ ~~) BEGIN
@@ -77,6 +79,8 @@ BEGIN
               SET pos2 = INDEX_BUFFER(~^END$~ pos1)
               PATCH_IF (pos2 > pos1) BEGIN
                 SET pos2 += 3
+                READ_ASCII pos1 block (pos2 - pos1)
+                TEXT_SPRINT $blocks(~%matches%~) ~%block%~
                 DELETE_BYTES pos1 (pos2 - pos1)
                 SET matches += 1
                 PATCH_IF (count > 0 && matches >= count) BEGIN
@@ -88,6 +92,11 @@ BEGIN
         END
       END
     BUT_ONLY IF_EXISTS
+  END
+
+  ACTION_IF (matches = 0) BEGIN
+    // workaround for WeiDU version 246 or earlier
+    OUTER_TEXT_SPRINT $blocks(~0~) ~~
   END
 END
 
@@ -141,7 +150,44 @@ BEGIN
       RET
         matches
     END
-    
+
+    // removing epilogue script blocks
+    ACTION_IF (GAME_IS ~tob bgt bg2ee eet~) BEGIN
+      LAF REMOVE_SCRIPT_BLOCK
+        INT_VAR
+          case_sensitive = 0
+          use_regexp = 0
+        STR_VAR
+          bcs_resref = ~AR6200~
+          search = EVAL ~Global("A7CHR-%cre_resref%Bio","GLOBAL",0)~
+        RET
+          matches
+        RET_ARRAY
+          blocks
+      END
+
+      // removing associated epilogue text files
+      ACTION_CLEAR_ARRAY ~files~
+      OUTER_FOR (i = 0; i < matches; ++i) BEGIN
+        OUTER_TEXT_SPRINT block $blocks(~%i%~)
+        OUTER_PATCH ~%block%~ BEGIN
+          REPLACE_EVALUATE
+            ~TextScreen("\([^"]*\)")~
+            BEGIN
+              PATCH_IF (NOT ~%MATCH1%~ STR_EQ ~~) BEGIN
+                TO_UPPER ~MATCH1~
+                SET $files(~%MATCH1%~) = 1
+              END
+            END
+            ~~
+        END
+      END
+      ACTION_PHP_EACH files AS resref => _ BEGIN
+        ACTION_IF (FILE_EXISTS ~override/%resref%.2DA~) BEGIN
+          DELETE ~override/%resref%.2DA~
+        END
+      END
+    END
   END
 END
 

@@ -125,6 +125,35 @@ killing monsters or completing quests. The former issue has been worked around b
 approximated amount of XP for monsters killed by the NPCs themselves. The level up process is
 still only available when the NPC is a regular party member.
 
+NOTE 3:
+For BG2, BGT, BG2:EE and EET it is possible to create custom epilogues for individual NPCs which
+are shown at the end of the game together with the epilogues of regular game NPCs.
+
+To enable epilogues for a character you have to create a text file with the epilogue text in the
+same folder as the character file. The file has to be saved under the same name as the character
+file but with the file extension ".EPI".
+To allow the game to show different epilogues depending on the choice made by the protagonist at
+the end of the game you have to create two text files which are, again, saved under the same name
+as the character file but using file extensions ".EP1" if the protagonist choses to ascend and
+".EP2" if the protagonist chooses a mortal life.
+
+Exported character files can be found in the "characters" subfolder which is located in the
+directory containing the "baldur.ini" or "baldur.lua" configuration files. For classic games this
+is usually the game installation directory itself. For the Enhanced Editions this is a folder in
+the user-specific Documents folder of the system.
+
+Example:
+MYCHAR.CHR: The character file created and exported by the game.
+
+Option 1:
+MYCHAR.EPI: A text file with the epilogue that is shown regardless of the protagonist's choice.
+
+Option 2:
+MYCHAR.EP1: A text file with the epilogue that is shown when the protagonist chooses ascension.
+MYCHAR.EP2: A text file with the epilogue that is shown when the protagonist chooses a mortal life.
+
+Option 2 takes preference if both epilogue options are detected.
+
 
 *** 2. Enable/Disable alignment checks for custom NPCs (not available for IWD:EE) ***
 

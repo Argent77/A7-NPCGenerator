@@ -424,3 +424,64 @@ BEGIN
     END
   END
 END
+
+// Attempts to find an unoccupied resource name based on the specified parameters.
+DEFINE_ACTION_FUNCTION GET_UNIQUE_RESREF
+STR_VAR
+  base_resref = ~~  // static resref suffix (may be truncated if needed)
+  base_suffix = ~~  // optional resref suffix (discarded if already occupied)
+  extension = ~~    // file extension
+RET
+  resref  // resref that is guaranteed to be unoccupied at the time of execution; returns empty string if resref could not be determined.
+BEGIN
+  ACTION_IF (~%extension%~ STR_EQ ~~) BEGIN
+    // special: no file extension results in simply returning the concatenation of base resref and suffix
+    OUTER_TEXT_SPRINT resref ~%base_resref%%base_suffix%~
+  END ELSE BEGIN
+    // check for specified resref + suffix first
+    ACTION_IF (STRING_LENGTH ~%base_resref%%base_suffix%~ > 8) BEGIN
+      LAF SUBSTRING
+        INT_VAR
+          start = 0
+          length = (8 - STRING_LENGTH ~%base_suffix%~)
+        STR_VAR
+          string = EVAL ~%base_resref%~
+        RET work_resref = substring
+      END
+    END ELSE BEGIN
+      OUTER_TEXT_SPRINT work_resref ~%base_resref%~
+    END
+
+    OUTER_TEXT_SPRINT resref ~%work_resref%%base_suffix%~
+    OUTER_SET match = NOT FILE_EXISTS_IN_GAME ~%resref%.%extension%~
+
+    // attempt to find an unoccupied resource name consisting of the base resref and a dynamic suffix
+    ACTION_IF (NOT match) BEGIN
+      ACTION_IF (STRING_LENGTH ~%base_resref%~ > 7) BEGIN
+        LAF SUBSTRING
+          INT_VAR start = 0 length = 7
+          STR_VAR string = EVAL ~%base_resref%~
+          RET work_resref = substring
+        END
+      END ELSE BEGIN
+        OUTER_TEXT_SPRINT work_resref ~%base_resref%~
+      END
+
+      ACTION_DEFINE_ARRAY suffix BEGIN
+        ~0~ ~1~ ~2~ ~3~ ~4~ ~5~ ~6~ ~7~ ~8~ ~9~ ~_~
+        ~A~ ~B~ ~C~ ~D~ ~E~ ~F~ ~G~ ~H~ ~I~ ~J~ ~K~ ~L~ ~M~ ~N~ ~O~ ~P~ ~Q~ ~R~ ~S~ ~T~ ~U~ ~V~ ~W~ ~X~ ~Y~ ~Z~
+      END
+      OUTER_SET suffix = 37 // number of available array items
+
+      OUTER_FOR (i = 0; i < suffix && NOT match; ++i) BEGIN
+        OUTER_TEXT_SPRINT resref $suffix(~%i%~)
+        OUTER_TEXT_SPRINT resref ~%work_resref%%resref%~
+        OUTER_SET match = NOT FILE_EXISTS_IN_GAME ~%resref%.%extension%~
+      END
+    END
+
+    ACTION_IF (NOT match) BEGIN
+      OUTER_TEXT_SPRINT resref ~~
+    END
+  END
+END

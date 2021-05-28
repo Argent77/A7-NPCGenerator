@@ -1,0 +1,13 @@
+// NPC epilogue trigger
+IF
+  Global("StartEndBios","AR6200",1)
+  IfValidForPartyDialog("%script_name%")
+  Global("%script_name%Bio","GLOBAL",0)
+  %choice_trigger%
+THEN
+  RESPONSE #100
+    SetGlobal("%script_name%Bio","GLOBAL",1)
+    TextScreen("%epilogue_resref%")
+    SmallWait(1)
+    Continue()
+END
