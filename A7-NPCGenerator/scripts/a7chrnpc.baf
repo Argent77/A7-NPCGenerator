@@ -19,7 +19,7 @@ THEN
 END
 
 
-// Fixing dialog
+// Fixing scripts and dialog
 IF
   Global("A7CHR-DIALOG-INIT","LOCALS",2)
   !InParty(Myself)
@@ -50,8 +50,13 @@ IF
     !Global("A7CHR-FOLLOWER","LOCALS",0)
 THEN
   RESPONSE #100
+    SetInterrupt(FALSE)
     SetGlobal("A7CHR-DIALOG-INIT","LOCALS",2)
     SetDialog("A7CHRNPC")
+    ChangeAIScript("",CLASS)
+    ChangeAIScript("",RACE)
+    ChangeAIScript("",GENERAL)
+    SetInterrupt(TRUE)
     Continue()
 END
 
