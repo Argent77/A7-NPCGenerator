@@ -1,7 +1,7 @@
 NPC Generator
 ~~~~~~~~~~~~~
 
-Version:    1.4
+Version:    1.5
 Author:     Argent77
 
 Download:   https://github.com/Argent77/A7-NPCGenerator/releases
@@ -226,6 +226,12 @@ International License" (http://creativecommons.org/licenses/by-sa/4.0/).
 
 History
 ~~~~~~~
+
+1.5
+- Added support for custom epilogues at the end of BG2:ToB for installed NPCs
+- Custom biography text is assigned to installed NPCs if available
+- Show explanatory message if NPCs are not available for installation
+- Fixed NPCs turning hostile when hit by friendly fire in follower mode
 
 1.4
 - Added Project Infinity metadata
