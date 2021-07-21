@@ -80,6 +80,7 @@ SUBCOMPONENT @1 // Add custom NPCs to the game
 REQUIRE_PREDICATE (GAME_IS ~tob tutu tutu_totsc bgt bgee bg2ee eet iwdee~) @500 // Game is not supported.
 REQUIRE_PREDICATE (VALID_SCRIPT_ACTIONS ~MakeGlobal()~) @500 // Game is not supported.
 DESIGNATED 1
+LABEL ~A7-NPCGENERATOR-ADD_NPC_USER~
 NO_LOG_RECORD
 
 INCLUDE ~%MOD_FOLDER%/lib/functions.tph~
@@ -117,6 +118,7 @@ SUBCOMPONENT @1 // Add custom NPCs to the game
 REQUIRE_PREDICATE (GAME_IS ~tob tutu tutu_totsc bgt bgee bg2ee eet iwdee~) @500 // Game is not supported.
 REQUIRE_PREDICATE (VALID_SCRIPT_ACTIONS ~MakeGlobal()~) @500 // Game is not supported.
 DESIGNATED 2
+LABEL ~A7-NPCGENERATOR-ADD_NPC_GAME~
 NO_LOG_RECORD
 
 INCLUDE ~%MOD_FOLDER%/lib/functions.tph~
@@ -152,6 +154,7 @@ SUBCOMPONENT @1 // Add custom NPCs to the game
 REQUIRE_PREDICATE (GAME_IS ~tob tutu tutu_totsc bgt bgee bg2ee eet iwdee~) @500 // Game is not supported.
 REQUIRE_PREDICATE (VALID_SCRIPT_ACTIONS ~MakeGlobal()~) @500 // Game is not supported.
 DESIGNATED 3
+LABEL ~A7-NPCGENERATOR-ADD_NPC_ALL~
 NO_LOG_RECORD
 
 INCLUDE ~%MOD_FOLDER%/lib/functions.tph~
@@ -193,6 +196,7 @@ REQUIRE_PREDICATE (GAME_IS ~tob tutu tutu_totsc bgt bgee bg2ee eet iwdee~) @500 
 REQUIRE_PREDICATE (VALID_SCRIPT_ACTIONS ~MakeGlobal()~) @500 // Game is not supported.
 REQUIRE_PREDICATE (FILE_EXISTS ~%MOD_FOLDER%/settings.tpa~) @505 // No settings file found.
 DESIGNATED 4
+LABEL ~A7-NPCGENERATOR-ADD_NPC_AUTOMATED~
 NO_LOG_RECORD
 
 INCLUDE ~%MOD_FOLDER%/lib/functions.tph~
@@ -237,6 +241,7 @@ REQUIRE_PREDICATE (GAME_IS ~tob tutu tutu_totsc bgt bgee bg2ee eet~) @500 // Gam
 REQUIRE_PREDICATE (FILE_EXISTS_IN_GAME ~a7-npc.2da~ && FILE_EXISTS_IN_GAME ~a7chrnpc.bcs~) @501 // No installed NPCs found.
 REQUIRE_PREDICATE (FILE_CONTAINS_EVALUATED(~a7chrnpc.bcs~ ~LOCALSA7CHR-SKIPCHECK_CHECKED~)) @506 // Alignment check already enabled.
 DESIGNATED 20
+LABEL ~A7-NPCGENERATOR-ALIGNMENT_CHECK_ENABLE~
 NO_LOG_RECORD
 
 INCLUDE ~%MOD_FOLDER%/lib/charinstall.tph~
@@ -252,6 +257,7 @@ REQUIRE_PREDICATE (GAME_IS ~tob tutu tutu_totsc bgt bgee bg2ee eet~) @500 // Gam
 REQUIRE_PREDICATE (FILE_EXISTS_IN_GAME ~a7-npc.2da~ && FILE_EXISTS_IN_GAME ~a7chrnpc.bcs~) @501 // No installed NPCs found.
 REQUIRE_PREDICATE (NOT FILE_CONTAINS_EVALUATED(~a7chrnpc.bcs~ ~LOCALSA7CHR-SKIPCHECK_CHECKED~)) @507 // Alignment check already disabled.
 DESIGNATED 21
+LABEL ~A7-NPCGENERATOR-ALIGNMENT_CHECK_DISABLE~
 NO_LOG_RECORD
 
 INCLUDE ~%MOD_FOLDER%/lib/charinstall.tph~
@@ -267,6 +273,7 @@ SUBCOMPONENT @10 // Remove custom NPCs from the game (CAUTION: See readme)
 REQUIRE_PREDICATE (FILE_EXISTS_IN_GAME ~a7-npc.2da~) @501 // No installed NPCs found.
 REQUIRE_PREDICATE (FILE_CONTAINS_EVALUATED(~a7-npc.2da~ ~^[^ %TAB%]+[ %TAB%]+[^ %TAB%]+[ %TAB%]+[^ %TAB%]+[ %TAB%]+[^ %TAB%]+[ %TAB%]+[-+0-9*]+[ %TAB%]+[-+0-9*]+[ %TAB%]+[-+0-9*][ %TAB%%WNL%]*$~)) @501 // No installed NPCs found.
 DESIGNATED 100
+LABEL ~A7-NPCGENERATOR-REMOVE_NPC_INDIVIDUAL~
 NO_LOG_RECORD
 
 INCLUDE ~%MOD_FOLDER%/lib/functions.tph~
@@ -299,6 +306,7 @@ SUBCOMPONENT @10 // Remove custom NPCs from the game (CAUTION: See readme)
 REQUIRE_PREDICATE (FILE_EXISTS_IN_GAME ~a7-npc.2da~) @501 // No installed NPCs found.
 REQUIRE_PREDICATE (FILE_CONTAINS_EVALUATED(~a7-npc.2da~ ~^[^ %TAB%]+[ %TAB%]+[^ %TAB%]+[ %TAB%]+[^ %TAB%]+[ %TAB%]+[^ %TAB%]+[ %TAB%]+[-+0-9*]+[ %TAB%]+[-+0-9*]+[ %TAB%]+[-+0-9*][ %TAB%%WNL%]*$~)) @501 // No installed NPCs found.
 DESIGNATED 101
+LABEL ~A7-NPCGENERATOR-REMOVE_NPC_ALL~
 NO_LOG_RECORD
 
 INCLUDE ~%MOD_FOLDER%/lib/functions.tph~
