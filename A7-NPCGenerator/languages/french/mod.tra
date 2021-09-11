@@ -1,0 +1,55 @@
+// -*- coding: utf-8 -*-
+// dialog lines
+@1000 = ~Bonjour, <SIRMAAM> ! J'attends l'occasion de partir à l'aventure. Avez-vous besoin d'un autre compagnon ?~
+@1001 = ~Re-bonjour ! Avez-vous changé d'avis ? Avez-vous besoin d'un autre compagnon ?~
+@1002 = ~Oui, rejoignez le groupe.~
+@1003 = ~Non.~
+@1004 = ~Bonjour, <SIRMAAM> ! J'attends une chance de faire mes preuves au combat. Avez-vous besoin d'un autre compagnon ?~
+@1005 = ~Bonjour, <SIRMAAM> ! J'attends une chance de découvrir les connaissances perdues des arts arcaniques. Avez-vous besoin d'un autre compagnon ?~
+@1006 = ~Bonjour, <SIRMAAM> ! J'attends l'occasion de prêcher les principes et les actes de ma divinité à travers les royaumes. Avez-vous besoin d'un autre compagnon ?~
+@1007 = ~Bonjour, <SIRMAAM> ! J'attends une chance de trouver tous les trésors cachés de ce monde. Avez-vous besoin d'un autre compagnon ?~
+@1008 = ~Bonjour, <SIRMAAM> ! J'attends une chance de divertir tout le monde avec mes chansons et mes poèmes. Avez-vous besoin d'un autre compagnon ?~
+@1009 = ~Bonjour, <SIRMAAM> ! J'attends une chance de frapper le mal au nom de mon dieu. Avez-vous besoin d'un autre compagnon ?~
+@1010 = ~Bonjour, <SIRMAAM> ! J'attends une chance de faire des ravages dans le monde pour la gloire de mon patron. Avez-vous besoin d'un autre compagnon ?~
+@1011 = ~Bonjour, <SIRMAAM> ! J'attends une chance d'aider mère nature dans tout Faerûn. Avez-vous besoin d'un autre compagnon ?~
+@1012 = ~Bonjour, <SIRMAAM> ! J'attends l'occasion de chasser les monstres qui menacent la nature et les personnes. Avez-vous besoin d'un autre compagnon ?~
+@1013 = ~Bonjour, <SIRMAAM> ! J'attends une chance d'en apprendre plus sur le monde, et donc sur moi-même. Avez-vous besoin d'un autre compagnon ?~
+@1014 = ~Bien sûr, tu peux me suivre pendant un petit moment.~
+@1015 = ~Vous voulez que je continue à vous suivre ?~
+@1016 = ~Voulez-vous toujours de moi dans le groupe ?~
+@1017 = ~Oui, s'il vous plaît.~
+@1018 = ~Veuillez rejoindre le groupe~
+@1019 = ~Non, s'il vous plaît arrêtez de nous suivre.~
+@1020 = ~Non, s'il vous plaît arrêtez de nous suivre et donnez-nous tout votre matériel.~
+@1021 = ~Oui.~
+@1022 = ~Non, je préférerais que vous me suiviez.~
+@1023 = ~Non, s'il vous plaît attendez-nous ici.~
+@1024 = ~Non, s'il vous plaît retournez au lieu de rendez-vous.~
+@1025 = ~Non, s'il vous plaît retournez au lieu de rendez-vous et donnez-nous tout votre matériel.~
+@1026 = ~Je suis ravi de le faire.~
+@1027 = ~Je vais vous suivre.~
+@1028 = ~Je ne pense pas que mes objectifs s'accordent avec les votre. Peut-être la prochaine fois.~
+@1029 = ~Je serais heureux de le faire contre rémunération. Que diriez-vous de 250 pièces d'or ?~
+@1030 = ~Je serais prêt à le faire contre rémunération. Que diriez-vous de 250 pièces d'or ?~
+@1031 = ~Je serais heureux de le faire contre rémunération. Que diriez-vous de 500 or ?~
+@1032 = ~Je serais prêt à le faire contre rémunération. Que diriez-vous de 500 pièces d'or ?~
+@1033 = ~Je pourrais me laisser convaincre de me joindre à vous pour un certain prix. Que diriez-vous de 250 pièces d'or ?~
+@1034 = ~Je pourrais me laisser convaincre de vous suivre pour un certain prix. Que diriez-vous de 250 pièces d'or ?~
+@1035 = ~Je pourrais me laisser convaincre de me joindre à vous pour un certain prix. Que diriez-vous de 500 pièces d'or ?~
+@1036 = ~Je pourrais me laisser convaincre de vous suivre pour un certain prix. Que diriez-vous de 500 pièces d'or ?~
+@1037 = ~Je pourrais me laisser convaincre de me joindre à vous pour un certain prix. Que diriez-vous de 1000 pièces d'or ?~
+@1038 = ~Je pourrais me laisser convaincre de vous suivre pour un certain prix. Que diriez-vous de 1000 pièces d'or ?~
+@1039 = ~D'accord, je vais payer vos honoraires.~
+@1040 = ~Je n'ai pas assez d'or. Peut-être plus tard.~
+@1041 = ~Je ne veux pas payer vos honoraires. Au revoir.~
+@1042 = ~Excellent ! Allons-y dans ce cas.~
+@1043 = ~Merci beaucoup ! Je vais vous suivre..~
+@1044 = ~Très bien, j'attendrais.~
+
+// display messages
+@1045 = ~J'aurais dû savoir que <CHARNAME> était capable de ça. Je m'en vais.~
+@1046 = ~Maintenant vous avez fait ça, <CHARNAME> ! Je n'ai plus aucune raison de rester avec vous.~
+@1047 = ~On dirait que vous vous êtes finalement intéressé à l'héritage de votre père.~
+@1048 = ~Non ! Je ne peux pas croire que <CHARNAME> soit capable de ça.~
+@1049 = ~Suis-je le seul à voir que <CHARNAME> est le bouc émissaire de ce crime ?~
+@1050 = ~Cela ne peut être ! <CHARNAME> a toujours combattu la souillure de son héritage.~

@@ -1,0 +1,91 @@
+// -*- coding: us-ascii -*-
+@1 = ~Ajouter des PNJ personnalises au jeu~
+@2 = ~Personnages de l'utilisateur uniquement~
+@3 = ~Personnages du jeu uniquement~
+@4 = ~Personnages de l'utilisateur et personnages du jeu~
+@5 = ~Installation automatisee (a partir de settings.tpa)~
+@10 = ~Supprimer les PNJ personnalises du jeu~
+@11 = ~Choisir individuellement~
+@12 = ~Tous les supprimer~
+@20 = ~Activer les controles d'alignement pour les PNJ personnalises~
+@21 = ~Desactiver les controles d'alignement pour les PNJ personnalises~
+
+// Strings for interactive character selection
+@50 = ~Personnages disponibles :~
+@51 = ~Selectionner l'option de personnage :~
+@52 = ~Tous les personnages disponibles~
+@53 = ~Terminer la selection~
+@54 = ~Veuillez saisir un index de personnage valide, A ou X.~
+@55 = ~Continuer (%oui%/%non%) ?~
+@56 = ~Veuillez entrer %oui% ou %non%.~
+@57 = ~o~   // assigned to %yes%
+@58 = ~n~   // assigned to %no%
+@59 = ~Les PNJ doivent-ils adapter automatiquement leur experience lorsqu'ils rejoignent le groupe (%yes%/%no%) ?~
+@60 = ~Installation du personnage :~
+@61 = ~Personnage selectionne :~
+@62 = ~Personnage non selectionne :~
+@63 = ~Desinstallation du personnage :~
+@64 = ~Personnages selectionnes :~
+@65 = ~selectionne~
+
+// Info labels
+@90 = ~Sexe :~
+@91 = ~Classe :~
+@92 = ~Profil :~
+@93 = ~Niveau :~
+@94 = ~Alignement :~
+
+// Character gender
+@100 = ~(inconnu)~
+@101 = ~Homme~
+@102 = ~Femme~
+
+// Character class
+@110 = ~Mage~
+@111 = ~Guerrier~
+@112 = ~Pretre~
+@113 = ~Voleur~
+@114 = ~Barde~
+@115 = ~Paladin~
+@116 = ~Guerrier/Mage~
+@117 = ~Guerrier/Pretre~
+@118 = ~Guerrier/Voleur~
+@119 = ~Guerrier/Mage/Voleur~
+@120 = ~Druide~
+@121 = ~Ranger~
+@122 = ~Mage/Voleur~
+@123 = ~Pretre/Mage~
+@124 = ~Pretre/Voleur~
+@125 = ~Guerrier/Druide~
+@126 = ~Guerrier/Mage/Pretre~
+@127 = ~Pretre/Ranger~
+@128 = ~Ensorceleur~
+@129 = ~Moine~
+@130 = ~Shaman~
+
+// Character class type
+@140 = ~multi~
+@141 = ~jumele~
+
+// Character alignment
+@150 = ~Loyal Bon~
+@151 = ~Loyal Neutre~
+@152 = ~Loyal Mauvais~
+@153 = ~Neutre Bon~
+@154 = ~Neutre~
+@155 = ~Neutre Mauvais~
+@156 = ~Chaotique Bon~
+@157 = ~Chaotique Neutre~
+@158 = ~Chaotique Mauvais~
+
+
+// Messages
+@500 = ~Ce jeu n'est pas supporte.~
+@501 = ~Aucun PNJ installe n'a ete trouve.~
+@502 = ~Aucun personnage n'est disponible.~
+@503 = ~Aucun personnage n'est selectionne.~
+@504 = ~Aucun jeu supporte n'a ete identifie.~
+@505 = ~Aucun fichier de configuration n'a ete trouve.~
+@506 = ~Les controles d'alignement sont deja actives.~
+@507 = ~Les controles d'alignement sont deja desactives.~
+@508 = ~%cre_name% (%cre_resref%.chr) : Un personnage avec le meme nom de ressource existe deja dans le jeu. Ignorer.~

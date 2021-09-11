@@ -222,6 +222,8 @@ Coding and testing: Argent77
 
 Russian translation: yota13
 
+French translation: Deratiseur
+
 
 Copyright Notice
 ~~~~~~~~~~~~~~~~
@@ -232,6 +234,10 @@ International License" (http://creativecommons.org/licenses/by-sa/4.0/).
 
 History
 ~~~~~~~
+
+1.6
+- Added French translation (thanks Deratiseur)
+- Added French readme
 
 1.5
 - Added support for custom epilogues at the end of BG2:ToB for installed NPCs

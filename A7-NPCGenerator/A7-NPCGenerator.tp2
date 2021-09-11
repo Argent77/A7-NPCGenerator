@@ -64,12 +64,18 @@ LANGUAGE ~Deutsch~
          ~A7-NPCGenerator/languages/english/mod.tra~
          ~A7-NPCGenerator/languages/german/setup.tra~
          ~A7-NPCGenerator/languages/german/mod.tra~
-LANGUAGE ~Russian~
+LANGUAGE ~Russian (Translation: yota13)~
          ~russian~
          ~A7-NPCGenerator/languages/english/setup.tra~
          ~A7-NPCGenerator/languages/english/mod.tra~
          ~A7-NPCGenerator/languages/russian/setup.tra~
          ~A7-NPCGenerator/languages/russian/mod.tra~
+LANGUAGE ~French (Translation: Deratiseur)~
+         ~french~
+         ~A7-NPCGenerator/languages/english/setup.tra~
+         ~A7-NPCGenerator/languages/english/mod.tra~
+         ~A7-NPCGenerator/languages/french/setup.tra~
+         ~A7-NPCGenerator/languages/french/mod.tra~
 
 
 ///////////////////////////////////////////////////////////
