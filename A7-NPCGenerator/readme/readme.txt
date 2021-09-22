@@ -238,6 +238,7 @@ History
 1.6
 - Added French translation (thanks Deratiseur)
 - Added French readme
+- Added option to assign AI scripts to NPCs in follower mode via dialog
 
 1.5
 - Added support for custom epilogues at the end of BG2:ToB for installed NPCs

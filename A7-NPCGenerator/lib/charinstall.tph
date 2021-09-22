@@ -63,10 +63,18 @@ BEGIN
 
   ACTION_IF (char_selected > 0) BEGIN
     ACTION_IF (NOT FILE_EXISTS_IN_GAME ~A7CHRNPC.DLG~) BEGIN
+      // Generating ai script list for followers
+      LAF CREATE_AI_LIST_RESPONSES RET response_list RET_ARRAY response_list END
+      OUTER_TEXT_SPRINT responses_aiscript ~~
+      OUTER_FOR (idx = 0; idx < response_list; ++idx) BEGIN
+        OUTER_TEXT_SPRINT line $response_list(~%idx%~)
+        LOG ~DEBUG: dlg_line(%idx%): %line%~
+        OUTER_TEXT_SPRINT responses_aiscript ~%responses_aiscript%%WNL%%line%~
+      END
       ACTION_IF (GAME_IS ~iwdee~) BEGIN
-        COMPILE ~%MOD_FOLDER%/dialogs/a7chrnpc-iwdee.d~
+        COMPILE ~%MOD_FOLDER%/dialogs/a7chrnpc-iwdee.d~ EVAL
       END ELSE BEGIN
-        COMPILE ~%MOD_FOLDER%/dialogs/a7chrnpc.d~
+        COMPILE ~%MOD_FOLDER%/dialogs/a7chrnpc.d~ EVAL
       END
     END
 

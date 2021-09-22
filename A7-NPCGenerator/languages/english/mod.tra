@@ -53,3 +53,11 @@
 @1048 = ~No! I can't believe <CHARNAME> is capable of that.~
 @1049 = ~Am I the only one to see that <CHARNAME> is being made the fall guy for this crime?~
 @1050 = ~This cannot be! <CHARNAME> has always fought against <PRO_HISHER> taint.~
+
+// AI script selection in follower mode
+@1100 = ~Please change your current behavior.~
+@1101 = ~What do you want me to do?~
+@1102 = ~Please don't act on your own.~
+@1103 = ~I've changed my mind. Please keep your passive behavior.~
+@1104 = ~Please change to behavior "%script_name%".~
+@1105 = ~I've changed my mind. Please keep your behavior "%script_name%".~

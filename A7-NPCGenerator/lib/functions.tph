@@ -485,3 +485,53 @@ BEGIN
     END
   END
 END
+
+
+// Generates a list of dialog responses for follower NPCs for changing their AI scripts.
+DEFINE_ACTION_FUNCTION CREATE_AI_LIST_RESPONSES
+RET
+  response_list
+RET_ARRAY
+  response_list
+BEGIN
+  OUTER_SET response_list = 0
+  OUTER_TEXT_SPRINT $response_list(~0~) ~~
+  OUTER_TEXT_SPRINT tilde "~"
+
+  // Fixed default responses
+  OUTER_TEXT_SPRINT $response_list(~%response_list%~)
+                    ~+ %tilde%!Global("A7CHR-AISCRIPT","LOCALS",0)%tilde% + @1102 DO %tilde%SetGlobal("A7CHR-AISCRIPT","LOCALS",0) ChangeAIScript("",CLASS) ClearActions(Myself)%tilde% EXIT~
+  OUTER_SET response_list += 1
+  OUTER_TEXT_SPRINT $response_list(~%response_list%~)
+                    ~+ %tilde%Global("A7CHR-AISCRIPT","LOCALS",0)%tilde% + @1103 EXIT~
+  OUTER_SET response_list += 1
+
+
+  // Retrieving AI scripts dynamically
+  COPY_EXISTING ~SCRPDESC.2DA~ ~override~
+    READ_2DA_ENTRIES_NOW scrpdesc 1
+    FOR (row = 4; row < scrpdesc; ++row) BEGIN
+      READ_2DA_ENTRY_FORMER scrpdesc row 0 script_resref
+      READ_2DA_ENTRY_FORMER scrpdesc row 1 strref
+      PATCH_IF (IS_AN_INT ~strref~ AND strref >= 0 && STRING_LENGTH ~%script_resref%~ <= 8 AND FILE_EXISTS ~scripts/%script_resref%.BS~) BEGIN
+        GET_STRREF strref script_name
+        INNER_PATCH_SAVE script_name ~%script_name%~ BEGIN
+          // prettifying script title
+          REPLACE_TEXTUALLY ~[ %TAB%]*:[ %TAB%]*$~ ~~
+        END
+        PATCH_IF (STRING_LENGTH ~%script_name%~ > 0) BEGIN
+          TO_UPPER ~script_resref~
+          SET script_idx = response_list / 2
+          SET strref_1104 = RESOLVE_STR_REF(@1104)
+          SET strref_1105 = RESOLVE_STR_REF(@1105)
+          TEXT_SPRINT $response_list(~%response_list%~)
+                      ~+ %tilde%!Global("A7CHR-AISCRIPT","LOCALS",%script_idx%)%tilde% + #%strref_1104% DO %tilde%SetGlobal("A7CHR-AISCRIPT","LOCALS",%script_idx%) ChangeAIScript("%script_resref%",CLASS) ClearActions(Myself)%tilde% EXIT~
+          SET response_list += 1
+          TEXT_SPRINT $response_list(~%response_list%~)
+                      ~+ %tilde%Global("A7CHR-AISCRIPT","LOCALS",%script_idx%)%tilde% + #%strref_1105% EXIT~
+          SET response_list += 1
+        END
+      END
+    END
+  BUT_ONLY
+END

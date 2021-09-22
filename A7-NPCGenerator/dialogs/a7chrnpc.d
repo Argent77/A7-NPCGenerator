@@ -431,6 +431,7 @@ IF ~!InParty(Myself) !Global("A7CHR-FOLLOWER","LOCALS",0)~ Follower.1
   ++ @1017 /* Yes, please do. */ EXIT
   ++ @1018 /* Please join the party. */
     DO ~SetGlobal("A7CHR-FOLLOWER","LOCALS",0)
+        SetGlobal("A7CHR-AISCRIPT","LOCALS",0)
         ApplySpellRES("a7chrxv2",Myself)
         RemoveFamiliar()
         ChangeEnemyAlly(Myself,NEUTRAL)
@@ -438,12 +439,14 @@ IF ~!InParty(Myself) !Global("A7CHR-FOLLOWER","LOCALS",0)~ Follower.1
         ChangeAIScript("DPLAYER3",DEFAULT) JoinParty()~ EXIT
   ++ @1019 /* No, please stop following us. */
     DO ~SetGlobal("A7CHR-FOLLOWER","LOCALS",0)
+        SetGlobal("A7CHR-AISCRIPT","LOCALS",0)
         ApplySpellRES("a7chrxv2",Myself)
         RemoveFamiliar()
         ChangeEnemyAlly(Myself,NEUTRAL)
         SetGlobal("A7CHR-DIALOG-INIT","LOCALS",1)~ EXIT
   ++ @1024 /* No, please return to the meeting place. */
     DO ~SetGlobal("A7CHR-FOLLOWER","LOCALS",0)
+        SetGlobal("A7CHR-AISCRIPT","LOCALS",0)
         ApplySpellRES("a7chrxv2",Myself)
         RemoveFamiliar()
         ChangeEnemyAlly(Myself,NEUTRAL)
@@ -451,19 +454,27 @@ IF ~!InParty(Myself) !Global("A7CHR-FOLLOWER","LOCALS",0)~ Follower.1
         SetGlobal("A7CHR-RETURN","LOCALS",1)~ EXIT
   ++ @1020 /* No, please stop following us, and give us all your gear */
     DO ~SetGlobal("A7CHR-FOLLOWER","LOCALS",0)
-    GivePartyAllEquipment()
-    ApplySpellRES("a7chrxv2",Myself)
-    RemoveFamiliar()
-    ChangeEnemyAlly(Myself,NEUTRAL)
-    SetGlobal("A7CHR-DIALOG-INIT","LOCALS",1)~ EXIT
+        SetGlobal("A7CHR-AISCRIPT","LOCALS",0)
+        GivePartyAllEquipment()
+        ApplySpellRES("a7chrxv2",Myself)
+        RemoveFamiliar()
+        ChangeEnemyAlly(Myself,NEUTRAL)
+        SetGlobal("A7CHR-DIALOG-INIT","LOCALS",1)~ EXIT
   ++ @1025 /* No, please return to the meeting place, and give us all your gear */
     DO ~SetGlobal("A7CHR-FOLLOWER","LOCALS",0)
+        SetGlobal("A7CHR-AISCRIPT","LOCALS",0)
         GivePartyAllEquipment()
         ApplySpellRES("a7chrxv2",Myself)
         RemoveFamiliar()
         ChangeEnemyAlly(Myself,NEUTRAL)
         SetGlobal("A7CHR-DIALOG-INIT","LOCALS",1)
         SetGlobal("A7CHR-RETURN","LOCALS",1)~ EXIT
+  ++ @1100 /* Please change your current behavior. */ + Follower.Script.1
+END
+
+IF ~~ Follower.Script.1
+  SAY @1101 /* What do you want me to do? */
+  %responses_aiscript%
 END
 
 // NPC is party member

@@ -10,6 +10,7 @@ THEN
     SetInterrupt(FALSE)
     SetGlobal("A7CHR-SPELLHOLD","LOCALS",1)
     SetGlobal("A7CHR-FOLLOWER","LOCALS",0)
+    SetGlobal("A7CHR-AISCRIPT","LOCALS",0)
     ApplySpellRES("a7chrxv2",Myself)
     RemoveFamiliar()
     ChangeEnemyAlly(Myself,NEUTRAL)
