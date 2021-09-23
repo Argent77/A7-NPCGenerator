@@ -499,15 +499,20 @@ BEGIN
   OUTER_TEXT_SPRINT tilde "~"
 
   // Fixed default responses
+  ACTION_IF (FILE_EXISTS ~scripts/none.bs~ AND SIZE_OF_FILE ~scripts/none.bs~ < 10) BEGIN
+    OUTER_TEXT_SPRINT script_resref ~NONE~
+  END ELSE BEGIN
+    OUTER_TEXT_SPRINT script_resref ~~
+  END
+  OUTER_SET $script_files(~NONE~) = 1
   OUTER_TEXT_SPRINT $response_list(~%response_list%~)
-                    ~+ %tilde%!Global("A7CHR-AISCRIPT","LOCALS",0)%tilde% + @1102 DO %tilde%SetGlobal("A7CHR-AISCRIPT","LOCALS",0) ChangeAIScript("",CLASS) ClearActions(Myself)%tilde% EXIT~
+                    ~+ %tilde%!Global("A7CHR-AISCRIPT","LOCALS",0)%tilde% + @1102 DO %tilde%SetGlobal("A7CHR-AISCRIPT","LOCALS",0) ChangeAIScript("%script_resref%",CLASS) ClearActions(Myself)%tilde% EXIT~
   OUTER_SET response_list += 1
   OUTER_TEXT_SPRINT $response_list(~%response_list%~)
                     ~+ %tilde%Global("A7CHR-AISCRIPT","LOCALS",0)%tilde% + @1103 EXIT~
   OUTER_SET response_list += 1
 
-
-  // Retrieving AI scripts dynamically
+  // Retrieving registered AI scripts dynamically
   COPY_EXISTING ~SCRPDESC.2DA~ ~override~
     READ_2DA_ENTRIES_NOW scrpdesc 1
     FOR (row = 4; row < scrpdesc; ++row) BEGIN
@@ -521,6 +526,7 @@ BEGIN
         END
         PATCH_IF (STRING_LENGTH ~%script_name%~ > 0) BEGIN
           TO_UPPER ~script_resref~
+          SET $script_files(~%script_resref%~) = 1
           SET script_idx = response_list / 2
           SET strref_1104 = RESOLVE_STR_REF(@1104)
           SET strref_1105 = RESOLVE_STR_REF(@1105)
@@ -534,4 +540,24 @@ BEGIN
       END
     END
   BUT_ONLY
+
+  // Retrieving unregistered scripts by resource name
+  GET_FILE_ARRAY ~files~ ~scripts~ ~^.+\.BS$~
+  ACTION_PHP_EACH files AS _ => file BEGIN
+    LAF RES_OF_FILESPEC STR_VAR filespec = EVAL ~%file%~ RET res END
+    ACTION_TO_UPPER ~res~
+    ACTION_IF (NOT VARIABLE_IS_SET $script_files(~%res%~)) BEGIN
+      OUTER_TEXT_SPRINT script_name ~%res%~
+      OUTER_TEXT_SPRINT script_resref ~%res%~
+      OUTER_SET script_idx = response_list / 2
+      OUTER_SET strref_1104 = RESOLVE_STR_REF(@1104)
+      OUTER_SET strref_1105 = RESOLVE_STR_REF(@1105)
+      OUTER_TEXT_SPRINT $response_list(~%response_list%~)
+                  ~+ %tilde%!Global("A7CHR-AISCRIPT","LOCALS",%script_idx%)%tilde% + #%strref_1104% DO %tilde%SetGlobal("A7CHR-AISCRIPT","LOCALS",%script_idx%) ChangeAIScript("%script_resref%",CLASS) ClearActions(Myself)%tilde% EXIT~
+      OUTER_SET response_list += 1
+      OUTER_TEXT_SPRINT $response_list(~%response_list%~)
+                  ~+ %tilde%Global("A7CHR-AISCRIPT","LOCALS",%script_idx%)%tilde% + #%strref_1105% EXIT~
+      OUTER_SET response_list += 1
+    END
+  END
 END
