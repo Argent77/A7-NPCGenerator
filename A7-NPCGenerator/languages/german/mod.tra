@@ -45,19 +45,20 @@
 @1042 = ~Hervorragend! Dann lasst uns aufbrechen.~
 @1043 = ~Vielen Dank dafür! Dann werde ich mitkommen.~
 @1044 = ~Also gut, bis dahin.~
+@1045 = ~Ändert bitte Euer derzeitiges Verhalten.~
+@1046 = ~Was soll ich denn tun?~
+@1047 = ~Bitte handelt nicht auf eigene Faust.~
+@1048 = ~Ich habe meine Meinung geändert. Haltet bitte Euer passives Verhalten bei.~
+@1049 = ~Bitte ändert Euer Verhalten auf "%script_name%".~
+@1050 = ~Ich habe meine Meinung geändert. Haltet bitte Euer Verhalten "%script_name%" bei.~
 
 // display messages
-@1045 = ~Ich hätte wissen müssen, dass <CHARNAME> dazu in der Lage ist. Ich verdufte.~
-@1046 = ~Jetzt habt Ihr es getan, <CHARNAME>! Es gibt keinen Grund mehr, dass ich weiter bei Euch bleibe.~
-@1047 = ~Es sieht so aus, als ob Ihr jetzt doch ein Interesse am Erbe Eures Vaters zeigt.~
-@1048 = ~Nein! Ich kann nicht glauben, dass <CHARNAME> dazu fähig ist.~
-@1049 = ~Bin ich die einzige Person, die erkennt, dass <CHARNAME> bei diesem Verbrechen hereingelegt wurde?~
-@1050 = ~Nein, das kann nicht sein! <CHARNAME> hat immer gegen <PRO_HISHER> Makel angekämpft.~
+@1200 = ~Ich hätte wissen müssen, dass <CHARNAME> dazu in der Lage ist. Ich verdufte.~
+@1201 = ~Jetzt habt Ihr es getan, <CHARNAME>! Es gibt keinen Grund mehr, dass ich weiter bei Euch bleibe.~
+@1202 = ~Es sieht so aus, als ob Ihr jetzt doch ein Interesse am Erbe Eures Vaters zeigt.~
+@1203 = ~Nein! Ich kann nicht glauben, dass <CHARNAME> dazu fähig ist.~
+@1204 = ~Bin ich die einzige Person, die erkennt, dass <CHARNAME> bei diesem Verbrechen hereingelegt wurde?~
+@1205 = ~Nein, das kann nicht sein! <CHARNAME> hat immer gegen <PRO_HISHER> Makel angekämpft.~
 
-// AI script selection in follower mode
-@1100 = ~Ändert bitte Euer derzeitiges Verhalten.~
-@1101 = ~Was soll ich denn tun?~
-@1102 = ~Bitte handelt nicht auf eigene Faust.~
-@1103 = ~Ich habe meine Meinung geändert. Haltet bitte Euer passives Verhalten bei.~
-@1104 = ~Bitte ändert Euer Verhalten auf "%script_name%".~
-@1105 = ~Ich habe meine Meinung geändert. Haltet bitte Euer Verhalten "%script_name%" bei.~
+// misc. strings
+@2000 = ~FORTGESCHRITTENE KI~

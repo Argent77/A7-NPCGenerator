@@ -181,6 +181,7 @@ Historique
 
 1.6
 - Ajout de la traduction française (merci Deratiseur)
+- Ajout d'une option permettant d'assigner des scripts d'IA aux PNJ en mode suiveur via le dialogue.
 
 1.5
 - Ajout de la prise en charge des épilogues personnalisés à la fin de BG2:ToB pour les PNJ installés.

@@ -12,17 +12,17 @@ THEN
     SetGlobal("A7CHR-SODLEAVE","LOCALS",1)
     SetGlobalTimerRandom("A7CHR-SODLEAVE_TIMER","LOCALS",1,5)
     SetGlobalTimer("bd_mdd1352_ot_timer","bd4100",6)
-    DisplayStringHead(Myself,@1045) // I should have known that <CHARNAME> is capable of this. I'm out of here.
+    DisplayStringHead(Myself,@1200) // I should have known that <CHARNAME> is capable of this. I'm out of here.
   RESPONSE #100
     SetGlobal("A7CHR-SODLEAVE","LOCALS",1)
     SetGlobalTimerRandom("A7CHR-SODLEAVE_TIMER","LOCALS",1,5)
     SetGlobalTimer("bd_mdd1352_ot_timer","bd4100",6)
-    DisplayStringHead(Myself,@1046) // Now you have done it, <CHARNAME>! There is no reason to be with you any longer.
+    DisplayStringHead(Myself,@1201) // Now you have done it, <CHARNAME>! There is no reason to be with you any longer.
   RESPONSE #100
     SetGlobal("A7CHR-SODLEAVE","LOCALS",1)
     SetGlobalTimerRandom("A7CHR-SODLEAVE_TIMER","LOCALS",1,5)
     SetGlobalTimer("bd_mdd1352_ot_timer","bd4100",6)
-    DisplayStringHead(Myself,@1047) // It looks like you have finally taken an interest in your father's legacy.
+    DisplayStringHead(Myself,@1202) // It looks like you have finally taken an interest in your father's legacy.
 END
 
 IF
@@ -38,17 +38,17 @@ THEN
     SetGlobal("A7CHR-SODLEAVE","LOCALS",1)
     SetGlobalTimerRandom("A7CHR-SODLEAVE_TIMER","LOCALS",1,5)
     SetGlobalTimer("bd_mdd1352_ot_timer","bd4100",6)
-    DisplayStringHead(Myself,@1048) // No! I can't believe <CHARNAME> is capable of that.
+    DisplayStringHead(Myself,@1203) // No! I can't believe <CHARNAME> is capable of that.
   RESPONSE #100
     SetGlobal("A7CHR-SODLEAVE","LOCALS",1)
     SetGlobalTimerRandom("A7CHR-SODLEAVE_TIMER","LOCALS",1,5)
     SetGlobalTimer("bd_mdd1352_ot_timer","bd4100",6)
-    DisplayStringHead(Myself,@1049) // Am I the only one to see that <CHARNAME> is being made the fall guy for this crime?
+    DisplayStringHead(Myself,@1204) // Am I the only one to see that <CHARNAME> is being made the fall guy for this crime?
   RESPONSE #100
     SetGlobal("A7CHR-SODLEAVE","LOCALS",1)
     SetGlobalTimerRandom("A7CHR-SODLEAVE_TIMER","LOCALS",1,5)
     SetGlobalTimer("bd_mdd1352_ot_timer","bd4100",6)
-    DisplayStringHead(Myself,@1050) // This cannot be! <CHARNAME> has always fought against <PRO_HISHER> taint.
+    DisplayStringHead(Myself,@1205) // This cannot be! <CHARNAME> has always fought against <PRO_HISHER> taint.
 END
 
 IF

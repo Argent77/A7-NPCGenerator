@@ -45,11 +45,20 @@
 @1042 = ~Excellent ! Allons-y dans ce cas.~
 @1043 = ~Merci beaucoup ! Je vais vous suivre..~
 @1044 = ~Très bien, j'attendrais.~
+@1045 = ~S'il vous plaît, changez votre comportement actuel.~
+@1046 = ~Que voulez-vous que je fasse?~
+@1047 = ~S'il vous plaît, n'agissez pas de votre propre chef.~
+@1048 = ~J'ai changé d'avis. S'il vous plaît, gardez votre comportement passif.~
+@1049 = ~Veuillez adopter le comportement "%script_name%".~
+@1050 = ~J'ai changé d'avis. Veuillez conserver votre comportement "%script_name%".~
 
 // display messages
-@1045 = ~J'aurais dû savoir que <CHARNAME> était capable de ça. Je m'en vais.~
-@1046 = ~Maintenant vous avez fait ça, <CHARNAME> ! Je n'ai plus aucune raison de rester avec vous.~
-@1047 = ~On dirait que vous vous êtes finalement intéressé à l'héritage de votre père.~
-@1048 = ~Non ! Je ne peux pas croire que <CHARNAME> soit capable de ça.~
-@1049 = ~Suis-je le seul à voir que <CHARNAME> est le bouc émissaire de ce crime ?~
-@1050 = ~Cela ne peut être ! <CHARNAME> a toujours combattu la souillure de son héritage.~
+@1200 = ~J'aurais dû savoir que <CHARNAME> était capable de ça. Je m'en vais.~
+@1201 = ~Maintenant vous avez fait ça, <CHARNAME> ! Je n'ai plus aucune raison de rester avec vous.~
+@1202 = ~On dirait que vous vous êtes finalement intéressé à l'héritage de votre père.~
+@1203 = ~Non ! Je ne peux pas croire que <CHARNAME> soit capable de ça.~
+@1204 = ~Suis-je le seul à voir que <CHARNAME> est le bouc émissaire de ce crime ?~
+@1205 = ~Cela ne peut être ! <CHARNAME> a toujours combattu la souillure de son héritage.~
+
+// misc. strings
+@2000 = ~IA AVANCÉE~

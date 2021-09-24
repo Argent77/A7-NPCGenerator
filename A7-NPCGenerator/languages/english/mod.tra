@@ -45,19 +45,20 @@
 @1042 = ~Excellent! Let us depart then.~
 @1043 = ~Thanks a lot! I'll follow along.~
 @1044 = ~Alright, until then.~
+@1045 = ~Please change your current behavior.~
+@1046 = ~What do you want me to do?~
+@1047 = ~Please don't act on your own.~
+@1048 = ~I've changed my mind. Please keep your passive behavior.~
+@1049 = ~Please change to behavior "%script_name%".~
+@1050 = ~I've changed my mind. Please keep your behavior "%script_name%".~
 
 // display messages
-@1045 = ~I should have known that <CHARNAME> is capable of this. I'm out of here.~
-@1046 = ~Now you have done it, <CHARNAME>! There is no reason to be with you any longer.~
-@1047 = ~It looks like you have finally taken an interest in your father's legacy.~
-@1048 = ~No! I can't believe <CHARNAME> is capable of that.~
-@1049 = ~Am I the only one to see that <CHARNAME> is being made the fall guy for this crime?~
-@1050 = ~This cannot be! <CHARNAME> has always fought against <PRO_HISHER> taint.~
+@1200 = ~I should have known that <CHARNAME> is capable of this. I'm out of here.~
+@1201 = ~Now you have done it, <CHARNAME>! There is no reason to be with you any longer.~
+@1202 = ~It looks like you have finally taken an interest in your father's legacy.~
+@1203 = ~No! I can't believe <CHARNAME> is capable of that.~
+@1204 = ~Am I the only one to see that <CHARNAME> is being made the fall guy for this crime?~
+@1205 = ~This cannot be! <CHARNAME> has always fought against <PRO_HISHER> taint.~
 
-// AI script selection in follower mode
-@1100 = ~Please change your current behavior.~
-@1101 = ~What do you want me to do?~
-@1102 = ~Please don't act on your own.~
-@1103 = ~I've changed my mind. Please keep your passive behavior.~
-@1104 = ~Please change to behavior "%script_name%".~
-@1105 = ~I've changed my mind. Please keep your behavior "%script_name%".~
+// misc. strings
+@2000 = ~ADVANCED AI~

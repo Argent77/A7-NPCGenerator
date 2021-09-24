@@ -119,11 +119,11 @@ IF ~!InParty(Myself) !Global("A7CHR-FOLLOWER","LOCALS",0)~ Follower.1
         ChangeEnemyAlly(Myself,NEUTRAL)
         SetGlobal("A7CHR-DIALOG-INIT","LOCALS",1)
         SetGlobal("A7CHR-RETURN","LOCALS",1)~ EXIT
-  ++ @1100 /* Please change your current behavior. */ + Follower.Script.1
+  ++ @1045 /* Please change your current behavior. */ + Follower.Script.1
 END
 
 IF ~~ Follower.Script.1
-  SAY @1101 /* What do you want me to do? */
+  SAY @1046 /* What do you want me to do? */
   %responses_aiscript%
 END
 
