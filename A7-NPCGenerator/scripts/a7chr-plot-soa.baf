@@ -32,6 +32,8 @@ THEN
     SetInterrupt(FALSE)
     SetGlobal("A7CHR-SPELLHOLD","LOCALS",2)
     ChangeAIScript("DPLAYER3",DEFAULT)
+    ChangeAIScript("%ai_default_script%",CLASS)
+    SetGlobal("A7CHR-AISCRIPT","LOCALS",%ai_default_global%)
     ChangeEnemyAlly(Myself,FAMILIAR)
     AddFamiliar()
     ApplySpellRES("a7chrxv",Myself)

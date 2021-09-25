@@ -13,6 +13,8 @@ IF ~NumTimesTalkedTo(0) Class(Myself,MONK) !InParty(Myself) Global("A7CHR-FOLLOW
   + ~OR(2) !Global("A7CHR-SKIPCHECK","LOCALS",0) !Global("A7CHR-CHECKED","LOCALS",0)~ + @1014 /* Sure, you can tag along for a while. */
     DO ~ChangeAIScript("DPLAYER3",DEFAULT)
         ChangeEnemyAlly(Myself,FAMILIAR)
+        ChangeAIScript("%ai_default_script%",CLASS)
+        SetGlobal("A7CHR-AISCRIPT","LOCALS",%ai_default_global%)
         AddFamiliar()
         ApplySpellRES("a7chrxv",Myself)
         SetGlobal("A7CHR-FOLLOWER","LOCALS",1)
@@ -133,6 +135,8 @@ END
 IF ~~ Follow.Good.1
   SAY @1027 /* I'll follow along. */
   IF ~~ DO ~ChangeAIScript("DPLAYER3",DEFAULT)
+            ChangeAIScript("%ai_default_script%",CLASS)
+            SetGlobal("A7CHR-AISCRIPT","LOCALS",%ai_default_global%)
             ChangeEnemyAlly(Myself,FAMILIAR)
             AddFamiliar()
             ApplySpellRES("a7chrxv",Myself)
@@ -159,6 +163,8 @@ END
 IF ~~ Follow.Neutral.1
   SAY @1027 /* I'll follow along. */
   IF ~~ DO ~ChangeAIScript("DPLAYER3",DEFAULT)
+            ChangeAIScript("%ai_default_script%",CLASS)
+            SetGlobal("A7CHR-AISCRIPT","LOCALS",%ai_default_global%)
             ChangeEnemyAlly(Myself,FAMILIAR)
             AddFamiliar()
             ApplySpellRES("a7chrxv",Myself)
@@ -198,6 +204,8 @@ END
 IF ~~ Follow.Neutral.2.Accept
   SAY @1043 /* Thanks a lot! I'll follow along. */
   IF ~~ DO ~ChangeAIScript("DPLAYER3",DEFAULT)
+            ChangeAIScript("%ai_default_script%",CLASS)
+            SetGlobal("A7CHR-AISCRIPT","LOCALS",%ai_default_global%)
             ChangeEnemyAlly(Myself,FAMILIAR)
             AddFamiliar()
             ApplySpellRES("a7chrxv",Myself)
@@ -242,6 +250,8 @@ END
 IF ~~ Follow.Neutral.3.Accept
   SAY @1043 /* Thanks a lot! I'll follow along. */
   IF ~~ DO ~ChangeAIScript("DPLAYER3",DEFAULT)
+            ChangeAIScript("%ai_default_script%",CLASS)
+            SetGlobal("A7CHR-AISCRIPT","LOCALS",%ai_default_global%)
             ChangeEnemyAlly(Myself,FAMILIAR)
             AddFamiliar()
             ApplySpellRES("a7chrxv",Myself)
@@ -279,6 +289,8 @@ END
 IF ~~ Follow.Evil.1
   SAY @1027 /* I'll follow along. */
   IF ~~ DO ~ChangeAIScript("DPLAYER3",DEFAULT)
+            ChangeAIScript("%ai_default_script%",CLASS)
+            SetGlobal("A7CHR-AISCRIPT","LOCALS",%ai_default_global%)
             ChangeEnemyAlly(Myself,FAMILIAR)
             AddFamiliar()
             ApplySpellRES("a7chrxv",Myself)
@@ -318,6 +330,8 @@ END
 IF ~~ Follow.Evil.2.Accept
   SAY @1043 /* Thanks a lot! I'll follow along. */
   IF ~~ DO ~ChangeAIScript("DPLAYER3",DEFAULT)
+            ChangeAIScript("%ai_default_script%",CLASS)
+            SetGlobal("A7CHR-AISCRIPT","LOCALS",%ai_default_global%)
             ChangeEnemyAlly(Myself,FAMILIAR)
             AddFamiliar()
             ApplySpellRES("a7chrxv",Myself)
@@ -362,6 +376,8 @@ END
 IF ~~ Follow.Evil.3.Accept
   SAY @1043 /* Thanks a lot! I'll follow along. */
   IF ~~ DO ~ChangeAIScript("DPLAYER3",DEFAULT)
+            ChangeAIScript("%ai_default_script%",CLASS)
+            SetGlobal("A7CHR-AISCRIPT","LOCALS",%ai_default_global%)
             ChangeEnemyAlly(Myself,FAMILIAR)
             AddFamiliar()
             ApplySpellRES("a7chrxv",Myself)
@@ -406,6 +422,8 @@ END
 IF ~~ Follow.Evil.4.Accept
   SAY @1043 /* Thanks a lot! I'll follow along. */
   IF ~~ DO ~ChangeAIScript("DPLAYER3",DEFAULT)
+            ChangeAIScript("%ai_default_script%",CLASS)
+            SetGlobal("A7CHR-AISCRIPT","LOCALS",%ai_default_global%)
             ChangeEnemyAlly(Myself,FAMILIAR)
             AddFamiliar()
             ApplySpellRES("a7chrxv",Myself)

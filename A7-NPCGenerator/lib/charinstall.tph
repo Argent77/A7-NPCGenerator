@@ -62,9 +62,9 @@ BEGIN
   END
 
   ACTION_IF (char_selected > 0) BEGIN
+    LAF CREATE_AI_LIST_RESPONSES RET response_list ai_default_script ai_default_global RET_ARRAY response_list END
     ACTION_IF (NOT FILE_EXISTS_IN_GAME ~A7CHRNPC.DLG~) BEGIN
       // Generating ai script list for followers
-      LAF CREATE_AI_LIST_RESPONSES RET response_list RET_ARRAY response_list END
       OUTER_TEXT_SPRINT responses_aiscript ~~
       OUTER_FOR (idx = 0; idx < response_list; ++idx) BEGIN
         OUTER_TEXT_SPRINT line $response_list(~%idx%~)
@@ -149,7 +149,7 @@ BEGIN
     END
 
     ACTION_IF (NOT FILE_EXISTS_IN_GAME ~A7CHRNPC.BCS~) BEGIN
-      COMPILE ~%MOD_FOLDER%/scripts/a7chrnpc.baf~
+      COMPILE ~%MOD_FOLDER%/scripts/a7chrnpc.baf~ EVAL
       // use better method for setting character XP if available
       ACTION_IF (VALID_SCRIPT_ACTIONS ~ChangeStat(Myself,XP,0,SET)~) BEGIN
         COPY_EXISTING ~A7CHRNPC.BCS~ ~override~

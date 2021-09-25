@@ -490,13 +490,18 @@ END
 // Generates a list of dialog responses for follower NPCs for changing their AI scripts.
 DEFINE_ACTION_FUNCTION CREATE_AI_LIST_RESPONSES
 RET
-  response_list
+  response_list       // number of items in response list
+  ai_default_script   // default script resref to be assigned when NPC enters follower mode
+  ai_default_global   // ^^ corresponding global index for dialog checks
 RET_ARRAY
-  response_list
+  response_list       // .d response items
 BEGIN
   OUTER_SET response_list = 0
   OUTER_TEXT_SPRINT $response_list(~0~) ~~
   OUTER_TEXT_SPRINT tilde "~"
+  OUTER_TEXT_SPRINT ai_default_script ~~
+  OUTER_SET ai_default_global = 0
+  OUTER_TEXT_SPRINT default_script_file ~DEFAULT~
 
   // Passive behavior first
   ACTION_IF (FILE_EXISTS ~scripts/none.bs~ AND SIZE_OF_FILE ~scripts/none.bs~ < 10) BEGIN
@@ -547,6 +552,9 @@ BEGIN
       TEXT_SPRINT $response_list(~%response_list%~)
                   ~+ %tilde%Global("A7CHR-AISCRIPT","LOCALS",%script_idx%)%tilde% + #%strref_1050% EXIT~
       SET response_list += 1
+      // auto-assigning default script
+      TEXT_SPRINT ai_default_script ~%script_resref%~
+      SET ai_default_global = script_idx
     END
   BUT_ONLY IF_EXISTS
 
@@ -574,6 +582,11 @@ BEGIN
           TEXT_SPRINT $response_list(~%response_list%~)
                       ~+ %tilde%Global("A7CHR-AISCRIPT","LOCALS",%script_idx%)%tilde% + #%strref_1050% EXIT~
           SET response_list += 1
+          PATCH_IF (~%ai_default_script%~ STR_EQ ~~ && ~%script_resref%~ STR_EQ ~%default_script_file%~) BEGIN
+            // auto-assigning default script
+            TEXT_SPRINT ai_default_script ~%script_resref%~
+            SET ai_default_global = script_idx
+          END
         END
       END
     END
@@ -596,6 +609,11 @@ BEGIN
       OUTER_TEXT_SPRINT $response_list(~%response_list%~)
                   ~+ %tilde%Global("A7CHR-AISCRIPT","LOCALS",%script_idx%)%tilde% + #%strref_1050% EXIT~
       OUTER_SET response_list += 1
+      ACTION_IF (~%ai_default_script%~ STR_EQ ~~ && ~%script_resref%~ STR_EQ ~%default_script_file%~) BEGIN
+        // auto-assigning default script
+        OUTER_TEXT_SPRINT ai_default_script ~%script_resref%~
+        OUTER_SET ai_default_global = script_idx
+      END
     END
   END
 END

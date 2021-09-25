@@ -10,6 +10,8 @@ IF ~NumTimesTalkedTo(0) Class(Myself,MONK) !InParty(Myself) Global("A7CHR-FOLLOW
         JoinParty()~ EXIT
   ++ @1014 /* Sure, you can tag along for a while. */
     DO ~ChangeAIScript("DPLAYER3",DEFAULT)
+        ChangeAIScript("%ai_default_script%",CLASS)
+        SetGlobal("A7CHR-AISCRIPT","LOCALS",%ai_default_global%)
         ChangeEnemyAlly(Myself,FAMILIAR)
         AddFamiliar()
         ApplySpellRES("a7chrxv",Myself)
