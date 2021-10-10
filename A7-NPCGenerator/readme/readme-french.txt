@@ -1,7 +1,7 @@
 Générateur de PNJ
 ~~~~~~~~~~~~~~~~~
 
-Version :        1.5
+Version :        1.6
 Auteur :         Argent77
 
 Téléchargement : https://github.com/Argent77/A7-NPCGenerator/releases

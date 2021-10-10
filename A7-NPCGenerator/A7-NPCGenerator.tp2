@@ -1,6 +1,6 @@
 BACKUP ~weidu_external/backup/A7-NPCGenerator~
 SUPPORT ~https://www.gibberlings3.net/forums/topic/31809-npc-generator-npc-creation-made-easy~
-VERSION ~1.5~
+VERSION ~1.6~
 
 ALWAYS
   // required because of non-standard BACKUP path
