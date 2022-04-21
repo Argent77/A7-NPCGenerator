@@ -7,6 +7,12 @@
     RESREF    SCRIPT_NAME   ARE       ARE_X     ARE_Y     ARE_DIR
 >>>>>>>>
 
+<<<<<<<< .../inlined/a7-npcgenerator/a7-scrpt.2da
+2DA V1.0
+*
+    SOURCE    DESTINATION
+>>>>>>>>
+
 RANDOM_SEED ~~
 
 // Returns the game-specific BG1 area resref
@@ -486,6 +492,49 @@ BEGIN
   END
 END
 
+// Installs a list of AI scripts from party scripts for followers.
+DEFINE_ACTION_FUNCTION CREATE_AI_SCRIPT_LIST
+RET_ARRAY
+  mappings
+BEGIN
+  ACTION_CLEAR_ARRAY ~mappings~
+
+  ACTION_IF (FILE_EXISTS_IN_GAME ~a7-scrpt.2da~) BEGIN
+    // script mapping exists: read data
+    COPY_EXISTING ~a7-scrpt.2da~ ~override~
+      COUNT_2DA_ROWS 1 num_rows
+      READ_2DA_ENTRIES_NOW script_table 1
+      FOR (row = 3; row < num_rows; ++row) BEGIN
+        READ_2DA_ENTRY_FORMER script_table row 1 src_resref
+        TO_UPPER ~src_resref~
+        READ_2DA_ENTRY_FORMER script_table row 2 dst_resref
+        TO_UPPER ~dst_resref~
+        TEXT_SPRINT $mappings(~%src_resref%~) ~%dst_resref%~
+      END
+    BUT_ONLY
+  END ELSE BEGIN
+    // script mapping does not exits: create
+    COPY ~.../inlined/a7-npcgenerator/a7-scrpt.2da~ ~override~
+    OUTER_SET index = 0
+    OUTER_TEXT_SPRINT ai_prefix ~a7chr~
+    ACTION_CLEAR_ARRAY ~files~
+    GET_FILE_ARRAY files ~scripts~ ~.+\.bs$~
+    ACTION_PHP_EACH files AS _ => filespec BEGIN
+      ACTION_IF (index < 100) BEGIN // upper limit
+        LAF RES_OF_FILESPEC STR_VAR filespec RET src_resref = res END
+        ACTION_TO_UPPER ~src_resref~
+        OUTER_TEXT_SPRINT dst_resref ~%ai_prefix%-%index%~
+        COPY ~%filespec%~ ~override/%dst_resref%.bcs~
+        OUTER_TEXT_SPRINT $mappings(~%src_resref%~) ~%dst_resref%~
+        OUTER_TEXT_SPRINT line_2da ~%index% %src_resref% %dst_resref%~
+        APPEND ~a7-scrpt.2da~ ~%line_2da%~
+        OUTER_SET index += 1
+      END
+    END
+    COPY_EXISTING ~a7-scrpt.2da~ ~override~ PRETTY_PRINT_2DA BUT_ONLY
+  END
+END
+
 
 // Generates a list of dialog responses for follower NPCs for changing their AI scripts.
 DEFINE_ACTION_FUNCTION CREATE_AI_LIST_RESPONSES
@@ -496,6 +545,9 @@ RET
 RET_ARRAY
   response_list       // .d response items
 BEGIN
+  // using mapped ai scripts
+  LAF CREATE_AI_SCRIPT_LIST RET_ARRAY mappings END
+
   OUTER_SET response_list = 0
   OUTER_TEXT_SPRINT $response_list(~0~) ~~
   OUTER_TEXT_SPRINT tilde "~"
@@ -504,8 +556,8 @@ BEGIN
   OUTER_TEXT_SPRINT default_script_file ~DEFAULT~
 
   // Passive behavior first
-  ACTION_IF (FILE_EXISTS ~scripts/none.bs~ AND SIZE_OF_FILE ~scripts/none.bs~ < 10) BEGIN
-    OUTER_TEXT_SPRINT script_resref ~NONE~
+  ACTION_IF (VARIABLE_IS_SET $mappings(~NONE~) && SIZE_OF_FILE ~scripts/none.bs~ < 10) BEGIN
+    OUTER_TEXT_SPRINT script_resref $mappings(~NONE~)
   END ELSE BEGIN
     OUTER_TEXT_SPRINT script_resref ~~
   END
@@ -565,27 +617,32 @@ BEGIN
       READ_2DA_ENTRY_FORMER scrpdesc row 0 script_resref
       READ_2DA_ENTRY_FORMER scrpdesc row 1 strref
       PATCH_IF (IS_AN_INT ~strref~ AND strref >= 0 && STRING_LENGTH ~%script_resref%~ <= 8 AND FILE_EXISTS ~scripts/%script_resref%.BS~) BEGIN
-        GET_STRREF strref script_name
-        INNER_PATCH_SAVE script_name ~%script_name%~ BEGIN
-          // prettifying script title
-          REPLACE_TEXTUALLY ~[ %TAB%]*:[ %TAB%]*$~ ~~
-        END
-        PATCH_IF (STRING_LENGTH ~%script_name%~ > 0) BEGIN
-          TO_UPPER ~script_resref~
-          SET $script_files(~%script_resref%~) = 1
-          SET script_idx = response_list / 2
-          SET strref_1049 = RESOLVE_STR_REF(@1049)
-          SET strref_1050 = RESOLVE_STR_REF(@1050)
-          TEXT_SPRINT $response_list(~%response_list%~)
-                      ~+ %tilde%!Global("A7CHR-AISCRIPT","LOCALS",%script_idx%)%tilde% + #%strref_1049% DO %tilde%SetGlobal("A7CHR-AISCRIPT","LOCALS",%script_idx%) ChangeAIScript("%script_resref%",CLASS) ClearActions(Myself)%tilde% EXIT~
-          SET response_list += 1
-          TEXT_SPRINT $response_list(~%response_list%~)
-                      ~+ %tilde%Global("A7CHR-AISCRIPT","LOCALS",%script_idx%)%tilde% + #%strref_1050% EXIT~
-          SET response_list += 1
-          PATCH_IF (~%ai_default_script%~ STR_EQ ~~ && ~%script_resref%~ STR_EQ ~%default_script_file%~) BEGIN
-            // auto-assigning default script
-            TEXT_SPRINT ai_default_script ~%script_resref%~
-            SET ai_default_global = script_idx
+        TO_UPPER ~script_resref~
+        PATCH_IF (VARIABLE_IS_SET $mappings(~%script_resref%~)) BEGIN
+          TEXT_SPRINT script_resref $mappings(~%script_resref%~)
+          PATCH_IF (NOT VARIABLE_IS_SET $script_files(~%script_resref%~)) BEGIN
+            GET_STRREF strref script_name
+            INNER_PATCH_SAVE script_name ~%script_name%~ BEGIN
+              // prettifying script title
+              REPLACE_TEXTUALLY ~[ %TAB%]*:[ %TAB%]*$~ ~~
+            END
+            PATCH_IF (STRING_LENGTH ~%script_name%~ > 0) BEGIN
+              SET $script_files(~%script_resref%~) = 1
+              SET script_idx = response_list / 2
+              SET strref_1049 = RESOLVE_STR_REF(@1049)
+              SET strref_1050 = RESOLVE_STR_REF(@1050)
+              TEXT_SPRINT $response_list(~%response_list%~)
+                          ~+ %tilde%!Global("A7CHR-AISCRIPT","LOCALS",%script_idx%)%tilde% + #%strref_1049% DO %tilde%SetGlobal("A7CHR-AISCRIPT","LOCALS",%script_idx%) ChangeAIScript("%script_resref%",CLASS) ClearActions(Myself)%tilde% EXIT~
+              SET response_list += 1
+              TEXT_SPRINT $response_list(~%response_list%~)
+                          ~+ %tilde%Global("A7CHR-AISCRIPT","LOCALS",%script_idx%)%tilde% + #%strref_1050% EXIT~
+              SET response_list += 1
+              PATCH_IF (~%ai_default_script%~ STR_EQ ~~ && ~%script_resref%~ STR_EQ ~%default_script_file%~) BEGIN
+                // auto-assigning default script
+                TEXT_SPRINT ai_default_script ~%script_resref%~
+                SET ai_default_global = script_idx
+              END
+            END
           END
         END
       END
@@ -593,13 +650,10 @@ BEGIN
   BUT_ONLY
 
   // Unregistered scripts by resource name
-  GET_FILE_ARRAY ~files~ ~scripts~ ~^.+\.BS$~
-  ACTION_PHP_EACH files AS _ => file BEGIN
-    LAF RES_OF_FILESPEC STR_VAR filespec = EVAL ~%file%~ RET res END
-    ACTION_TO_UPPER ~res~
-    ACTION_IF (NOT VARIABLE_IS_SET $script_files(~%res%~)) BEGIN
-      OUTER_TEXT_SPRINT script_name ~%res%~
-      OUTER_TEXT_SPRINT script_resref ~%res%~
+  ACTION_PHP_EACH mappings AS src_resref => dst_resref BEGIN
+    ACTION_IF (NOT VARIABLE_IS_SET $script_files(~%dst_resref%~)) BEGIN
+      OUTER_TEXT_SPRINT script_name ~%src_resref%~
+      OUTER_TEXT_SPRINT script_resref ~%dst_resref%~
       OUTER_SET script_idx = response_list / 2
       OUTER_SET strref_1049 = RESOLVE_STR_REF(@1049)
       OUTER_SET strref_1050 = RESOLVE_STR_REF(@1050)
