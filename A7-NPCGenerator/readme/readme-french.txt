@@ -1,7 +1,7 @@
 Générateur de PNJ
 ~~~~~~~~~~~~~~~~~
 
-Version :        1.6
+Version :        1.7
 Auteur :         Argent77
 
 Téléchargement : https://github.com/Argent77/A7-NPCGenerator/releases
@@ -178,6 +178,10 @@ Le mod "Magasin magique de Vergadain" est sous licence "Creative Commons Attribu
 
 Historique
 ~~~~~~~~~~
+
+1.7
+- Fixed combat script selection for NPCs in follower mode
+- Updated mod compatibility and installation order in the readme and PI ini file
 
 1.6
 - Ajout de la traduction française (merci Deratiseur)
