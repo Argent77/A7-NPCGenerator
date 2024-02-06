@@ -39,6 +39,12 @@ Ceci est un mod WeiDU, ce qui signifie qu'il est très facile à installer. Il s
 
 Le mod offre des options pour les installations manuelles et automatisées. Voir "Composants" ci-dessous pour plus de détails.
 
+
+Compatibilité et ordre d'installation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Il est recommandé d'installer les PNJ avant le composant "Augmenter la vitesse de déplacement du groupe en dehors du combat" de Tweak Anthology, sinon ils ne prendront pas en compte l'augmentation de la vitesse lorsqu'ils suivent le groupe en mode suiveur.
+
 Note pour Siege of Dragonspear (SoD) :
 GOG et Steam installent tous deux l'extension "Siege of Dragonspear" d'une manière qui n'est pas moddable à l'origine. Vous devez installer un mod appelé "DLC Merger" sur votre installation SoD avant que ce mod ou tout autre mod basé sur WeiDU ne puisse être installé.
 Il peut être téléchargé ici : https://github.com/Argent77/A7-DlcMerger/releases/latest
@@ -172,7 +178,7 @@ Traduction française : Deratiseur
 Avis de droit d'auteur
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Le mod "Magasin magique de Vergadain" est sous licence "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License"
+Le mod "Générateur de PNJ" est sous licence "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License"
 (https://creativecommons.org/licenses/by-nc-sa/4.0/).
 
 
@@ -180,8 +186,8 @@ Historique
 ~~~~~~~~~~
 
 1.7
-- Fixed combat script selection for NPCs in follower mode
-- Updated mod compatibility and installation order in the readme and PI ini file
+- Correction de la sélection du script de combat pour les PNJ en mode suiveur
+- Mise à jour de la compatibilité des mods et de l'ordre d'installation dans le fichier lisez moi et le fichier ini de Project Infinity
 
 1.6
 - Ajout de la traduction française (merci Deratiseur)
