@@ -60,5 +60,22 @@
 @1204 = ~Am I the only one to see that <CHARNAME> is being made the fall guy for this crime?~
 @1205 = ~This cannot be! <CHARNAME> has always fought against <PRO_HISHER> taint.~
 
+// NPC resurrection
+@1300 = ~Remains of %npc_name%~
+@1301 = ~These are the remains of %npc_name%. Use the "Resurrect" option of the item to raise your companion.
+
+STATISTICS:
+
+Weight: 4~
+@1302 = ~Resurrect~
+
+@1310 = ~Undead companions cannot be resurrected.~
+@1311 = ~%npc_name% doesn't appear to be dead.~
+@1312 = ~%npc_name% can be resurrected for %resurrect_price% gold.~
+@1313 = ~Pay %resurrect_price% gold to resurrect %npc_name%.~
+@1314 = ~Don't resurrect %npc_name% for now.~
+@1315 = ~You don't have enough gold to resurrect %npc_name%.~
+@1316 = ~You are too far away from %npc_name%'s resting place.~
+
 // misc. strings
 @2000 = ~ADVANCED AI~

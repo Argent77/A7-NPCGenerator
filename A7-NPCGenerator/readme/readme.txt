@@ -54,6 +54,10 @@ It is recommended to install NPCs before the Tweaks Anthology component "Increas
 Speed Outside of Combat". Otherwise, they are not included by the speed increase when tagging
 along in follower mode.
 
+Important:
+Version 2.0 of the NPC Generator introduced a feature that is not fully backwards compatible.
+Don't use older mod versions again after having used version 2.0 or higher to install NPCs.
+
 Note for Siege of Dragonspear (SoD):
 GOG and Steam both install the "Siege of Dragonspear" expansion in a way that is not moddable out
 of the box. You must install a mod called "DLC Merger" on your SoD installation before this or
@@ -140,6 +144,13 @@ approximated amount of XP for monsters killed by the NPCs themselves. The level 
 still only available when the NPC is a regular party member.
 
 NOTE 3:
+NPCs in companion mode will drop a special item when they die. This item allows you to resurrect
+the fallen companion for a level-dependent amount of gold by pressing the "Resurrect" button on
+the item description screen.
+In IWD:EE resurrecting elves or half-elves is more expensive than resurrecting any member of the
+other races.
+
+NOTE 4:
 For BG2, BGT, BG2:EE and EET it is possible to create custom epilogues for individual NPCs which
 are shown at the end of the game together with the epilogues of regular game NPCs.
 
@@ -242,6 +253,9 @@ International License" (http://creativecommons.org/licenses/by-sa/4.0/).
 
 History
 ~~~~~~~
+
+2.0
+- Added the means to resurrect dead NPCs in follower mode (for a price)
 
 1.7
 - Fixed combat script selection for NPCs in follower mode

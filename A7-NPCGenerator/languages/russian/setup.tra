@@ -89,3 +89,4 @@
 @506 = ~Alignment checks already enabled.~
 @507 = ~Alignment checks already disabled.~
 @508 = ~%cre_name% (%cre_resref%.chr): A character with the same resource name already exists in the game. Skipping.~
+@509 = ~DLC Merger is required before mods can be installed on this game. Check the readme for more information and a link to download DLC Merger.~

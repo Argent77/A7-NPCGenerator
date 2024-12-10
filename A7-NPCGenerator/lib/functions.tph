@@ -4,7 +4,7 @@
 <<<<<<<< .../inlined/a7-npcgenerator/a7-npc.2da
 2DA V1.0
 *
-    RESREF    SCRIPT_NAME   ARE       ARE_X     ARE_Y     ARE_DIR
+    RESREF    SCRIPT_NAME   ARE       ARE_X     ARE_Y     ARE_DIR   RESURRECT_INDEX
 >>>>>>>>
 
 <<<<<<<< .../inlined/a7-npcgenerator/a7-scrpt.2da
@@ -16,7 +16,7 @@
 RANDOM_SEED ~~
 
 // Returns the game-specific BG1 area resref
-DEFINE_ACTION_FUNCTION RESOLVE_ARE_RESREF
+DEFINE_DIMORPHIC_FUNCTION RESOLVE_ARE_RESREF
 STR_VAR
   game    = ~~
   are_src = ~~
@@ -28,18 +28,6 @@ BEGIN
     OUTER_TEXT_SPRINT are_dst EVAL ~%AREA_%are_src%%~
   END ELSE BEGIN
     OUTER_TEXT_SPRINT are_dst ~%are_src%~
-  END
-END
-
-DEFINE_PATCH_FUNCTION RESOLVE_ARE_RESREF
-STR_VAR
-  game    = ~~
-  are_src = ~~
-RET
-  are_dst
-BEGIN
-  INNER_ACTION BEGIN
-    LAF RESOLVE_ARE_RESREF STR_VAR game are_src RET are_dst END
   END
 END
 
@@ -68,7 +56,7 @@ END
 
 
 // Ensures that the returned resref contains only characters allowed in filename or scriptname.
-DEFINE_ACTION_FUNCTION GET_SAFE_RESREF
+DEFINE_DIMORPHIC_FUNCTION GET_SAFE_RESREF
 STR_VAR resref = ~~
 RET resref
 BEGIN
@@ -83,13 +71,6 @@ BEGIN
   END
 END
 
-DEFINE_PATCH_FUNCTION GET_SAFE_RESREF
-STR_VAR resref = ~~
-RET resref
-BEGIN
-  INNER_ACTION BEGIN LAF GET_SAFE_RESREF STR_VAR resref RET resref END END
-END
-
 
 // Marks the specified character as installed
 DEFINE_ACTION_FUNCTION REGISTER_CHAR
@@ -97,6 +78,7 @@ INT_VAR
   are_x   = 0
   are_y   = 0
   are_dir = 0
+  resurrect_index = "-1"
 STR_VAR
   game = ~~
   cre_resref = ~~
@@ -132,7 +114,7 @@ BEGIN
       ACTION_IF (~%script_name%~ STR_EQ ~~) BEGIN
         OUTER_TEXT_SPRINT script_name ~%resref%~
       END
-      APPEND ~a7-npc.2da~ ~%index% %cre_resref% %script_name% %are_resref% %are_x% %are_y% %are_dir%~
+      APPEND ~a7-npc.2da~ ~%index% %cre_resref% %script_name% %are_resref% %are_x% %are_y% %are_dir% %resurrect_index%~
       OUTER_SET success = 1
       COPY_EXISTING ~a7-npc.2da~ ~override~
         PRETTY_PRINT_2DA
@@ -165,7 +147,7 @@ END
 
 
 // Returns whether the specified characters is already installed
-DEFINE_ACTION_FUNCTION IS_CHAR_REGISTERED
+DEFINE_DIMORPHIC_FUNCTION IS_CHAR_REGISTERED
 STR_VAR
   cre_resref = ~~
 RET
@@ -184,17 +166,6 @@ BEGIN
         END
       END
     BUT_ONLY
-  END
-END
-
-DEFINE_PATCH_FUNCTION IS_CHAR_REGISTERED
-STR_VAR
-  cre_resref = ~~
-RET
-  registered
-BEGIN
-  INNER_ACTION BEGIN
-    LAF IS_CHAR_REGISTERED STR_VAR cre_resref RET registered END
   END
 END
 
@@ -670,4 +641,77 @@ BEGIN
       END
     END
   END
+END
+
+
+// Returns the resurrection index for the specified CRE resref. Returns -1 if unavailable.
+DEFINE_DIMORPHIC_FUNCTION GET_RESURRECT_INDEX
+STR_VAR
+  resref = ~~
+RET
+  index
+BEGIN
+  OUTER_SET index = "-1"
+  COPY_EXISTING ~a7-npc.2da~ ~override~
+    READ_2DA_ENTRIES_NOW a7_npc 1
+    FOR (row = 3; row < a7_npc; ++row) BEGIN
+      READ_2DA_ENTRY_FORMER a7_npc row 1 cre
+      PATCH_IF (~%cre%~ STR_EQ ~%resref%~) BEGIN
+        READ_2DA_ENTRY_FORMER a7_npc row 7 v
+        PATCH_IF (IS_AN_INT ~v~) BEGIN
+          SET index = v
+          SET row = a7_npc
+        END
+      END
+    END
+  BUT_ONLY IF_EXISTS
+END
+
+// Returns the next free resurrection index for a new NPC. Returns -1 if unavailable.
+DEFINE_DIMORPHIC_FUNCTION GET_FREE_RESURRECT_INDEX
+RET
+  index
+BEGIN
+  OUTER_SET index = "-1"
+  COPY_EXISTING ~a7-npc.2da~ ~override~
+    READ_2DA_ENTRIES_NOW a7_npc 1
+    FOR (row = 3; row < a7_npc; ++row) BEGIN
+      READ_2DA_ENTRY_FORMER a7_npc row 7 value
+      PATCH_IF (IS_AN_INT ~value~) BEGIN
+        SET value = value
+        SET $values(~%value%~) = 1
+      END
+    END
+  BUT_ONLY IF_EXISTS
+
+  OUTER_FOR (i = 0; i < 256; ++i) BEGIN
+    ACTION_IF (NOT VARIABLE_IS_SET $values(~%i%~)) BEGIN
+      OUTER_SET index = i
+      OUTER_SET i = 256
+    END
+  END
+END
+
+// Returns an indexed resource reference consisting of the resref base string and the hexadecimal notation of the given index.
+DEFINE_DIMORPHIC_FUNCTION GET_INDEXED_RESOURCE_NAME
+INT_VAR
+  index = 0 // index in range 0..255
+STR_VAR
+  resref_base = ~~  // resref prefix
+RET
+  resref  // resolved resref: %resref_base%xx where xx is hex notation of "index"
+BEGIN
+  OUTER_SPRINT resref ~%resref_base%~
+  ACTION_IF (index >= 0 && index < 256) BEGIN
+    OUTER_PATCH_SAVE resref ~%resref%00~ BEGIN
+      SET len = BUFFER_LENGTH
+      SET v = index / 16
+      WRITE_BYTE (len - 2) (v < 10 ? 48 : 55) + v
+      SET v = index & 15
+      WRITE_BYTE (len - 1) (v < 10 ? 48 : 55) + v
+    END
+  END ELSE BEGIN
+    OUTER_SPRINT resref ~%resref_base%xx~
+  END
+  ACTION_TO_LOWER ~resref~
 END

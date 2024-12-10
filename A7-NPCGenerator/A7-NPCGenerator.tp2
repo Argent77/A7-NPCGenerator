@@ -8,6 +8,10 @@ ALWAYS
   // root folder for mutable data
   OUTER_TEXT_SPRINT WORK_FOLDER ~weidu_external~
 
+  ACTION_IF ((FILE_EXISTS ~dlc/sod-dlc.zip~) OR (FILE_EXISTS ~sod-dlc.zip~)) THEN BEGIN
+    FAIL @509 // DLC Merger is required before mods can be installed on this game. Check the readme for more information and a link to download DLC Merger.
+  END
+
   // Platform-specific line breaks
   ACTION_IF (~%WEIDU_OS%~ STR_EQ ~win32~) BEGIN
     OUTER_TEXT_SPRINT nl ~%WNL%~
@@ -244,7 +248,9 @@ LAM INSTALL_CHARACTERS
 ///////////////////////////////////////////////////////////
 BEGIN @20 // Enable alignment checks for custom NPCs
 REQUIRE_PREDICATE (GAME_IS ~tob tutu tutu_totsc bgt bgee bg2ee eet~) @500 // Game is not supported.
-REQUIRE_PREDICATE (FILE_EXISTS_IN_GAME ~a7-npc.2da~ && FILE_EXISTS_IN_GAME ~a7chrnpc.bcs~) @501 // No installed NPCs found.
+REQUIRE_PREDICATE (FILE_EXISTS_IN_GAME ~a7-npc.2da~) @501 // No installed NPCs found.
+// A7-NPC.2DA:                                          INDEX            RESREF             SCRIPT_NAME        ARE                ARE_X             ARE_Y             ARE_DIR           RESURRECT_INDEX
+REQUIRE_PREDICATE (FILE_CONTAINS_EVALUATED(~a7-npc.2da~ ~^[0-9]+[ %TAB%]+[^ %TAB%]+[ %TAB%]+[^ %TAB%]+[ %TAB%]+[^ %TAB%]+[ %TAB%]+[-+0-9*]+[ %TAB%]+[-+0-9*]+[ %TAB%]+[-+0-9*]+[ %TAB%]+[-+0-9*]+[ %TAB%%WNL%]*$~)) @501 // No installed NPCs found.
 REQUIRE_PREDICATE (FILE_CONTAINS_EVALUATED(~a7chrnpc.bcs~ ~LOCALSA7CHR-SKIPCHECK_CHECKED~)) @506 // Alignment check already enabled.
 DESIGNATED 20
 LABEL ~A7-NPCGENERATOR-ALIGNMENT_CHECK_ENABLE~
@@ -252,7 +258,20 @@ NO_LOG_RECORD
 
 INCLUDE ~%MOD_FOLDER%/lib/charinstall.tph~
 
-LAF REMOVE_DISABLED_ALIGNMENT_CHECK END
+WITH_SCOPE BEGIN
+  COPY_EXISTING ~a7-npc.2da~ ~override~
+    READ_2DA_ENTRIES_NOW a7_npc 1
+    FOR (row = 3; row < a7_npc; ++row) BEGIN
+      PATCH_IF (VARIABLE_IS_SET $a7_npc(~%row%~ ~7~)) BEGIN
+        READ_2DA_ENTRY_FORMER a7_npc row 7 index
+        INNER_ACTION BEGIN
+          LAF GET_INDEXED_RESOURCE_NAME INT_VAR index STR_VAR resref_base = ~a7chrn~ RET script_resref = resref END
+          LAF REMOVE_DISABLED_ALIGNMENT_CHECK STR_VAR script_resref END
+        END
+      END
+    END
+  BUT_ONLY
+END
 
 
 ///////////////////////////////////////////////////////////
@@ -260,7 +279,9 @@ LAF REMOVE_DISABLED_ALIGNMENT_CHECK END
 ///////////////////////////////////////////////////////////
 BEGIN @21 // Disable alignment checks for custom NPCs
 REQUIRE_PREDICATE (GAME_IS ~tob tutu tutu_totsc bgt bgee bg2ee eet~) @500 // Game is not supported.
-REQUIRE_PREDICATE (FILE_EXISTS_IN_GAME ~a7-npc.2da~ && FILE_EXISTS_IN_GAME ~a7chrnpc.bcs~) @501 // No installed NPCs found.
+REQUIRE_PREDICATE (FILE_EXISTS_IN_GAME ~a7-npc.2da~) @501 // No installed NPCs found.
+// A7-NPC.2DA:                                          INDEX            RESREF             SCRIPT_NAME        ARE                ARE_X             ARE_Y             ARE_DIR           RESURRECT_INDEX
+REQUIRE_PREDICATE (FILE_CONTAINS_EVALUATED(~a7-npc.2da~ ~^[0-9]+[ %TAB%]+[^ %TAB%]+[ %TAB%]+[^ %TAB%]+[ %TAB%]+[^ %TAB%]+[ %TAB%]+[-+0-9*]+[ %TAB%]+[-+0-9*]+[ %TAB%]+[-+0-9*]+[ %TAB%]+[-+0-9*]+[ %TAB%%WNL%]*$~)) @501 // No installed NPCs found.
 REQUIRE_PREDICATE (NOT FILE_CONTAINS_EVALUATED(~a7chrnpc.bcs~ ~LOCALSA7CHR-SKIPCHECK_CHECKED~)) @507 // Alignment check already disabled.
 DESIGNATED 21
 LABEL ~A7-NPCGENERATOR-ALIGNMENT_CHECK_DISABLE~
@@ -268,7 +289,20 @@ NO_LOG_RECORD
 
 INCLUDE ~%MOD_FOLDER%/lib/charinstall.tph~
 
-LAF ADD_DISABLED_ALIGNMENT_CHECK END
+WITH_SCOPE BEGIN
+  COPY_EXISTING ~a7-npc.2da~ ~override~
+    READ_2DA_ENTRIES_NOW a7_npc 1
+    FOR (row = 3; row < a7_npc; ++row) BEGIN
+      PATCH_IF (VARIABLE_IS_SET $a7_npc(~%row%~ ~7~)) BEGIN
+        READ_2DA_ENTRY_FORMER a7_npc row 7 index
+        INNER_ACTION BEGIN
+          LAF GET_INDEXED_RESOURCE_NAME INT_VAR index STR_VAR resref_base = ~a7chrn~ RET script_resref = resref END
+          LAF ADD_DISABLED_ALIGNMENT_CHECK STR_VAR script_resref END
+        END
+      END
+    END
+  BUT_ONLY
+END
 
 
 ///////////////////////////////////////////////////////////
@@ -277,7 +311,8 @@ LAF ADD_DISABLED_ALIGNMENT_CHECK END
 BEGIN @11 // Select individually
 SUBCOMPONENT @10 // Remove custom NPCs from the game (CAUTION: See readme)
 REQUIRE_PREDICATE (FILE_EXISTS_IN_GAME ~a7-npc.2da~) @501 // No installed NPCs found.
-REQUIRE_PREDICATE (FILE_CONTAINS_EVALUATED(~a7-npc.2da~ ~^[^ %TAB%]+[ %TAB%]+[^ %TAB%]+[ %TAB%]+[^ %TAB%]+[ %TAB%]+[^ %TAB%]+[ %TAB%]+[-+0-9*]+[ %TAB%]+[-+0-9*]+[ %TAB%]+[-+0-9*][ %TAB%%WNL%]*$~)) @501 // No installed NPCs found.
+// A7-NPC.2DA:                                          INDEX            RESREF             SCRIPT_NAME        ARE                ARE_X             ARE_Y             ARE_DIR           RESURRECT_INDEX
+REQUIRE_PREDICATE (FILE_CONTAINS_EVALUATED(~a7-npc.2da~ ~^[0-9]+[ %TAB%]+[^ %TAB%]+[ %TAB%]+[^ %TAB%]+[ %TAB%]+[^ %TAB%]+[ %TAB%]+[-+0-9*]+[ %TAB%]+[-+0-9*]+[ %TAB%]+[-+0-9*]+[ %TAB%]+[-+0-9*]+[ %TAB%%WNL%]*$~)) @501 // No installed NPCs found.
 DESIGNATED 100
 LABEL ~A7-NPCGENERATOR-REMOVE_NPC_INDIVIDUAL~
 NO_LOG_RECORD
@@ -310,7 +345,8 @@ LAM UNINSTALL_CHARACTERS
 BEGIN @12 // Remove all
 SUBCOMPONENT @10 // Remove custom NPCs from the game (CAUTION: See readme)
 REQUIRE_PREDICATE (FILE_EXISTS_IN_GAME ~a7-npc.2da~) @501 // No installed NPCs found.
-REQUIRE_PREDICATE (FILE_CONTAINS_EVALUATED(~a7-npc.2da~ ~^[^ %TAB%]+[ %TAB%]+[^ %TAB%]+[ %TAB%]+[^ %TAB%]+[ %TAB%]+[^ %TAB%]+[ %TAB%]+[-+0-9*]+[ %TAB%]+[-+0-9*]+[ %TAB%]+[-+0-9*][ %TAB%%WNL%]*$~)) @501 // No installed NPCs found.
+// A7-NPC.2DA:                                          INDEX            RESREF             SCRIPT_NAME        ARE                ARE_X             ARE_Y             ARE_DIR           RESURRECT_INDEX
+REQUIRE_PREDICATE (FILE_CONTAINS_EVALUATED(~a7-npc.2da~ ~^[0-9]+[ %TAB%]+[^ %TAB%]+[ %TAB%]+[^ %TAB%]+[ %TAB%]+[^ %TAB%]+[ %TAB%]+[-+0-9*]+[ %TAB%]+[-+0-9*]+[ %TAB%]+[-+0-9*]+[ %TAB%]+[-+0-9*]+[ %TAB%%WNL%]*$~)) @501 // No installed NPCs found.
 DESIGNATED 101
 LABEL ~A7-NPCGENERATOR-REMOVE_NPC_ALL~
 NO_LOG_RECORD

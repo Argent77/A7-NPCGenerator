@@ -1,0 +1,63 @@
+// Handle NPC death in follower mode
+IF
+  Global("dead","LOCALS",0)
+  OR(2)
+    !Global("A7CHR-FOLLOWER","LOCALS",0)
+    !Global("stoned","LOCALS",0)
+  StateCheck(Myself,3840)  // STATE_EXPLODING_DEATH | STATE_FLAME_DEATH | STATE_ACID_DEATH | STATE_DEAD
+THEN
+  RESPONSE #100
+    SetGlobal("dead","LOCALS",1)
+    GiveItemCreate("%resurrect_itm%",Myself,1,0,0)  // Remains of <npc_name>
+    ActionOverride(Myself,DropInventory())
+    Continue()
+END
+
+IF
+  !Global("dead","LOCALS",0)
+  !StateCheck(Myself,3840)  // STATE_EXPLODING_DEATH | STATE_FLAME_DEATH | STATE_ACID_DEATH | STATE_DEAD
+THEN
+  RESPONSE #100
+    SetGlobal("dead","LOCALS",0)
+    Continue()
+END
+
+IF
+  !Global("A7CHR-FOLLOWER","LOCALS",0)
+  StateCheck(Myself,3840)  // STATE_EXPLODING_DEATH | STATE_FLAME_DEATH | STATE_ACID_DEATH | STATE_DEAD
+THEN
+  RESPONSE #100
+    SetGlobal("A7CHR-FOLLOWER","LOCALS",0)
+    SetGlobal("A7CHR-AISCRIPT","LOCALS",0)
+    SetGlobal("A7CHR-DIALOG-INIT","LOCALS",1)
+    SetGlobal("A7CHR-INIT","LOCALS",0)
+    ApplySpellRES("a7chrxv2",Myself)
+    RemoveFamiliar()
+    Continue()
+END
+
+IF
+  !Global("A7CHR-FOLLOWER","LOCALS",0)
+  Global("stoned","LOCALS",0)
+  StateCheck(Myself,192)  // STATE_FROZEN_DEATH | STATE_STONE_DEATH
+THEN
+  RESPONSE #100
+    SetGlobal("stoned","LOCALS",1)
+    SetGlobal("A7CHR-FOLLOWER","LOCALS",0)
+    SetGlobal("A7CHR-AISCRIPT","LOCALS",0)
+    SetGlobal("A7CHR-DIALOG-INIT","LOCALS",1)
+    ApplySpellRES("a7chrxv2",Myself)
+    RemoveFamiliar()
+    ChangeEnemyAlly(Myself,NEUTRAL)
+    Continue()
+END
+
+IF
+  !Global("A7CHR-FOLLOWER","LOCALS",0)
+  !Global("stoned","LOCALS",0)
+  !StateCheck(Myself,192)  // STATE_FROZEN_DEATH | STATE_STONE_DEATH
+THEN
+  RESPONSE #100
+    SetGlobal("stoned","LOCALS",0)
+    Continue()
+END

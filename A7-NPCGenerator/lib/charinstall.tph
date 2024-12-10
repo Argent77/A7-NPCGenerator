@@ -77,6 +77,9 @@ BEGIN
       END
     END
 
+    // Resurrection feature is initially available
+    OUTER_SET enable_resurrection = 1
+
     // Spell effect "Clear Fog of War" used in companion mode
     ACTION_IF (NOT FILE_EXISTS_IN_GAME ~A7CHRXV.SPL~) BEGIN
       // Non-EE games have to resort to secondary type removal
@@ -87,13 +90,15 @@ BEGIN
         PATCH_IF (NOT IS_EE && type > 0) BEGIN
           WRITE_BYTE 0x27 type    // secondary type
         END
+        SET timing = IS_EE ? 9 : 1  // Work-around for non-EE games to make effect removable
         LPF ADD_SPELL_EFFECT
           INT_VAR
             opcode = 268  // Clear Fog of War
             target = 2    // Preset target
-            timing = IS_EE ? 9 : 1  // Work-around for non-EE games to make effect removable
+            timing
         END
     END
+
     ACTION_IF (NOT FILE_EXISTS_IN_GAME ~A7CHRXV2.SPL~) BEGIN
       ACTION_IF (NOT IS_EE) BEGIN
         LAF GET_CUSTOM_SECTYPE STR_VAR name = ~A7CHR_CLEAR_FOW~ RET type END
@@ -148,27 +153,9 @@ BEGIN
       EXTEND_BOTTOM ~dplayer3.bcs~ ~.../inlined/a7-npcgenerator/breaking_point.baf~
     END
 
-    ACTION_IF (NOT FILE_EXISTS_IN_GAME ~A7CHRNPC.BCS~) BEGIN
-      COMPILE ~%MOD_FOLDER%/scripts/a7chrnpc.baf~ EVAL
-      // use better method for setting character XP if available
-      ACTION_IF (VALID_SCRIPT_ACTIONS ~ChangeStat(Myself,XP,0,SET)~) BEGIN
-        COPY_EXISTING ~A7CHRNPC.BCS~ ~override~
-          DECOMPILE_AND_PATCH BEGIN
-            REPLACE_TEXTUALLY ~AddXPObject(Myself,\([0-9]+\))~ ~ChangeStat(Myself,XP,\1,SET)~
-          END
-        BUT_ONLY
-      END
-      ACTION_IF (GAME_INCLUDES ~soa~) BEGIN
-        EXTEND_BOTTOM ~A7CHRNPC.BCS~ ~%MOD_FOLDER%/scripts/a7chr-plot-soa.baf~ EVAL
-      END
-      ACTION_IF (IS_EE) BEGIN
-        ACTION_IF (GAME_INCLUDES ~sod~) BEGIN
-          EXTEND_BOTTOM ~A7CHRNPC.BCS~ ~%MOD_FOLDER%/scripts/ee/a7chr-plot-sod.baf~
-        END
-        EXTEND_BOTTOM ~A7CHRNPC.BCS~ ~%MOD_FOLDER%/scripts/ee/a7chrxp-append.baf~
-      END ELSE BEGIN
-        EXTEND_BOTTOM ~A7CHRNPC.BCS~ ~%MOD_FOLDER%/scripts/a7chrxp-append.baf~
-      END
+    // Upgrading old NPC installations
+    ACTION_IF (enable_resurrection) BEGIN
+      LAF UPGRADE_NPC_RESURRECTION END
     END
 
     // Installing NPCs
@@ -183,6 +170,15 @@ BEGIN
         OUTER_SPRINT msg @60  // Installing character
         PRINT ~%msg% %name% (%chr_resref%.chr)~
 
+        LAF GET_FREE_RESURRECT_INDEX RET resurrect_index = index END
+        ACTION_IF (resurrect_index < 0) BEGIN
+          OUTER_SET enable_resurrection = 0
+          WARN ~WARNING: Resurrection feature disabled (reason: no further resurrection slots available)~
+        END
+
+        // installing NPC override script
+        LAF INSTALL_OVERRIDE_SCRIPT INT_VAR index = resurrect_index RET override_script = resref END
+
         // installing CHR as CRE
         ACTION_IF (~%directory%~ STR_EQ ~~ && FILE_EXISTS_IN_GAME ~%filespec%~) BEGIN
           // assign biography if available
@@ -195,7 +191,7 @@ BEGIN
           BUT_ONLY IF_EXISTS
 
           COPY_EXISTING ~%filespec%~ ~override/%cre_resref%.cre~
-            LPF INSTALL_CHR_AS_CRE INT_VAR adapt_xp bio_strref STR_VAR script_name = EVAL ~A7CHR-%cre_resref%~ END
+            LPF INSTALL_CHR_AS_CRE INT_VAR adapt_xp bio_strref STR_VAR script_name = EVAL ~A7CHR-%cre_resref%~ override_script END
         END ELSE BEGIN
           OUTER_FOR (i = 0; i < chr_folder; ++i) BEGIN
             OUTER_TEXT_SPRINT folder $chr_folder(~%i%~)
@@ -210,7 +206,7 @@ BEGIN
             BUT_ONLY IF_EXISTS
 
             COPY ~%folder%/%chr_resref%.chr~ ~override/%cre_resref%.cre~
-              LPF INSTALL_CHR_AS_CRE INT_VAR adapt_xp bio_strref STR_VAR script_name = EVAL ~A7CHR-%cre_resref%~ END
+              LPF INSTALL_CHR_AS_CRE INT_VAR adapt_xp bio_strref STR_VAR script_name = EVAL ~A7CHR-%cre_resref%~ override_script END
             IF_EXISTS
 
             // handling epilogue
@@ -246,6 +242,11 @@ BEGIN
           END
         END
 
+        // installing resurrection feature
+        ACTION_IF (enable_resurrection) BEGIN
+          LAF INSTALL_RESURRECTION INT_VAR index = resurrect_index STR_VAR cre_resref END
+        END
+
         // setting up character creation
         OUTER_SET move_stage = 1
         OUTER_FOR (game_idx = 0; game_idx < supported_games; ++game_idx) BEGIN
@@ -270,11 +271,8 @@ BEGIN
               END
 
               LAF GET_FREE_NPC_POSITION
-              STR_VAR game are_resref
-              RET
-                are_x = x
-                are_y = y
-                are_dir = dir
+                STR_VAR game are_resref
+                RET are_x = x are_y = y are_dir = dir
               END
 
               OUTER_TEXT_SPRINT extra_trigger ~~
@@ -302,10 +300,10 @@ BEGIN
               END
               EXTEND_TOP ~%are_script%.BCS~ ~.../inlined/a7-npcgenerator/create_script.baf~ EVAL
               EXTEND_TOP ~%are_script%.BCS~ ~.../inlined/a7-npcgenerator/move_script.baf~ EVAL
-              EXTEND_BOTTOM ~A7CHRNPC.BCS~ ~.../inlined/a7-npcgenerator/npc_return_script.baf~ EVAL
+              EXTEND_BOTTOM ~%override_script%.BCS~ ~.../inlined/a7-npcgenerator/npc_return_script.baf~ EVAL
 
               LAF REGISTER_CHAR
-                INT_VAR are_x are_y are_dir
+                INT_VAR are_x are_y are_dir resurrect_index
                 STR_VAR game cre_resref are_resref script_name = EVAL ~A7CHR-%cre_resref%~
                 RET success
               END
@@ -323,13 +321,52 @@ BEGIN
 END
 
 
+// Installs a customized version of an NPC override script
+DEFINE_ACTION_FUNCTION INSTALL_OVERRIDE_SCRIPT
+INT_VAR
+  index = "-1"  // index range in 0..255, specify negative value to install the script with a default name
+RET
+  resref  // override script resref
+BEGIN
+  COMPILE ~%MOD_FOLDER%/scripts/a7chrnpc.baf~ EVAL
+
+  // use better method for setting character XP if available
+  ACTION_IF (VALID_SCRIPT_ACTIONS ~ChangeStat(Myself,XP,0,SET)~) BEGIN
+    COPY_EXISTING ~a7chrnpc.bcs~ ~override~
+      DECOMPILE_AND_PATCH BEGIN
+        REPLACE_TEXTUALLY ~AddXPObject(Myself,\([0-9]+\))~ ~ChangeStat(Myself,XP,\1,SET)~
+      END
+    BUT_ONLY
+  END
+  ACTION_IF (GAME_INCLUDES ~soa~) BEGIN
+    EXTEND_BOTTOM ~a7chrnpc.bcs~ ~%MOD_FOLDER%/scripts/a7chr-plot-soa.baf~ EVAL
+  END
+  ACTION_IF (IS_EE) BEGIN
+    ACTION_IF (GAME_INCLUDES ~sod~) BEGIN
+      EXTEND_BOTTOM ~a7chrnpc.bcs~ ~%MOD_FOLDER%/scripts/ee/a7chr-plot-sod.baf~
+    END
+    EXTEND_BOTTOM ~a7chrnpc.bcs~ ~%MOD_FOLDER%/scripts/ee/a7chrxp-append.baf~
+  END ELSE BEGIN
+    EXTEND_BOTTOM ~a7chrnpc.bcs~ ~%MOD_FOLDER%/scripts/a7chrxp-append.baf~
+  END
+
+  ACTION_IF (index >= 0 && index < 256) BEGIN
+    LAF GET_INDEXED_RESOURCE_NAME INT_VAR index STR_VAR resref_base = ~a7chrn~ RET resref END
+    COPY_EXISTING ~a7chrnpc.bcs~ ~override/%resref%.bcs~
+  END ELSE BEGIN
+    OUTER_SPRINT resref ~a7chrnpc~
+  END
+END
+
+
 // Prepares current CHR/CRE file to be used as custom NPC
 DEFINE_PATCH_FUNCTION INSTALL_CHR_AS_CRE
 INT_VAR
   adapt_xp = 0  // whether to activate XP adaptation
   bio_strref = "-1" // strref of an optional biography text
 STR_VAR
-  script_name = ~~
+  script_name = ~~  // script name of the NPC
+  override_script = ~A7CHRNPC~  // override script resref
 BEGIN
   // initializations
   PATCH_IF (IS_EE) BEGIN
@@ -353,7 +390,7 @@ BEGIN
     WRITE_LONG BIO ((bio_strref >= 0 || (THIS >= bio_exclude_min && THIS <= bio_exclude_max)) ? bio_strref : THIS)
     WRITE_BYTE 0x270 128 // Allegiance = NEUTRAL
     WRITE_ASCII DIALOG ~A7CHRNPC~ (8)
-    WRITE_ASCII SCRIPT_OVERRIDE ~A7CHRNPC~ (8)
+    WRITE_ASCIIE SCRIPT_OVERRIDE ~%override_script%~ (8)
     WRITE_ASCII SCRIPT_DEFAULT ~~ (8)
     WRITE_ASCIIE DEATHVAR ~%script_name%~ (32)
     LPF ADD_LOCAL_VARIABLE INT_VAR value = 1 STR_VAR name = ~A7CHR-CUSTOM~ END
@@ -443,19 +480,23 @@ END
 
 // Adds local script block to disable initial alignment check when recruiting custom NPCs.
 DEFINE_ACTION_FUNCTION ADD_DISABLED_ALIGNMENT_CHECK
+STR_VAR
+  script_resref = ~a7chrnpc~
 BEGIN
-  ACTION_IF (FILE_EXISTS_IN_GAME ~a7chrnpc.bcs~) BEGIN
-    ACTION_IF (FILE_EXISTS_IN_GAME ~a7chrnpc.bcs~ &&
-               NOT FILE_CONTAINS_EVALUATED(~a7chrnpc.bcs~ ~LOCALSA7CHR-SKIPCHECK_CHECKED~)) BEGIN
-      EXTEND_TOP ~a7chrnpc.bcs~ ~.../inlined/a7-npcgenerator/npc_disable_alignment_check.baf~
+  ACTION_IF (FILE_EXISTS_IN_GAME ~%%script_resref.bcs~) BEGIN
+    ACTION_IF (FILE_EXISTS_IN_GAME ~%script_resref%.bcs~ &&
+               NOT FILE_CONTAINS_EVALUATED(~%script_resref%.bcs~ ~LOCALSA7CHR-SKIPCHECK_CHECKED~)) BEGIN
+      EXTEND_TOP ~%script_resref%.bcs~ ~.../inlined/a7-npcgenerator/npc_disable_alignment_check.baf~
     END
   END
 END
 
 // Removes local script block to disable initial alignment check when recruiting custom NPCs.
 DEFINE_ACTION_FUNCTION REMOVE_DISABLED_ALIGNMENT_CHECK
+STR_VAR
+  script_resref = ~a7chrnpc~
 BEGIN
-  COPY_EXISTING ~a7chrnpc.bcs~ ~override~
+  COPY_EXISTING ~%script_resref%.bcs~ ~override~
     PATCH_IF (INDEX_BUFFER(~LOCALSA7CHR-SKIPCHECK_CHECKED~) >= 0) BEGIN
       DECOMPILE_AND_PATCH BEGIN
         SET p1 = INDEX_BUFFER(~Global("A7CHR-SKIPCHECK_CHECKED","LOCALS",0)~)
@@ -563,5 +604,203 @@ BEGIN
         WARN ~Could not install epilogue %suffix% for %cre_resref%.~
       END
     END
+  END
+END
+
+// Installs the resurrection feature to existing NPCs that were installed by older mod versions.
+DEFINE_ACTION_FUNCTION UPGRADE_NPC_RESURRECTION
+BEGIN
+  LAF UPGRADE_NPC_RESURRECTION#append_table RET expanded END
+
+  ACTION_IF (expanded) BEGIN
+    // collecting NPC entries
+    COPY_EXISTING ~a7-npc.2da~ ~override~
+      READ_2DA_ENTRIES_NOW a7_npc 1
+      FOR (row = 3; row < a7_npc; ++row) BEGIN
+        READ_2DA_ENTRY_FORMER a7_npc row 1 npc_resref
+        READ_2DA_ENTRY_FORMER a7_npc row 7 resurrect_idx
+        TO_UPPER ~npc_resref~
+        PATCH_IF (IS_AN_INT ~resurrect_idx~) BEGIN
+          SET $npc_resurrect(~%npc_resref%~) = resurrect_idx
+        END
+      END
+    BUT_ONLY
+
+    // applying resurrection feature
+    ACTION_PHP_EACH npc_resurrect AS cre_resref => index BEGIN
+      LAF GET_INDEXED_RESOURCE_NAME INT_VAR index STR_VAR resref_base = ~a7chrn~ RET override_script = resref END
+      COPY_EXISTING ~A7CHRNPC.BCS~ ~override/%override_script%.bcs~
+      LAF INSTALL_RESURRECTION INT_VAR index STR_VAR cre_resref END
+    END
+    ACTION_IF (FILE_EXISTS_IN_GAME ~override/A7CHRNPC.BCS~) BEGIN
+      DELETE ~override/A7CHRNPC.BCS~
+    END
+  END
+END
+
+// Expands A7-NPC.2DA with the RESURRECT_INDEX column if needed.
+DEFINE_ACTION_FUNCTION UPGRADE_NPC_RESURRECTION#append_table
+RET
+  expanded  // indicates whether table was expanded by this function
+BEGIN
+  OUTER_SET expanded = 0
+  COPY_EXISTING ~a7-npc.2da~ ~override~
+    READ_2DA_ENTRIES_NOW a7_npc 1
+    PATCH_IF (NOT VARIABLE_IS_SET $a7_npc(~2~ ~6~)) BEGIN
+      // preparing "resurrection index" column
+      SET expanded = 1
+      SPRINT append ~$ $ RESURRECT_INDEX~
+      SET res_idx = "-1"
+      SET next_res_idx = 0
+      FOR (row = 3; row < a7_npc; ++row) BEGIN
+        READ_2DA_ENTRY_FORMER a7_npc row 1 resref
+        TO_UPPER ~resref~
+        PATCH_IF (VARIABLE_IS_SET $npc_resref(~%resref%~)) BEGIN
+          SET res_idx = $npc_resref(~%resref%~)
+        END ELSE BEGIN
+          SET res_idx = next_res_idx
+          SET next_res_idx += 1
+          SET $npc_resref(~%resref%~) = res_idx
+        END
+        SPRINT append ~%append% %res_idx%~
+      END
+    END
+  BUT_ONLY IF_EXISTS
+
+  ACTION_IF (expanded) BEGIN
+    APPEND_COL ~a7-npc.2da~ ~%append%~
+    COPY_EXISTING ~a7-npc.2da~ ~override~
+      PRETTY_PRINT_2DA
+  END
+END
+
+/**
+ * Sets up the specified NPC for resurrection. NPC must already be installed.
+ *
+ * INT_VAR index  RESURRECT_INDEX value from A7-NPC.2DA table
+ * STR_VAR strref CRE resref of the NPC.
+ */
+DEFINE_ACTION_FUNCTION INSTALL_RESURRECTION
+INT_VAR
+  index = "-1"
+STR_VAR
+  cre_resref = ~~
+BEGIN
+  ACTION_IF (index >= 0 && FILE_EXISTS_IN_GAME ~%cre_resref%.CRE~) BEGIN
+    // 1. installing global resources if needed
+    ACTION_IF (NOT FILE_EXISTS_IN_GAME ~a7chrres.spl~) BEGIN
+      // cloning name of "Resurrection" spell
+      OUTER_SET resurrection_strref = "-1"
+      LAF RES_NUM_OF_SPELL_NAME STR_VAR spell_name = ~CLERIC_RESURRECTION~ RET spell_res END
+      COPY_EXISTING ~%spell_res%.spl~ ~override~
+        READ_LONG NAME1 resurrection_strref
+      BUT_ONLY IF_EXISTS
+      ACTION_IF (resurrection_strref < 0) BEGIN
+        OUTER_SET resurrection_strref = RESOLVE_STR_REF(@1302)
+      END
+
+      COPY ~%MOD_FOLDER%/items/a7chrirs.bam~ ~override~
+      ACTION_IF (IS_EE) BEGIN
+        COPY ~%MOD_FOLDER%/spells/ee/a7chrres.spl~ ~override~
+          WRITE_LONG NAME1 resurrection_strref
+        COPY ~%MOD_FOLDER%/spells/ee/a7chrrsa.spl~ ~override~
+
+        COPY ~%MOD_FOLDER%/items/ee/a7chrcrs.bam~ ~override~
+      END ELSE BEGIN
+        COPY ~%MOD_FOLDER%/spells/a7chrres.spl~ ~override~
+          WRITE_LONG NAME1 resurrection_strref
+
+        COPY ~%MOD_FOLDER%/items/a7chrcrs.bam~ ~override~
+      END
+    END
+
+    // 2. installing NPC-specific resources
+    // 2.1. generating resurrection price array
+    OUTER_SET $resurrect_price(~0~) = 20000
+    OUTER_SET price_min = $resurrect_price(~0~)
+    COPY_EXISTING ~raisdead.2da~ ~override~
+      READ_2DA_ENTRIES_NOW raisdead 1
+      READ_2DA_ENTRY_FORMER raisdead 1 0 def_value
+      SET def_value = IS_AN_INT ~def_value~ ? def_value : $resurrect_price(~0~)
+      FOR (row = 3; row < raisdead; ++row) BEGIN
+        READ_2DA_ENTRY_FORMER raisdead row 0 level
+        READ_2DA_ENTRY_FORMER raisdead row 1 price
+        SET level = IS_AN_INT ~level~ ? level : row - 2
+        SET price = IS_AN_INT ~price~ ? price : def_value
+        PATCH_IF (level > 0) BEGIN
+          SET $resurrect_price(~%level%~) = price
+          SET price_min = (price < price_min) ? price : price_min
+          SET def_value = (price > def_value) ? price : def_value
+        END
+      END
+      SET $resurrect_price(~0~) = def_value
+
+      // ensure that prices for all supported levels are defined
+      SET cur_price = price_min
+      FOR (i = 1; i <= 40; ++i) BEGIN
+        PATCH_IF (VARIABLE_IS_SET $resurrect_price(~%i%~)) BEGIN
+          SET cur_price = $resurrect_price(~%i%~)
+        END ELSE BEGIN
+          SET $resurrect_price(~%i%~) = cur_price
+        END
+      END
+    BUT_ONLY
+
+    // 2.2. creating custom dialog
+    LAF GET_INDEXED_RESOURCE_NAME INT_VAR index STR_VAR resref_base = ~a7chrr~ RET a7chrr_resref = resref END
+    OUTER_SPRINT resurrect_dlg ~%a7chrr_resref%~
+    OUTER_SPRINT resurrect_itm ~%a7chrr_resref%~
+    COPY_EXISTING ~%cre_resref%.CRE~ ~override~
+      // fetching required information for dialog creation
+      READ_STRREF NAME1 npc_name
+      READ_ASCII DEATHVAR script_name (32) NULL
+
+      SET price_multiplier = 1
+      SET price_divider = 1
+      PATCH_IF (GAME_IS ~iwdee~) BEGIN
+        // IWDEE only: Elves and half-elves pay more for resurrection
+        READ_BYTE 0x272 npc_race
+        PATCH_IF (npc_race == IDS_OF_SYMBOL(~race~ ~ELF~)) BEGIN
+          // Elves: x2
+          SET price_multiplier = 2
+        END ELSE PATCH_IF (npc_race == IDS_OF_SYMBOL(~race~ ~HALF_ELF~)) BEGIN
+          // Half-elves: x1.5
+          SET price_multiplier = 3
+          SET price_divider = 2
+        END
+      END
+    BUT_ONLY
+
+    COPY - ~.../inlined/a7-npcgenerator/blank~ ~.../inlined/a7-npcgenerator/%resurrect_dlg%.d~
+      APPEND_FILE_EVALUATE  ~%MOD_FOLDER%/dialogs/a7chrrxx-base.d~
+      FOR (npc_level = 1; npc_level <= 40; ++npc_level) BEGIN
+        SET resurrect_price = $resurrect_price(~%npc_level%~) * price_multiplier /  price_divider
+        SPRINT state_price @1312 // <npc_name> can be resurrected for <resurrect_price> gold.
+        SPRINT reply_price_pay @1313 // Pay <resurrect_price> gold to resurrect <npc_name>.
+        APPEND_FILE_EVALUATE  ~%MOD_FOLDER%/dialogs/a7chrrxx-level.d~
+      END
+      SET resurrect_price = $resurrect_price(~0~) * price_multiplier / price_divider
+      SPRINT state_price @1312 // <npc_name> can be resurrected for <resurrect_price> gold.
+      SPRINT reply_price_pay @1313 // Pay <resurrect_price> gold to resurrect <npc_name>.
+      APPEND_FILE_EVALUATE  ~%MOD_FOLDER%/dialogs/a7chrrxx-levelx.d~
+    COMPILE ~.../inlined/a7-npcgenerator/%resurrect_dlg%.d~
+
+    // 2.3. creating custom resurrection item and spell
+    COPY ~%MOD_FOLDER%/items/a7chrrxx.itm~ ~override/%resurrect_itm%.itm~
+      SAY NAME1 @1300 // Remains of %npc_name%
+      SAY NAME2 @1300 // Remains of %npc_name%
+      SAY UNIDENTIFIED_DESC @1301 // These are the remains of %npc_name%...
+
+    OUTER_SET button_label = RESOLVE_STR_REF(@1302) // Resurrect
+    APPEND ~itemdial.2da~ ~%resurrect_itm%  %button_label%  %resurrect_dlg%~
+
+    // 2.4. customizing override script
+    LAF GET_INDEXED_RESOURCE_NAME INT_VAR index STR_VAR resref_base = ~a7chrn~ RET override_script = resref END
+    LAF GET_INDEXED_RESOURCE_NAME INT_VAR index STR_VAR resref_base = ~a7chrr~ RET resurrect_itm = resref END
+    EXTEND_TOP ~%override_script%.bcs~ ~%MOD_FOLDER%/scripts/a7chr-spawn-resurrection-item.baf~ EVAL
+
+    COPY_EXISTING ~%cre_resref%.CRE~ ~override~
+      WRITE_ASCIIE SCRIPT_OVERRIDE ~%override_script%~ (8)
+    BUT_ONLY
   END
 END

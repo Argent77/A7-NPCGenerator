@@ -60,5 +60,22 @@
 @1204 = ~Bin ich die einzige Person, die erkennt, dass <CHARNAME> bei diesem Verbrechen hereingelegt wurde?~
 @1205 = ~Nein, das kann nicht sein! <CHARNAME> hat immer gegen <PRO_HISHER> Makel angekämpft.~
 
+// NPC resurrection
+@1300 = ~Überreste von %npc_name%~
+@1301 = ~Dies sind die Überreste von %npc_name%. Benutzt die Schaltfläche "Wiederbeleben", um Euren Gefährten ins Leben zurückzuholen.
+
+EIGENSCHAFTEN:
+
+Gewicht: 4~
+@1302 = ~Wiederbeleben~
+
+@1310 = ~Untote Gefährten können nicht wiederbelebt werden.~
+@1311 = ~%npc_name% scheint nicht tot zu sein.~
+@1312 = ~%npc_name% kann für %resurrect_price% Goldstücke wiederbelebt werden.~
+@1313 = ~Zahle %resurrect_price% Goldstücke, um %npc_name% wiederzubeleben.~
+@1314 = ~Belebe %npc_name% vorerst nicht wieder.~
+@1315 = ~Ihr habt nicht genug Gold, um %npc_name% wiederzubeleben.~
+@1316 = ~Ihr seid zu weit von %npc_name%s Ruhestätte entfernt.~
+
 // misc. strings
 @2000 = ~FORTGESCHRITTENE KI~

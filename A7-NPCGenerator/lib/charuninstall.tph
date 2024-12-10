@@ -192,6 +192,38 @@ BEGIN
 END
 
 
+// Removes resurrection-specific game resources for a specific NPC.
+DEFINE_ACTION_FUNCTION REMOVE_RESURRECTION_FEATURE
+INT_VAR
+  index = "-1"  // resurrection index (as defined in a7-npc.2da)
+BEGIN
+  ACTION_IF (index >= 0 && index < 256) BEGIN
+    LAF GET_INDEXED_RESOURCE_NAME INT_VAR index STR_VAR resref_base = ~a7chrr~ RET resref END
+    LAF GET_INDEXED_RESOURCE_NAME INT_VAR index STR_VAR resref_base = ~a7chrn~ RET override_script = resref END
+    ACTION_DEFINE_ARRAY files BEGIN
+      ~%resref%.DLG~
+      ~%resref%.ITM~
+      ~%resref%.SPL~
+      ~%override_script%.BCS~
+    END
+    ACTION_PHP_EACH files AS _ => file BEGIN
+      ACTION_IF (FILE_EXISTS ~override/%file%~) BEGIN
+        DELETE ~override/%file%~
+      END
+    END
+
+    COPY_EXISTING ~itemdial.2da~ ~override~
+      READ_2DA_ENTRIES_NOW itemdial 1
+      FOR (row = itemdial - 1; row >= 3; --row) BEGIN
+        READ_2DA_ENTRY_FORMER itemdial row 0 value
+        PATCH_IF (~%value%~ STR_EQ ~%resref%~) BEGIN
+          REMOVE_2DA_ROW row 1
+        END
+      END
+    BUT_ONLY
+  END
+END
+
 // Macro: Uninstalls all characters selected in the character selection menu.
 // Requires the following variables to be initialized: $char_ref, $char_selected, $char_name
 DEFINE_ACTION_MACRO UNINSTALL_CHARACTERS
@@ -214,6 +246,12 @@ BEGIN
 
         // removing CRE script blocks in area scripts
         LAF REMOVE_CRE_SCRIPT STR_VAR cre_resref END
+
+        // remove resurrection-specific resources
+        LAF GET_RESURRECT_INDEX STR_VAR resref = EVAL ~%cre_resref%~ RET index END
+        ACTION_IF (index >= 0) BEGIN
+          LAF REMOVE_RESURRECTION_FEATURE INT_VAR index STR_VAR cre_resref END
+        END
 
         // removing character entries from a7-npc.2da
         LAF UNREGISTER_CHAR STR_VAR cre_resref END

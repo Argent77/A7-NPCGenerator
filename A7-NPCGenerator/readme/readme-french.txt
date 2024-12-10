@@ -185,6 +185,9 @@ Le mod "Générateur de PNJ" est sous licence "Creative Commons Attribution-NonC
 Historique
 ~~~~~~~~~~
 
+2.0
+- Added the means to resurrect dead NPCs in follower mode (for a price)
+
 1.7
 - Correction de la sélection du script de combat pour les PNJ en mode suiveur
 - Mise à jour de la compatibilité des mods et de l'ordre d'installation dans le fichier lisez moi et le fichier ini de Project Infinity
